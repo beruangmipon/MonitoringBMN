@@ -19,10 +19,10 @@
 // ============================================================
 
 export const firebaseConfig = {
-  apiKey:            "GANTI_API_KEY",
-  authDomain:        "GANTI_PROJECT_ID.firebaseapp.com",
-  projectId:         "GANTI_PROJECT_ID",
-  storageBucket:     "GANTI_PROJECT_ID.appspot.com",
-  messagingSenderId: "GANTI_SENDER_ID",
-  appId:             "GANTI_APP_ID"
+  apiKey:            "AIzaSyDNHTh4BQIwTSlQB477KaebpLs7eMzpdJE",
+  authDomain:        "bmn-dashboard-53414.firebaseapp.com",
+  projectId:         "bmn-dashboard-53414",
+  storageBucket:     "bmn-dashboard-53414.firebasestorage.app",
+  messagingSenderId: "1075522479903",
+  appId:             "1:1075522479903:web:f6c6d64a1b04689974322a"
 };
