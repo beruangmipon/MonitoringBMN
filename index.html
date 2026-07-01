@@ -24,6 +24,9 @@
     --red:#DC2626;
     --red-dim:#FEE2E2;
     --red-text:#7F1D1D;
+    --info:#2563EB;
+    --info-dim:#DBEAFE;
+    --info-text:#1E3A8A;
     --slate:#64748B;
     font-family:'Inter',sans-serif;
     color:var(--ink);
@@ -197,6 +200,22 @@
 
   /* ---------- Body / tickets ---------- */
   #bst-root .bst-body{ padding:18px 26px 26px; }
+
+  /* ---------- Footer ---------- */
+  #bst-root .bst-footer{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;
+    padding:14px 26px; border-top:1px solid var(--line); background:var(--paper-dim);
+    border-radius:0 0 14px 14px;
+  }
+  #bst-root .bst-footer-title{
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:11px;
+    text-transform:uppercase; letter-spacing:0.4px; color:var(--ink);
+  }
+  #bst-root .bst-footer-right{ text-align:right; }
+  #bst-root .bst-footer-sub{
+    margin-top:3px; font-family:'JetBrains Mono',monospace; font-weight:400;
+    font-size:10.5px; color:var(--slate);
+  }
   #bst-root .bst-empty{ text-align:center; padding:56px 20px; color:var(--slate); }
   #bst-root .bst-empty .disp{ font-size:16px; margin-bottom:6px; color:var(--ink); }
 
@@ -208,8 +227,10 @@
   }
   #bst-root .ticket:hover{ box-shadow:0 8px 22px rgba(15,23,32,0.09); transform:translateY(-1px); }
   #bst-root .ticket-baru{ border-left-color:var(--line); }
+  #bst-root .ticket-disetujui{ border-left-color:var(--info); }
   #bst-root .ticket-proses{ border-left-color:var(--amber); }
   #bst-root .ticket-telat{ border-left-color:var(--red); }
+  #bst-root .ticket-ditolak{ border-left-color:var(--red); }
   #bst-root .ticket-selesai{ border-left-color:var(--primary); }
   #bst-root .ticket-selesai-kuning{ border-left-color:var(--yellow); }
   #bst-root .ticket-selesai-merah{ border-left-color:var(--red); }
@@ -220,11 +241,13 @@
   #bst-root .ticket-kendala{ font-size:11.5px; color:var(--slate); margin-top:3px; font-style:italic; max-width:420px; }
   #bst-root .badge{ font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; padding:4px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.3px; white-space:nowrap; }
   #bst-root .badge-baru{ background:var(--paper-dim); color:var(--slate); border:1px solid var(--line); }
+  #bst-root .badge-disetujui{ background:var(--info-dim); color:var(--info-text); }
   #bst-root .badge-proses{ background:var(--amber-dim); color:var(--amber-text); }
   #bst-root .badge-selesai{ background:var(--primary-dim); color:var(--primary-text); }
   #bst-root .badge-selesai-kuning{ background:var(--yellow-dim); color:var(--yellow-text); }
   #bst-root .badge-selesai-merah{ background:var(--red-dim); color:var(--red-text); }
   #bst-root .badge-telat{ background:var(--red-dim); color:var(--red-text); }
+  #bst-root .badge-ditolak{ background:var(--red-dim); color:var(--red-text); }
   #bst-root .ticket-actions{ display:flex; gap:6px; }
   #bst-root .icon-btn{ background:transparent; border:1px solid var(--line); cursor:pointer; width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--slate); transition:all .15s ease; }
   #bst-root .icon-btn:hover{ background:var(--paper-dim); color:var(--ink); transform:translateY(-1px); }
@@ -273,6 +296,9 @@
   #bst-root .section-card.locked .section-head{ background:var(--paper-dim); }
   #bst-root .lock-icon{ font-size:11px; }
   #bst-root .approved-note{ font-size:11.5px; background:var(--primary-dim); color:var(--primary-text); border-radius:8px; padding:8px 10px; margin-top:6px; }
+  #bst-root .rejected-note{ font-size:11.5px; background:var(--red-dim); color:var(--red-text); border-radius:8px; padding:8px 10px; margin-top:6px; line-height:1.6; }
+  #bst-root .decision-buttons{ display:flex; gap:10px; flex-wrap:wrap; }
+  #bst-root .decision-buttons .btn{ flex:1; min-width:120px; }
 
   #bst-root .bst-modal-foot{ padding:14px 22px 20px; display:flex; justify-content:flex-end; gap:10px; }
   #bst-root .close-x{ background:transparent; border:none; color:var(--paper); cursor:pointer; font-size:18px; width:26px; height:26px; }
@@ -280,13 +306,42 @@
 
   @media (max-width:560px){
     #bst-root .field-row{ grid-template-columns:1fr; }
-    #bst-root .bst-header{ padding:16px; }
+    #bst-root .bst-header{ padding:16px; border-radius:14px 14px 0 0; }
+    #bst-root .bst-title{ font-size:17px; }
+    #bst-root .bst-sub{ font-size:11px; }
+    #bst-root .bst-header-actions{ width:100%; }
+    #bst-root .bst-header-actions .btn{ flex:1; min-width:calc(50% - 5px); text-align:center; }
+    #bst-root .bst-userbar{ width:100%; }
+    #bst-root .bst-count-pill{ width:100%; text-align:center; }
+    #bst-root .bst-toolbar{ flex-direction:column; align-items:stretch; padding:12px 14px; }
+    #bst-root .bst-search{ width:100%; }
+    #bst-root select.bst-filter{ width:100%; }
+    #bst-root .bst-sync{ justify-content:center; }
     #bst-root .bst-body{ padding:12px; }
+    #bst-root .ticket-top{ padding:13px 14px 8px; }
+    #bst-root .ticket-foot{ padding:9px 14px; }
     #bst-root .stepper{ padding:2px 8px 14px; }
     #bst-root .step .lbl{ display:none; }
     #bst-root .role-grid{ grid-template-columns:1fr 1fr; }
     #bst-root .choose-grid{ grid-template-columns:1fr; }
     #bst-root .user-row{ flex-direction:column; align-items:flex-start; }
+    #bst-root .user-actions{ width:100%; }
+    #bst-root .user-actions .btn{ flex:1; }
+
+    /* Target sentuh lebih besar & cegah auto-zoom iOS Safari saat fokus input (butuh font-size >= 16px) */
+    #bst-root .btn{ min-height:42px; font-size:14px; }
+    #bst-root .btn-sm{ min-height:36px; }
+    #bst-root .icon-btn{ width:36px; height:36px; }
+    #bst-root .field input, #bst-root .field textarea,
+    #bst-root .bst-search, #bst-root select.bst-filter,
+    #bst-root .bst-login-form input, #bst-root .user-role-select{ font-size:16px; }
+
+    #bst-root .bst-overlay{ padding:0; align-items:flex-end; }
+    #bst-root .bst-modal{ max-width:100%; max-height:92vh; border-radius:16px 16px 0 0; }
+    #bst-root .decision-buttons{ flex-direction:column; }
+    #bst-root .decision-buttons .btn{ min-width:100%; }
+    #bst-root .bst-footer{ flex-direction:column; padding:12px 14px; }
+    #bst-root .bst-footer-right{ text-align:left; }
   }
 
   /* ---------- Cetak Rekapitulasi ---------- */
@@ -321,8 +376,8 @@
   const ROLES = [
     { key:'pemohon',   icon:'&#128100;', name:'Pemohon',    desc:'Ajukan permohonan servis baru — tanpa akun' },
     { key:'kasub_bmn', icon:'&#9989;',   name:'Kasub BMN',  desc:'Menyetujui permohonan' },
-    { key:'vendor',    icon:'&#128295;', name:'Vendor',     desc:'Proses & perbaikan barang' },
-    { key:'monitor',   icon:'&#128065;', name:'Monitor',    desc:'Memantau status & mengisi Tanggal Selesai Pekerjaan' },
+    { key:'vendor',    icon:'&#128295;', name:'Vendor',     desc:'Pemeriksaan & Estimasi Penyelesaian' },
+    { key:'monitor',   icon:'&#128065;', name:'Monitor',    desc:'Proses Permohonan & Tanggal Selesai Pekerjaan' },
     { key:'admin',     icon:'&#128737;', name:'Admin',      desc:'Akses penuh & menyetujui akun staf lain' },
   ];
   const ROLE_LABEL = Object.fromEntries(ROLES.map(r=>[r.key, r.name]));
@@ -346,7 +401,7 @@
     kendala:            { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     tglPermohonan:      { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     tglPersetujuan:     { role:'kasub_bmn', ok:e=> !!e.tglPermohonan && !e.tglPersetujuan },
-    tglProses:          { role:'vendor',    ok:e=> !!e.tglPersetujuan && !e.tglProses },
+    tglProses:          { role:'monitor',   ok:e=> !!e.tglPersetujuan && !e.tglProses },
     tglPemeriksaan:     { role:'vendor',    ok:e=> !!e.tglProses && !e.tglPemeriksaan },
     hasilPemeriksaan:   { role:'vendor',    ok:e=> !!e.tglProses && !e.tglSelesaiPekerjaan },
     estimasi:           { role:'vendor',    ok:e=> !!e.tglProses && !e.tglSelesaiPekerjaan },
@@ -394,11 +449,13 @@
   function escapeAttr(str){ return (str||'').replace(/"/g,'&quot;'); }
 
   function getStatus(e){
+    if(e.persetujuanStatus === 'ditolak') return 'ditolak';
     const doneCount = STEPS.filter(s => e[s.key]).length;
     const isOverdue = e.estimasi && !e.tglSelesaiPekerjaan && e.estimasi < todayISO();
     if(doneCount === STEPS.length) return 'selesai';
     if(isOverdue) return 'telat';
     if(doneCount === 0) return 'baru';
+    if(e.tglPersetujuan && !e.tglProses) return 'disetujui';
     return 'proses';
   }
   // Menghitung ketepatan waktu penyelesaian dibanding tanggal estimasi.
@@ -421,8 +478,9 @@
       return '<span class="badge badge-selesai">Selesai &middot; Tepat Waktu</span>';
     }
     const map = {
-      baru:{cls:'badge-baru',txt:'Baru'}, proses:{cls:'badge-proses',txt:'Proses'},
-      telat:{cls:'badge-telat',txt:'Lewat Estimasi'},
+      baru:{cls:'badge-baru',txt:'Baru'}, disetujui:{cls:'badge-disetujui',txt:'Disetujui'},
+      proses:{cls:'badge-proses',txt:'Proses'},
+      telat:{cls:'badge-telat',txt:'Lewat Estimasi'}, ditolak:{cls:'badge-ditolak',txt:'Ditolak'},
     };
     const m = map[status];
     return '<span class="badge '+m.cls+'">'+m.txt+'</span>';
@@ -435,6 +493,63 @@
       return 'ticket-selesai';
     }
     return 'ticket-' + status;
+  }
+
+  /* ============ PERSETUJUAN KASUB BMN (Setuju / Tidak Setuju) ============ */
+  function renderPersetujuanSection(e){
+    if(e.tglPersetujuan && e.persetujuanStatus !== 'ditolak'){
+      let html = `<div class="approved-note">Disetujui oleh <b>${escapeHtml(e.approvedBy||'-')}</b> pada ${fmtDate(e.tglPersetujuan)}.</div>`;
+      if(currentUser.role === 'admin'){
+        html += `<button class="btn btn-ghost btn-sm" id="btn-reset-persetujuan" style="margin-top:8px;">Reset Keputusan (Admin)</button>`;
+      }
+      return html;
+    }
+    if(e.persetujuanStatus === 'ditolak'){
+      let html = `<div class="rejected-note">Ditolak oleh <b>${escapeHtml(e.ditolakOleh||'-')}</b> pada ${fmtDate(e.tglPenolakan)}.<br>Alasan: ${escapeHtml(e.alasanPenolakan||'-')}</div>`;
+      if(currentUser.role === 'admin'){
+        html += `<button class="btn btn-ghost btn-sm" id="btn-reset-persetujuan" style="margin-top:8px;">Reset Keputusan (Admin)</button>`;
+      }
+      return html;
+    }
+    const canDecide = (currentUser.role === 'kasub_bmn' || currentUser.role === 'admin') && !!e.tglPermohonan;
+    if(canDecide){
+      return `<div class="decision-buttons">
+        <button class="btn btn-primary" id="btn-setuju">&#10003; Setuju</button>
+        <button class="btn btn-ghost danger-text" id="btn-tolak">&#10007; Tidak Setuju</button>
+      </div>`;
+    }
+    return `<div class="field-hint locked">${!e.tglPermohonan ? 'Menunggu Tanggal Permohonan.' : 'Hanya dapat diputuskan oleh Kasub BMN.'}</div>`;
+  }
+
+  async function decidePersetujuan(id, approve){
+    const e = entries.find(x=>x.id===id);
+    if(!e) return;
+    if(approve){
+      if(!confirm('Setujui permohonan ini?')) return;
+      closeModal();
+      await updateEntryRemote(id, {
+        tglPersetujuan: todayISO(), approvedBy: currentUser.name, persetujuanStatus: 'disetujui',
+      });
+    } else {
+      const reason = prompt('Alasan tidak menyetujui permohonan ini:');
+      if(reason === null) return; // dibatalkan
+      const trimmed = reason.trim();
+      if(!trimmed){ alert('Alasan wajib diisi.'); return; }
+      closeModal();
+      await updateEntryRemote(id, {
+        persetujuanStatus: 'ditolak', tglPenolakan: todayISO(),
+        ditolakOleh: currentUser.name, alasanPenolakan: trimmed,
+      });
+    }
+  }
+
+  async function resetPersetujuan(id){
+    if(!confirm('Reset keputusan persetujuan? Kasub BMN akan bisa memutuskan ulang.')) return;
+    closeModal();
+    await updateEntryRemote(id, {
+      tglPersetujuan: null, approvedBy: null, persetujuanStatus: null,
+      tglPenolakan: null, ditolakOleh: null, alasanPenolakan: null,
+    });
   }
 
   /* ============================================================
@@ -601,6 +716,7 @@
             <div class="rd">Kasub BMN, Vendor, Monitor, atau Admin. Wajib masuk dengan email &amp; kata sandi yang sudah disetujui.</div>
           </div>
         </div>
+        <div class="bst-disclaimer">Dirancang sebagai prototipe &middot; &copy; 2026 &mdash; dibuat oleh beruangmipon</div>
       </div>`;
     document.getElementById('choose-pemohon').addEventListener('click', renderPemohonForm);
     document.getElementById('choose-staff').addEventListener('click', ()=> renderStaffLogin());
@@ -737,7 +853,7 @@
       <div class="bst-header">
         <div>
           <div class="bst-title disp">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</div>
-          <div class="bst-sub">Pelacakan permohonan servis &middot; multi-pengguna</div>
+          <div class="bst-sub">Pelacakan permohonan servis - Bappebti</div>
         </div>
         <div class="bst-header-actions">
           <span class="bst-count-pill mono" id="bst-count-pill">0 permohonan</span>
@@ -759,13 +875,25 @@
         <select class="bst-filter" id="bst-filter">
           <option value="all">Semua Status</option>
           <option value="baru">Baru</option>
+          <option value="disetujui">Disetujui</option>
           <option value="proses">Proses</option>
           <option value="selesai">Selesai</option>
           <option value="telat">Melewati Estimasi</option>
+          <option value="ditolak">Ditolak</option>
         </select>
         <div class="bst-sync"><span class="dot-live" id="bst-dot"></span><span id="bst-sync-text">memuat...</span></div>
       </div>
       <div class="bst-body" id="bst-body"><div class="bst-empty">Memuat data&hellip;</div></div>
+      <div class="bst-footer">
+        <div>
+          <div class="bst-footer-title">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</div>
+          <div class="bst-footer-sub">Bappebti &middot; Multi-pengguna</div>
+        </div>
+        <div class="bst-footer-right">
+          <div class="bst-footer-title">Dirancang sebagai prototipe</div>
+          <div class="bst-footer-sub">&copy; 2026 &mdash; dibuat oleh beruangmipon</div>
+        </div>
+      </div>
     `;
     document.getElementById('bst-logout').addEventListener('click', logout);
     if(currentUser.role === 'pemohon' || currentUser.role === 'admin'){
@@ -1022,7 +1150,7 @@
       if(lateness === 'late_gt3') return 'Selesai - Terlambat >3 Hari';
       return 'Selesai - Tepat Waktu';
     }
-    const map = { baru:'Baru', proses:'Proses', telat:'Lewat Estimasi' };
+    const map = { baru:'Baru', disetujui:'Disetujui', proses:'Proses', telat:'Lewat Estimasi', ditolak:'Ditolak' };
     return map[status] || status;
   }
 
@@ -1193,7 +1321,8 @@
       jenis: document.getElementById('f-jenis').value.trim(),
       kendala: document.getElementById('f-kendala').value.trim(),
       tglPermohonan,
-      tglPersetujuan: null, approvedBy: null,
+      tglPersetujuan: null, approvedBy: null, persetujuanStatus: null,
+      tglPenolakan: null, ditolakOleh: null, alasanPenolakan: null,
       tglProses: null,
       tglPemeriksaan: null, hasilPemeriksaan: '',
       estimasi: null,
@@ -1262,15 +1391,14 @@
           <div class="section-card">
             <div class="section-head"><span class="st">2. Persetujuan Kasub BMN</span><span class="who">Kasub BMN</span></div>
             <div class="section-body">
-              ${inputField('Tanggal Persetujuan Kasub BMN','tglPersetujuan','date',{lockToRole:'kasub_bmn'})}
-              ${e.tglPersetujuan && e.approvedBy ? `<div class="approved-note">Disetujui oleh <b>${escapeHtml(e.approvedBy)}</b> pada ${fmtDate(e.tglPersetujuan)}.</div>` : ''}
+              ${renderPersetujuanSection(e)}
             </div>
           </div>
 
           <div class="section-card">
-            <div class="section-head"><span class="st">3. Proses oleh Vendor</span><span class="who">Vendor</span></div>
+            <div class="section-head"><span class="st">3. Proses Permohonan</span><span class="who">Monitor</span></div>
             <div class="section-body">
-              ${inputField('Tanggal Proses Permohonan','tglProses','date',{lockToRole:'vendor'})}
+              ${inputField('Tanggal Proses Permohonan','tglProses','date',{lockToRole:'monitor'})}
             </div>
           </div>
 
@@ -1296,7 +1424,7 @@
             </div>
           </div>
 
-          ${currentUser.role === 'monitor' ? '<div class="note">Sebagai Monitor, Anda hanya dapat mengisi Tanggal Selesai Pekerjaan (setelah tahap Pemeriksaan lengkap). Field lain hanya untuk dilihat.</div>' : ''}
+          ${currentUser.role === 'monitor' ? '<div class="note">Sebagai Monitor, Anda dapat mengisi Tanggal Proses Permohonan (setelah Kasub BMN menyetujui) dan Tanggal Selesai Pekerjaan (setelah tahap Pemeriksaan lengkap). Field lain hanya untuk dilihat.</div>' : ''}
         </div>
         <div class="bst-modal-foot">
           <button class="btn btn-ghost" id="bst-cancel" style="color:var(--ink);border-color:var(--line);">Batal</button>
@@ -1308,6 +1436,12 @@
     document.getElementById('bst-cancel').addEventListener('click', closeModal);
     overlay.addEventListener('click', ev=>{ if(ev.target === overlay) closeModal(); });
     document.getElementById('bst-save').addEventListener('click', ()=> submitEdit(id));
+    const setujuBtn = document.getElementById('btn-setuju');
+    const tolakBtn = document.getElementById('btn-tolak');
+    const resetBtn = document.getElementById('btn-reset-persetujuan');
+    if(setujuBtn) setujuBtn.addEventListener('click', ()=> decidePersetujuan(id, true));
+    if(tolakBtn) tolakBtn.addEventListener('click', ()=> decidePersetujuan(id, false));
+    if(resetBtn) resetBtn.addEventListener('click', ()=> resetPersetujuan(id));
   }
 
   async function submitEdit(id){
@@ -1395,15 +1529,6 @@
 </script>
 
 <script type="module">
-  // ============================================================
-  //  Koneksi Firebase — memakai firebase-config.js di folder yang sama.
-  //  - Firebase Authentication (email + password): akun staf (Kasub BMN, Vendor, Monitor, Admin)
-  //  - Firestore:
-  //      koleksi 'bst_users'      -> profil & status persetujuan akun staf
-  //      koleksi 'bmn_permohonan' -> data permohonan servis (realtime)
-  //  Lihat PANDUAN-ADMIN.md untuk cara mengaktifkan Email/Password di Firebase
-  //  dan cara membuat Admin PERTAMA (bootstrap).
-  // ============================================================
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import {
     getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
