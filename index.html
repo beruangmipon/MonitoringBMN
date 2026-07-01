@@ -8,21 +8,27 @@
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   #bst-root {
-    --ink:#1C2530;
-    --paper:#F6F3EC;
-    --paper-dim:#EDE8DC;
-    --line:#D8D0BE;
-    --amber:#C97A3D;
-    --amber-dim:#E8CBAE;
-    --teal:#3C7A6E;
-    --teal-dim:#CFE1DC;
-    --red:#B5493F;
-    --red-dim:#F0D6D2;
-    --slate:#5B6472;
+    --ink:#0F1720;
+    --paper:#FAFAF8;
+    --paper-dim:#F0F2EE;
+    --line:#E2E6DF;
+    --primary:#059669;
+    --primary-dim:#D1FAE5;
+    --primary-text:#065F46;
+    --amber:#D97706;
+    --amber-dim:#FEF3C7;
+    --amber-text:#92400E;
+    --yellow:#CA8A04;
+    --yellow-dim:#FEF9C3;
+    --yellow-text:#854D0E;
+    --red:#DC2626;
+    --red-dim:#FEE2E2;
+    --red-text:#7F1D1D;
+    --slate:#64748B;
     font-family:'Inter',sans-serif;
     color:var(--ink);
     background:var(--paper);
-    border-radius:10px;
+    border-radius:14px;
     padding:0;
     min-height:100%;
     box-sizing:border-box;
@@ -31,37 +37,43 @@
   #bst-root .disp{ font-family:'Space Grotesk',sans-serif; }
   #bst-root .mono{ font-family:'JetBrains Mono',monospace; }
 
+  @keyframes bstFadeIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
+  @media (prefers-reduced-motion: reduce){
+    #bst-root *{ animation:none !important; transition:none !important; }
+  }
+
   /* ---------- Login screen ---------- */
   #bst-root .bst-login{
-    padding:44px 26px; text-align:center; background:var(--ink); border-radius:10px;
-    color:var(--paper);
+    padding:48px 26px; text-align:center;
+    background:linear-gradient(150deg, #0F1720 0%, #17222E 55%, #101A22 100%);
+    border-radius:14px; color:var(--paper);
   }
-  #bst-root .bst-login h2{ font-family:'Space Grotesk',sans-serif; font-size:22px; margin:0 0 6px; }
-  #bst-root .bst-login p{ color:#B9C2CE; font-size:13px; margin:0 0 26px; max-width:460px; margin-left:auto; margin-right:auto; }
+  #bst-root .bst-login h2{ font-family:'Space Grotesk',sans-serif; font-size:23px; margin:0 0 6px; }
+  #bst-root .bst-login p{ color:#A6B1BE; font-size:13px; margin:0 0 26px; max-width:460px; margin-left:auto; margin-right:auto; }
   #bst-root .role-grid{
     display:grid; grid-template-columns:repeat(5,1fr); gap:10px; max-width:780px; margin:0 auto 22px;
   }
   #bst-root .role-card{
-    background:rgba(246,243,236,0.06); border:1.5px solid rgba(246,243,236,0.18);
-    border-radius:10px; padding:16px 10px; cursor:pointer; transition:all .15s ease;
+    background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.12);
+    border-radius:12px; padding:16px 10px; cursor:pointer; transition:all .18s ease;
     color:var(--paper);
   }
-  #bst-root .role-card:hover{ border-color:var(--amber); background:rgba(201,122,61,0.12); }
-  #bst-root .role-card.selected{ border-color:var(--amber); background:rgba(201,122,61,0.18); }
+  #bst-root .role-card:hover{ border-color:var(--primary); background:rgba(5,150,105,0.14); transform:translateY(-2px); }
+  #bst-root .role-card.selected{ border-color:var(--primary); background:rgba(5,150,105,0.2); }
   #bst-root .role-card .ric{ font-size:22px; margin-bottom:8px; }
   #bst-root .role-card .rn{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px; }
-  #bst-root .role-card .rd{ font-size:10.5px; color:#B9C2CE; margin-top:4px; line-height:1.4; }
+  #bst-root .role-card .rd{ font-size:10.5px; color:#A6B1BE; margin-top:4px; line-height:1.4; }
   #bst-root .bst-login-form{ max-width:320px; margin:0 auto; }
   #bst-root .bst-login-form input{
-    width:100%; padding:10px 13px; border-radius:7px; border:1px solid rgba(246,243,236,0.25);
-    background:rgba(246,243,236,0.08); color:var(--paper); font-family:'Inter',sans-serif; font-size:13.5px;
-    margin-bottom:12px;
+    width:100%; padding:11px 13px; border-radius:9px; border:1px solid rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.06); color:var(--paper); font-family:'Inter',sans-serif; font-size:13.5px;
+    margin-bottom:12px; transition:border-color .15s ease, background .15s ease;
   }
-  #bst-root .bst-login-form input::placeholder{ color:#8B93A0; }
-  #bst-root .bst-login-form input:focus{ outline:none; border-color:var(--amber); }
+  #bst-root .bst-login-form input::placeholder{ color:#7C8896; }
+  #bst-root .bst-login-form input:focus{ outline:none; border-color:var(--primary); background:rgba(5,150,105,0.08); }
   #bst-root .bst-disclaimer{
-    font-size:10.5px; color:#8B93A0; max-width:420px; margin:18px auto 0; line-height:1.5;
-    border-top:1px dashed rgba(246,243,236,0.15); padding-top:14px;
+    font-size:10.5px; color:#7C8896; max-width:420px; margin:18px auto 0; line-height:1.5;
+    border-top:1px dashed rgba(255,255,255,0.12); padding-top:14px;
   }
 
   /* ---------- Pilih jalur masuk (Pemohon vs Staf) ---------- */
@@ -69,23 +81,23 @@
     display:grid; grid-template-columns:1fr 1fr; gap:14px; max-width:520px; margin:0 auto 22px;
   }
   #bst-root .choose-card{
-    background:rgba(246,243,236,0.06); border:1.5px solid rgba(246,243,236,0.18);
-    border-radius:12px; padding:24px 16px; cursor:pointer; transition:all .15s ease; text-align:center;
+    background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.12);
+    border-radius:14px; padding:26px 16px; cursor:pointer; transition:all .18s ease; text-align:center;
   }
-  #bst-root .choose-card:hover{ border-color:var(--amber); background:rgba(201,122,61,0.12); }
-  #bst-root .choose-card .ric{ font-size:30px; margin-bottom:10px; }
+  #bst-root .choose-card:hover{ border-color:var(--primary); background:rgba(5,150,105,0.14); transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,0.25); }
+  #bst-root .choose-card .ric{ font-size:32px; margin-bottom:10px; }
   #bst-root .choose-card .rn{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; margin-bottom:6px; }
-  #bst-root .choose-card .rd{ font-size:11px; color:#B9C2CE; line-height:1.5; }
+  #bst-root .choose-card .rd{ font-size:11px; color:#A6B1BE; line-height:1.5; }
 
   /* ---------- Link & error area login staf ---------- */
   #bst-root .auth-links{
     max-width:320px; margin:14px auto 0; display:flex; flex-direction:column; gap:8px; align-items:center;
   }
-  #bst-root .auth-links a{ color:var(--amber); font-size:12.5px; text-decoration:none; }
+  #bst-root .auth-links a{ color:var(--primary); font-size:12.5px; text-decoration:none; font-weight:500; }
   #bst-root .auth-links a:hover{ text-decoration:underline; }
   #bst-root .auth-error{
-    max-width:320px; margin:0 auto 14px; background:rgba(181,73,63,0.18); border:1px solid rgba(181,73,63,0.5);
-    color:#F0D6D2; font-size:12px; padding:9px 12px; border-radius:7px; text-align:left;
+    max-width:320px; margin:0 auto 14px; background:rgba(220,38,38,0.16); border:1px solid rgba(220,38,38,0.45);
+    color:#FCA5A5; font-size:12px; padding:9px 12px; border-radius:9px; text-align:left;
   }
   #bst-root .status-icon{ font-size:34px; margin-bottom:6px; }
 
@@ -96,13 +108,13 @@
   }
   #bst-root .user-section-title:first-child{ margin-top:0; }
   #bst-root .user-row{
-    display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); flex-wrap:wrap;
+    display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid var(--line); flex-wrap:wrap;
   }
   #bst-root .user-info{ flex:1; min-width:150px; }
   #bst-root .user-name{ font-weight:600; font-size:13px; color:var(--ink); }
   #bst-root .user-email{ font-size:11px; color:var(--slate); margin-top:1px; }
   #bst-root .user-role-select{
-    font-family:'Inter',sans-serif; font-size:12px; padding:6px 8px; border-radius:6px;
+    font-family:'Inter',sans-serif; font-size:12px; padding:6px 8px; border-radius:8px;
     border:1px solid var(--line); background:#fff; color:var(--ink);
   }
   #bst-root .user-actions{ display:flex; gap:6px; }
@@ -112,50 +124,55 @@
 
   /* ---------- Header ---------- */
   #bst-root .bst-header{
-    background:var(--ink); color:var(--paper); padding:20px 26px; border-radius:10px 10px 0 0;
+    background:linear-gradient(135deg, #0F1720 0%, #1B2733 55%, #0F1720 100%);
+    color:var(--paper); padding:22px 26px; border-radius:14px 14px 0 0;
     display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
     position:relative; overflow:hidden;
   }
   #bst-root .bst-header::after{
-    content:""; position:absolute; right:-40px; top:-40px; width:140px; height:140px;
-    border:1px dashed rgba(246,243,236,0.18); border-radius:50%;
+    content:""; position:absolute; right:-40px; top:-40px; width:150px; height:150px;
+    border:1px dashed rgba(5,150,105,0.35); border-radius:50%;
+  }
+  #bst-root .bst-header::before{
+    content:""; position:absolute; left:30%; bottom:-60px; width:120px; height:120px;
+    background:radial-gradient(circle, rgba(5,150,105,0.25) 0%, transparent 70%);
   }
   #bst-root .bst-title{ font-size:20px; font-weight:700; letter-spacing:0.2px; }
-  #bst-root .bst-sub{ font-size:12px; color:#B9C2CE; margin-top:3px; font-family:'JetBrains Mono',monospace; }
+  #bst-root .bst-sub{ font-size:12px; color:#9CA9B6; margin-top:3px; font-family:'JetBrains Mono',monospace; }
   #bst-root .bst-header-actions{ display:flex; gap:10px; align-items:center; z-index:1; flex-wrap:wrap; }
   #bst-root .bst-count-pill{
-    font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(246,243,236,0.1);
-    border:1px solid rgba(246,243,236,0.25); padding:6px 12px; border-radius:20px; color:var(--paper);
+    font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18); padding:6px 12px; border-radius:20px; color:var(--paper);
   }
   #bst-root .btn{
-    font-family:'Inter',sans-serif; font-weight:600; font-size:13.5px; padding:9px 16px; border-radius:7px;
-    border:none; cursor:pointer; transition:transform .12s ease, background .15s ease;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:13.5px; padding:9px 16px; border-radius:9px;
+    border:none; cursor:pointer; transition:transform .12s ease, background .15s ease, box-shadow .15s ease;
   }
   #bst-root .btn:active{ transform:scale(0.97); }
-  #bst-root .btn-primary{ background:var(--amber); color:#fff; }
-  #bst-root .btn-primary:hover{ background:#B56A30; }
-  #bst-root .btn-primary:disabled{ background:#8a8378; cursor:not-allowed; opacity:.6; }
-  #bst-root .btn-ghost{ background:transparent; color:var(--paper); border:1px solid rgba(246,243,236,0.35); }
-  #bst-root .btn-ghost:hover{ background:rgba(246,243,236,0.1); }
-  #bst-root .btn-sm{ padding:5px 10px; font-size:12px; border-radius:5px; }
+  #bst-root .btn-primary{ background:var(--primary); color:#fff; box-shadow:0 1px 3px rgba(5,150,105,0.4); }
+  #bst-root .btn-primary:hover{ background:#047857; transform:translateY(-1px); box-shadow:0 4px 10px rgba(5,150,105,0.35); }
+  #bst-root .btn-primary:disabled{ background:#9CA3AF; cursor:not-allowed; opacity:.6; box-shadow:none; }
+  #bst-root .btn-ghost{ background:transparent; color:var(--paper); border:1px solid rgba(255,255,255,0.22); }
+  #bst-root .btn-ghost:hover{ background:rgba(255,255,255,0.08); }
+  #bst-root .btn-sm{ padding:5px 10px; font-size:12px; border-radius:7px; }
   #bst-root .btn-logout{
-    background:transparent; color:var(--amber); border:1.5px solid var(--amber);
+    background:transparent; color:#FCA5A5; border:1.5px solid rgba(220,38,38,0.55);
     font-weight:700;
   }
-  #bst-root .btn-logout:hover{ background:var(--amber); color:#fff; }
+  #bst-root .btn-logout:hover{ background:var(--red); color:#fff; border-color:var(--red); }
 
   /* user bar */
   #bst-root .bst-userbar{
     display:flex; align-items:center; gap:10px; padding:5px 10px 5px 5px;
-    background:rgba(246,243,236,0.08); border-radius:20px; font-size:12px;
+    background:rgba(255,255,255,0.06); border-radius:22px; font-size:12px;
   }
   #bst-root .bst-avatar{
-    width:26px; height:26px; border-radius:50%; background:var(--amber); color:#fff;
+    width:26px; height:26px; border-radius:50%; background:var(--primary); color:#fff;
     display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;
     font-family:'Space Grotesk',sans-serif;
   }
   #bst-root .bst-role-tag{
-    font-family:'JetBrains Mono',monospace; font-size:10px; color:#B9C2CE;
+    font-family:'JetBrains Mono',monospace; font-size:10px; color:#9CA9B6;
   }
 
   /* ---------- Toolbar ---------- */
@@ -165,86 +182,101 @@
   }
   #bst-root .bst-search{
     flex:1; min-width:200px; font-family:'Inter',sans-serif; font-size:13.5px; padding:9px 13px;
-    border-radius:7px; border:1px solid var(--line); background:var(--paper); color:var(--ink);
+    border-radius:9px; border:1px solid var(--line); background:var(--paper); color:var(--ink);
+    transition:border-color .15s ease;
   }
-  #bst-root .bst-search:focus{ outline:none; border-color:var(--amber); }
+  #bst-root .bst-search:focus{ outline:none; border-color:var(--primary); }
   #bst-root select.bst-filter{
-    font-family:'Inter',sans-serif; font-size:13px; padding:9px 10px; border-radius:7px;
+    font-family:'Inter',sans-serif; font-size:13px; padding:9px 10px; border-radius:9px;
     border:1px solid var(--line); background:var(--paper); color:var(--ink);
   }
   #bst-root .bst-sync{ font-size:11px; color:var(--slate); font-family:'JetBrains Mono',monospace; display:flex; align-items:center; gap:6px; }
-  #bst-root .dot-live{ width:6px; height:6px; border-radius:50%; background:var(--teal); animation:bstpulse 2s infinite; }
+  #bst-root .dot-live{ width:6px; height:6px; border-radius:50%; background:var(--primary); animation:bstpulse 2s infinite; }
   #bst-root .dot-live.warn{ background:var(--red); animation:none; }
   @keyframes bstpulse{ 0%,100%{opacity:1;} 50%{opacity:0.25;} }
 
   /* ---------- Body / tickets ---------- */
-  #bst-root .bst-body{ padding:16px 26px 26px; }
-  #bst-root .bst-empty{ text-align:center; padding:50px 20px; color:var(--slate); }
+  #bst-root .bst-body{ padding:18px 26px 26px; }
+  #bst-root .bst-empty{ text-align:center; padding:56px 20px; color:var(--slate); }
   #bst-root .bst-empty .disp{ font-size:16px; margin-bottom:6px; color:var(--ink); }
 
-  #bst-root .ticket{ background:var(--paper); border:1px solid var(--line); border-radius:9px; margin-bottom:12px; overflow:hidden; transition:box-shadow .15s ease; }
-  #bst-root .ticket:hover{ box-shadow:0 3px 14px rgba(28,37,48,0.08); }
+  #bst-root .ticket{
+    background:var(--paper); border:1px solid var(--line); border-left:4px solid var(--line);
+    border-radius:12px; margin-bottom:12px; overflow:hidden;
+    transition:box-shadow .18s ease, transform .18s ease;
+    animation:bstFadeIn .25s ease both;
+  }
+  #bst-root .ticket:hover{ box-shadow:0 8px 22px rgba(15,23,32,0.09); transform:translateY(-1px); }
+  #bst-root .ticket-baru{ border-left-color:var(--line); }
+  #bst-root .ticket-proses{ border-left-color:var(--amber); }
+  #bst-root .ticket-telat{ border-left-color:var(--red); }
+  #bst-root .ticket-selesai{ border-left-color:var(--primary); }
+  #bst-root .ticket-selesai-kuning{ border-left-color:var(--yellow); }
+  #bst-root .ticket-selesai-merah{ border-left-color:var(--red); }
+
   #bst-root .ticket-top{ display:flex; align-items:flex-start; justify-content:space-between; padding:14px 18px 8px; gap:12px; flex-wrap:wrap; }
   #bst-root .ticket-name{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; color:var(--ink); }
   #bst-root .ticket-jenis{ font-size:12.5px; color:var(--slate); margin-top:2px; }
   #bst-root .ticket-kendala{ font-size:11.5px; color:var(--slate); margin-top:3px; font-style:italic; max-width:420px; }
-  #bst-root .badge{ font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; padding:4px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.4px; white-space:nowrap; }
+  #bst-root .badge{ font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; padding:4px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.3px; white-space:nowrap; }
   #bst-root .badge-baru{ background:var(--paper-dim); color:var(--slate); border:1px solid var(--line); }
-  #bst-root .badge-proses{ background:var(--amber-dim); color:#8A4B1E; }
-  #bst-root .badge-selesai{ background:var(--teal-dim); color:#245349; }
-  #bst-root .badge-telat{ background:var(--red-dim); color:#8A2E24; }
+  #bst-root .badge-proses{ background:var(--amber-dim); color:var(--amber-text); }
+  #bst-root .badge-selesai{ background:var(--primary-dim); color:var(--primary-text); }
+  #bst-root .badge-selesai-kuning{ background:var(--yellow-dim); color:var(--yellow-text); }
+  #bst-root .badge-selesai-merah{ background:var(--red-dim); color:var(--red-text); }
+  #bst-root .badge-telat{ background:var(--red-dim); color:var(--red-text); }
   #bst-root .ticket-actions{ display:flex; gap:6px; }
-  #bst-root .icon-btn{ background:transparent; border:1px solid var(--line); cursor:pointer; width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--slate); transition:all .12s ease; }
-  #bst-root .icon-btn:hover{ background:var(--paper-dim); color:var(--ink); }
+  #bst-root .icon-btn{ background:transparent; border:1px solid var(--line); cursor:pointer; width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--slate); transition:all .15s ease; }
+  #bst-root .icon-btn:hover{ background:var(--paper-dim); color:var(--ink); transform:translateY(-1px); }
   #bst-root .icon-btn.danger:hover{ background:var(--red-dim); color:var(--red); border-color:var(--red); }
 
-  #bst-root .stepper{ display:flex; align-items:center; padding:2px 18px 16px; gap:0; }
+  #bst-root .stepper{ display:flex; align-items:center; padding:4px 18px 16px; gap:0; }
   #bst-root .step{ display:flex; flex-direction:column; align-items:center; flex:1; position:relative; }
-  #bst-root .step .node{ width:15px; height:15px; border-radius:50%; background:var(--paper-dim); border:2px solid var(--line); z-index:1; transition:all .15s ease; }
-  #bst-root .step.done .node{ background:var(--teal); border-color:var(--teal); }
+  #bst-root .step .node{ width:15px; height:15px; border-radius:50%; background:var(--paper-dim); border:2px solid var(--line); z-index:1; transition:all .18s ease; }
+  #bst-root .step.done .node{ background:var(--primary); border-color:var(--primary); }
   #bst-root .step.current .node{ background:var(--amber); border-color:var(--amber); box-shadow:0 0 0 4px var(--amber-dim); }
   #bst-root .step .lbl{ font-size:9.5px; font-family:'JetBrains Mono',monospace; color:var(--slate); margin-top:5px; text-align:center; line-height:1.25; max-width:78px; }
   #bst-root .step .dt{ font-size:9.5px; color:var(--ink); font-weight:600; margin-top:1px; font-family:'JetBrains Mono',monospace; }
   #bst-root .step:not(:last-child)::after{ content:""; position:absolute; top:6.5px; left:calc(50% + 10px); right:calc(-50% + 10px); height:2px; background:var(--line); z-index:0; }
-  #bst-root .step.done:not(:last-child)::after{ background:var(--teal); }
+  #bst-root .step.done:not(:last-child)::after{ background:var(--primary); }
 
-  #bst-root .ticket-foot{ display:flex; justify-content:space-between; align-items:center; padding:9px 18px; background:var(--paper-dim); border-top:1px dashed var(--line); font-size:11.5px; color:var(--slate); flex-wrap:wrap; gap:6px; }
+  #bst-root .ticket-foot{ display:flex; justify-content:space-between; align-items:center; padding:10px 18px; background:var(--paper-dim); border-top:1px dashed var(--line); font-size:11.5px; color:var(--slate); flex-wrap:wrap; gap:6px; }
   #bst-root .ticket-foot .nup{ font-family:'JetBrains Mono',monospace; color:var(--ink); font-weight:600; }
   #bst-root .ticket-foot .estimasi{ font-family:'JetBrains Mono',monospace; }
   #bst-root .ticket-foot .estimasi.overdue{ color:var(--red); font-weight:600; }
-  #bst-root .hasil-preview{ padding:0 18px 12px; font-size:11.5px; color:var(--ink); background:var(--teal-dim); margin:0 18px 12px; border-radius:6px; padding:8px 10px; }
-  #bst-root .hasil-preview b{ font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; display:block; margin-bottom:2px; color:#245349; }
+  #bst-root .hasil-preview{ font-size:11.5px; color:var(--ink); background:var(--primary-dim); margin:0 18px 12px; border-radius:9px; padding:9px 11px; }
+  #bst-root .hasil-preview b{ font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; display:block; margin-bottom:2px; color:var(--primary-text); }
 
   /* ---------- Modal ---------- */
-  #bst-root .bst-overlay{ position:fixed; inset:0; background:rgba(28,37,48,0.55); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px; }
-  #bst-root .bst-modal{ background:var(--paper); border-radius:12px; width:100%; max-width:560px; max-height:88vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
-  #bst-root .bst-modal-head{ padding:16px 22px; background:var(--ink); color:var(--paper); border-radius:12px 12px 0 0; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:2; }
+  #bst-root .bst-overlay{ position:fixed; inset:0; background:rgba(15,23,32,0.6); backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px; }
+  #bst-root .bst-modal{ background:var(--paper); border-radius:16px; width:100%; max-width:560px; max-height:88vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,0.35); animation:bstFadeIn .2s ease both; }
+  #bst-root .bst-modal-head{ padding:16px 22px; background:linear-gradient(135deg, #0F1720, #1B2733); color:var(--paper); border-radius:16px 16px 0 0; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:2; }
   #bst-root .bst-modal-head .disp{ font-size:16px; font-weight:700; }
   #bst-root .bst-modal-body{ padding:18px 22px; }
   #bst-root .field{ margin-bottom:14px; }
   #bst-root .field label{ display:block; font-size:11.5px; font-weight:600; color:var(--slate); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.3px; }
   #bst-root .field .req{ color:var(--red); }
-  #bst-root .field input, #bst-root .field textarea{ width:100%; padding:9px 11px; border-radius:7px; border:1px solid var(--line); background:#fff; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); }
-  #bst-root .field input:focus, #bst-root .field textarea:focus{ outline:none; border-color:var(--amber); }
+  #bst-root .field input, #bst-root .field textarea{ width:100%; padding:9px 11px; border-radius:9px; border:1px solid var(--line); background:#fff; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); transition:border-color .15s ease; }
+  #bst-root .field input:focus, #bst-root .field textarea:focus{ outline:none; border-color:var(--primary); }
   #bst-root .field input:disabled, #bst-root .field textarea:disabled{ background:var(--paper-dim); color:var(--slate); cursor:not-allowed; }
-  #bst-root .field input:read-only{ background:var(--teal-dim); color:#245349; cursor:default; border-color:var(--teal); }
+  #bst-root .field input:read-only{ background:var(--primary-dim); color:var(--primary-text); cursor:default; border-color:var(--primary); }
   #bst-root .field textarea{ resize:vertical; min-height:56px; font-family:'Inter',sans-serif; }
   #bst-root .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   #bst-root .field-hint{ font-size:10.5px; color:var(--slate); margin-top:4px; font-style:italic; }
-  #bst-root .field-hint.locked{ color:#9a8a7a; }
+  #bst-root .field-hint.locked{ color:#A39A87; }
 
-  #bst-root .section-card{ border:1px solid var(--line); border-radius:9px; margin-bottom:14px; overflow:hidden; }
+  #bst-root .section-card{ border:1px solid var(--line); border-radius:12px; margin-bottom:14px; overflow:hidden; }
   #bst-root .section-head{ display:flex; align-items:center; justify-content:space-between; padding:9px 14px; background:var(--paper-dim); border-bottom:1px solid var(--line); }
   #bst-root .section-head .st{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px; }
   #bst-root .section-head .who{ font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--slate); text-transform:uppercase; }
   #bst-root .section-body{ padding:14px; }
-  #bst-root .section-card.locked .section-head{ background:#EFE9DD; }
+  #bst-root .section-card.locked .section-head{ background:var(--paper-dim); }
   #bst-root .lock-icon{ font-size:11px; }
-  #bst-root .approved-note{ font-size:11.5px; background:var(--teal-dim); color:#245349; border-radius:6px; padding:8px 10px; margin-top:6px; }
+  #bst-root .approved-note{ font-size:11.5px; background:var(--primary-dim); color:var(--primary-text); border-radius:8px; padding:8px 10px; margin-top:6px; }
 
   #bst-root .bst-modal-foot{ padding:14px 22px 20px; display:flex; justify-content:flex-end; gap:10px; }
   #bst-root .close-x{ background:transparent; border:none; color:var(--paper); cursor:pointer; font-size:18px; width:26px; height:26px; }
-  #bst-root .note{ font-size:11px; color:var(--slate); background:var(--paper-dim); border:1px solid var(--line); border-radius:7px; padding:9px 12px; margin-top:2px; }
+  #bst-root .note{ font-size:11px; color:var(--slate); background:var(--paper-dim); border:1px solid var(--line); border-radius:9px; padding:9px 12px; margin-top:2px; }
 
   @media (max-width:560px){
     #bst-root .field-row{ grid-template-columns:1fr; }
@@ -259,7 +291,7 @@
 
   /* ---------- Cetak Rekapitulasi ---------- */
   #bst-print-area{ display:none; }
-  #bst-print-area .print-head h1{ font-family:'Space Grotesk',sans-serif; font-size:16px; margin:0 0 4px; color:#1C2530; }
+  #bst-print-area .print-head h1{ font-family:'Space Grotesk',sans-serif; font-size:16px; margin:0 0 4px; color:#0F1720; }
   #bst-print-area .print-meta{ font-size:10.5px; color:#555; margin-bottom:14px; font-family:'JetBrains Mono',monospace; }
   #bst-print-area .print-table{ width:100%; border-collapse:collapse; font-size:9px; font-family:'Inter',sans-serif; }
   #bst-print-area .print-table th, #bst-print-area .print-table td{ border:1px solid #999; padding:4px 5px; text-align:left; vertical-align:top; }
@@ -270,6 +302,7 @@
     #bst-print-area{ display:block; position:absolute; left:0; top:0; width:100%; padding:16px; }
   }
 </style>
+
 </head>
 <body>
 <div id="bst-root"></div>
@@ -306,6 +339,8 @@
   // ---- field permission rules: who can edit + when ----
   const FIELD_RULES = {
     nama:               { role:'pemohon',   ok:e=> !e.tglPersetujuan },
+    nip:                { role:'pemohon',   ok:e=> !e.tglPersetujuan },
+    eselonII:           { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     nup:                { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     jenis:              { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     kendala:            { role:'pemohon',   ok:e=> !e.tglPersetujuan },
@@ -366,13 +401,40 @@
     if(doneCount === 0) return 'baru';
     return 'proses';
   }
-  function statusBadge(status){
+  // Menghitung ketepatan waktu penyelesaian dibanding tanggal estimasi.
+  // null = belum selesai / tidak ada estimasi untuk dibandingkan.
+  function getLateness(e){
+    if(!e.tglSelesaiPekerjaan || !e.estimasi) return null;
+    const est = new Date(e.estimasi + 'T00:00:00');
+    const done = new Date(e.tglSelesaiPekerjaan + 'T00:00:00');
+    if(isNaN(est) || isNaN(done)) return null;
+    const diffDays = Math.round((done - est) / (1000*60*60*24));
+    if(diffDays <= 0) return 'ontime';
+    if(diffDays <= 3) return 'late1_3';
+    return 'late_gt3';
+  }
+  function statusBadge(status, e){
+    if(status === 'selesai'){
+      const lateness = e ? getLateness(e) : null;
+      if(lateness === 'late1_3') return '<span class="badge badge-selesai-kuning">Selesai &middot; Terlambat 1&ndash;3 Hari</span>';
+      if(lateness === 'late_gt3') return '<span class="badge badge-selesai-merah">Selesai &middot; Terlambat &gt;3 Hari</span>';
+      return '<span class="badge badge-selesai">Selesai &middot; Tepat Waktu</span>';
+    }
     const map = {
       baru:{cls:'badge-baru',txt:'Baru'}, proses:{cls:'badge-proses',txt:'Proses'},
-      selesai:{cls:'badge-selesai',txt:'Selesai'}, telat:{cls:'badge-telat',txt:'Lewat Estimasi'},
+      telat:{cls:'badge-telat',txt:'Lewat Estimasi'},
     };
     const m = map[status];
     return '<span class="badge '+m.cls+'">'+m.txt+'</span>';
+  }
+  function statusCssClass(status, e){
+    if(status === 'selesai'){
+      const lateness = e ? getLateness(e) : null;
+      if(lateness === 'late1_3') return 'ticket-selesai-kuning';
+      if(lateness === 'late_gt3') return 'ticket-selesai-merah';
+      return 'ticket-selesai';
+    }
+    return 'ticket-' + status;
   }
 
   /* ============================================================
@@ -549,9 +611,11 @@
     root.innerHTML = `
       <div class="bst-login">
         <h2 class="disp">Masuk sebagai Pemohon</h2>
-        <p>Cukup isi nama Anda. Tidak perlu akun atau kata sandi.</p>
+        <p>Isi data berikut. Tidak perlu akun atau kata sandi.</p>
         <div class="bst-login-form">
           <input type="text" id="f-pemohon-name" placeholder="Nama lengkap Anda">
+          <input type="text" id="f-pemohon-nip" placeholder="NIP">
+          <input type="text" id="f-pemohon-eselon2" placeholder="Eselon II">
           <button class="btn btn-primary" id="btn-pemohon-masuk" style="width:100%;">Masuk sebagai Pemohon</button>
           <button class="btn btn-ghost" id="btn-pemohon-back" style="width:100%;margin-top:8px;">&larr; Kembali</button>
         </div>
@@ -559,8 +623,10 @@
     document.getElementById('btn-pemohon-back').addEventListener('click', renderChoose);
     document.getElementById('btn-pemohon-masuk').addEventListener('click', ()=>{
       const name = document.getElementById('f-pemohon-name').value.trim();
-      if(!name){ alert('Isi nama Anda terlebih dahulu.'); return; }
-      savePemohonSession({ name, role:'pemohon' });
+      const nip = document.getElementById('f-pemohon-nip').value.trim();
+      const eselonII = document.getElementById('f-pemohon-eselon2').value.trim();
+      if(!name || !nip || !eselonII){ alert('Nama, NIP, dan Eselon II wajib diisi.'); return; }
+      savePemohonSession({ name, nip, eselonII, role:'pemohon' });
       initDashboard();
     });
   }
@@ -689,7 +755,7 @@
         </div>
       </div>
       <div class="bst-toolbar">
-        <input type="text" class="bst-search" id="bst-search" placeholder="Cari nama pemohon, NUP, atau jenis peralatan...">
+        <input type="text" class="bst-search" id="bst-search" placeholder="Cari nama pemohon, NIP, NUP, atau jenis peralatan...">
         <select class="bst-filter" id="bst-filter">
           <option value="all">Semua Status</option>
           <option value="baru">Baru</option>
@@ -940,7 +1006,7 @@
     const filter = (filterEl && filterEl.value) || 'all';
 
     let filtered = entries.filter(e=>{
-      const matchQ = !q || (e.nama||'').toLowerCase().includes(q) || (e.nup||'').toLowerCase().includes(q) || (e.jenis||'').toLowerCase().includes(q);
+      const matchQ = !q || (e.nama||'').toLowerCase().includes(q) || (e.nup||'').toLowerCase().includes(q) || (e.jenis||'').toLowerCase().includes(q) || (e.nip||'').toLowerCase().includes(q);
       const status = getStatus(e);
       const matchF = filter === 'all' || status === filter;
       return matchQ && matchF;
@@ -949,8 +1015,14 @@
     return filtered;
   }
 
-  function statusText(status){
-    const map = { baru:'Baru', proses:'Proses', selesai:'Selesai', telat:'Lewat Estimasi' };
+  function statusText(status, e){
+    if(status === 'selesai'){
+      const lateness = e ? getLateness(e) : null;
+      if(lateness === 'late1_3') return 'Selesai - Terlambat 1-3 Hari';
+      if(lateness === 'late_gt3') return 'Selesai - Terlambat >3 Hari';
+      return 'Selesai - Tepat Waktu';
+    }
+    const map = { baru:'Baru', proses:'Proses', telat:'Lewat Estimasi' };
     return map[status] || status;
   }
 
@@ -963,6 +1035,8 @@
       return '<tr>'
         + '<td>'+(i+1)+'</td>'
         + '<td>'+escapeHtml(e.nama)+'</td>'
+        + '<td>'+escapeHtml(e.nip||'-')+'</td>'
+        + '<td>'+escapeHtml(e.eselonII||'-')+'</td>'
         + '<td>'+escapeHtml(e.nup)+'</td>'
         + '<td>'+escapeHtml(e.jenis||'-')+'</td>'
         + '<td>'+escapeHtml(e.kendala||'-')+'</td>'
@@ -973,7 +1047,7 @@
         + '<td>'+escapeHtml(e.hasilPemeriksaan||'-')+'</td>'
         + '<td>'+(e.estimasi?fmtDate(e.estimasi):'-')+'</td>'
         + '<td>'+(e.tglSelesaiPekerjaan?fmtDate(e.tglSelesaiPekerjaan):'-')+'</td>'
-        + '<td>'+statusText(status)+'</td>'
+        + '<td>'+statusText(status, e)+'</td>'
         + '</tr>';
     }).join('');
 
@@ -988,7 +1062,7 @@
       + '<div class="print-meta">Dicetak oleh: '+escapeHtml(currentUser.name)+' ('+ROLE_LABEL[currentUser.role]+') &middot; '+new Date().toLocaleString('id-ID')+' &middot; Total: '+list.length+' permohonan</div>'
       + '</div>'
       + '<table class="print-table"><thead><tr>'
-        + '<th>No</th><th>Nama Pemohon</th><th>NUP</th><th>Jenis Peralatan &amp; Mesin</th><th>Kendala</th>'
+        + '<th>No</th><th>Nama Pemohon</th><th>NIP</th><th>Eselon II</th><th>NUP</th><th>Jenis Peralatan &amp; Mesin</th><th>Kendala</th>'
         + '<th>Tgl Permohonan</th><th>Tgl Persetujuan Kasub BMN</th><th>Tgl Proses</th><th>Tgl Pemeriksaan</th>'
         + '<th>Hasil Pemeriksaan</th><th>Estimasi Selesai</th><th>Tgl Selesai Pekerjaan</th><th>Status</th>'
       + '</tr></thead><tbody>'+rows+'</tbody></table>';
@@ -1023,6 +1097,7 @@
 
   function renderTicket(e){
     const status = getStatus(e);
+    const statusCls = statusCssClass(status, e);
     const doneCount = STEPS.filter(s=>e[s.key]).length;
     const stepsHtml = STEPS.map((s, idx)=>{
       const val = e[s.key];
@@ -1035,7 +1110,7 @@
     const overdue = e.estimasi && !e.tglSelesaiPekerjaan && e.estimasi < todayISO();
     const canDelete = (currentUser.role === 'pemohon' && !e.tglPersetujuan) || currentUser.role === 'admin';
 
-    return '<div class="ticket">'
+    return '<div class="ticket '+statusCls+'">'
       + '<div class="ticket-top">'
         + '<div>'
           + '<div class="ticket-name">'+escapeHtml(e.nama||'(tanpa nama)')+'</div>'
@@ -1043,7 +1118,7 @@
           + (e.kendala ? '<div class="ticket-kendala">Kendala: '+escapeHtml(e.kendala)+'</div>' : '')
         + '</div>'
         + '<div style="display:flex;align-items:center;gap:10px;">'
-          + statusBadge(status)
+          + statusBadge(status, e)
           + '<div class="ticket-actions">'
             + '<button class="icon-btn" id="open-'+e.id+'" title="Lihat / Ubah">&#128065;</button>'
             + (canDelete ? '<button class="icon-btn danger" id="del-'+e.id+'" title="Hapus">&#128465;</button>' : '')
@@ -1053,7 +1128,7 @@
       + '<div class="stepper">'+stepsHtml+'</div>'
       + (e.hasilPemeriksaan ? '<div class="hasil-preview"><b>Hasil Pemeriksaan</b>'+escapeHtml(e.hasilPemeriksaan)+'</div>' : '')
       + '<div class="ticket-foot">'
-        + '<span>NUP: <span class="nup">'+escapeHtml(e.nup||'-')+'</span></span>'
+        + '<span>NUP: <span class="nup">'+escapeHtml(e.nup||'-')+'</span> &middot; NIP: <span class="nup">'+escapeHtml(e.nip||'-')+'</span></span>'
         + '<span class="estimasi '+(overdue?'overdue':'')+'">Estimasi selesai: '+(e.estimasi ? fmtDate(e.estimasi) : '-')+(overdue ? ' (lewat)' : '')+'</span>'
       + '</div>'
     + '</div>';
@@ -1071,8 +1146,14 @@
           <button class="close-x" id="bst-close">&times;</button>
         </div>
         <div class="bst-modal-body">
-          <div class="field"><label>Nama Pemohon <span class="req">*</span></label>
-            <input type="text" id="f-nama" placeholder="Nama lengkap pemohon"></div>
+          <div class="field-row">
+            <div class="field"><label>Nama Pemohon <span class="req">*</span></label>
+              <input type="text" id="f-nama" placeholder="Nama lengkap pemohon" value="${currentUser.role==='pemohon' ? escapeAttr(currentUser.name) : ''}"></div>
+            <div class="field"><label>NIP <span class="req">*</span></label>
+              <input type="text" id="f-nip" placeholder="NIP" value="${currentUser.role==='pemohon' ? escapeAttr(currentUser.nip||'') : ''}"></div>
+          </div>
+          <div class="field"><label>Eselon II <span class="req">*</span></label>
+            <input type="text" id="f-eselon2" placeholder="Eselon II" value="${currentUser.role==='pemohon' ? escapeAttr(currentUser.eselonII||'') : ''}"></div>
           <div class="field-row">
             <div class="field"><label>NUP <span class="req">*</span></label>
               <input type="text" id="f-nup" placeholder="Nomor Urut Pendaftaran"></div>
@@ -1099,13 +1180,16 @@
 
   async function submitCreate(){
     const nama = document.getElementById('f-nama').value.trim();
+    const nip = document.getElementById('f-nip').value.trim();
+    const eselonII = document.getElementById('f-eselon2').value.trim();
     const nup = document.getElementById('f-nup').value.trim();
     const tglPermohonan = document.getElementById('f-tglPermohonan').value;
-    if(!nama || !nup){ alert('Nama Pemohon dan NUP wajib diisi.'); return; }
+    if(!nama || !nip || !eselonII){ alert('Nama, NIP, dan Eselon II wajib diisi.'); return; }
+    if(!nup){ alert('NUP wajib diisi.'); return; }
     if(!tglPermohonan){ alert('Tanggal Permohonan wajib diisi.'); return; }
 
     const entryData = {
-      nama, nup,
+      nama, nip, eselonII, nup,
       jenis: document.getElementById('f-jenis').value.trim(),
       kendala: document.getElementById('f-kendala').value.trim(),
       tglPermohonan,
@@ -1161,7 +1245,11 @@
           <div class="section-card">
             <div class="section-head"><span class="st">1. Data Permohonan</span><span class="who">Pemohon</span></div>
             <div class="section-body">
-              ${inputField('Nama Pemohon','nama','text')}
+              <div class="field-row">
+                ${inputField('Nama Pemohon','nama','text')}
+                ${inputField('NIP','nip','text')}
+              </div>
+              ${inputField('Eselon II','eselonII','text')}
               <div class="field-row">
                 ${inputField('NUP','nup','text')}
                 ${inputField('Jenis Peralatan &amp; Mesin','jenis','text')}
@@ -1244,6 +1332,8 @@
     if('tglProses' in patch && currentUser.role === 'vendor'){ patch.tglProses = todayISO(); }
 
     if('nama' in patch && !patch.nama){ alert('Nama Pemohon tidak boleh kosong.'); return; }
+    if('nip' in patch && !patch.nip){ alert('NIP tidak boleh kosong.'); return; }
+    if('eselonII' in patch && !patch.eselonII){ alert('Eselon II tidak boleh kosong.'); return; }
     if('nup' in patch && !patch.nup){ alert('NUP tidak boleh kosong.'); return; }
     if('tglPermohonan' in patch && !patch.tglPermohonan){ alert('Tanggal Permohonan tidak boleh kosong.'); return; }
 
@@ -1305,6 +1395,15 @@
 </script>
 
 <script type="module">
+  // ============================================================
+  //  Koneksi Firebase — memakai firebase-config.js di folder yang sama.
+  //  - Firebase Authentication (email + password): akun staf (Kasub BMN, Vendor, Monitor, Admin)
+  //  - Firestore:
+  //      koleksi 'bst_users'      -> profil & status persetujuan akun staf
+  //      koleksi 'bmn_permohonan' -> data permohonan servis (realtime)
+  //  Lihat PANDUAN-ADMIN.md untuk cara mengaktifkan Email/Password di Firebase
+  //  dan cara membuat Admin PERTAMA (bootstrap).
+  // ============================================================
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import {
     getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
