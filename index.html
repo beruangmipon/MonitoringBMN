@@ -227,6 +227,7 @@
   #bst-root .field input, #bst-root .field textarea{ width:100%; padding:9px 11px; border-radius:7px; border:1px solid var(--line); background:#fff; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); }
   #bst-root .field input:focus, #bst-root .field textarea:focus{ outline:none; border-color:var(--amber); }
   #bst-root .field input:disabled, #bst-root .field textarea:disabled{ background:var(--paper-dim); color:var(--slate); cursor:not-allowed; }
+  #bst-root .field input:read-only{ background:var(--teal-dim); color:#245349; cursor:default; border-color:var(--teal); }
   #bst-root .field textarea{ resize:vertical; min-height:56px; font-family:'Inter',sans-serif; }
   #bst-root .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   #bst-root .field-hint{ font-size:10.5px; color:var(--slate); margin-top:4px; font-style:italic; }
@@ -288,7 +289,7 @@
     { key:'pemohon',   icon:'&#128100;', name:'Pemohon',    desc:'Ajukan permohonan servis baru — tanpa akun' },
     { key:'kasub_bmn', icon:'&#9989;',   name:'Kasub BMN',  desc:'Menyetujui permohonan' },
     { key:'vendor',    icon:'&#128295;', name:'Vendor',     desc:'Proses & perbaikan barang' },
-    { key:'monitor',   icon:'&#128065;', name:'Monitor',    desc:'Lihat status saja (read-only)' },
+    { key:'monitor',   icon:'&#128065;', name:'Monitor',    desc:'Memantau status & mengisi Tanggal Selesai Pekerjaan' },
     { key:'admin',     icon:'&#128737;', name:'Admin',      desc:'Akses penuh & menyetujui akun staf lain' },
   ];
   const ROLE_LABEL = Object.fromEntries(ROLES.map(r=>[r.key, r.name]));
@@ -314,7 +315,7 @@
     tglPemeriksaan:     { role:'vendor',    ok:e=> !!e.tglProses && !e.tglPemeriksaan },
     hasilPemeriksaan:   { role:'vendor',    ok:e=> !!e.tglProses && !e.tglSelesaiPekerjaan },
     estimasi:           { role:'vendor',    ok:e=> !!e.tglProses && !e.tglSelesaiPekerjaan },
-    tglSelesaiPekerjaan:{ role:'vendor',    ok:e=> !!e.tglPemeriksaan && !!e.hasilPemeriksaan && !e.tglSelesaiPekerjaan },
+    tglSelesaiPekerjaan:{ role:'monitor',   ok:e=> !!e.tglPemeriksaan && !!e.hasilPemeriksaan && !e.tglSelesaiPekerjaan },
   };
 
   function canEdit(fieldKey, entry){
@@ -1124,16 +1125,21 @@
   function openDetailModal(id){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
-    const readOnly = currentUser.role === 'monitor';
 
     function inputField(labelText, fieldKey, type, opts){
       opts = opts || {};
-      const editable = !readOnly && canEdit(fieldKey, e);
-      const hint = readOnly ? '' : fieldHint(fieldKey, e);
-      const val = e[fieldKey] || '';
+      const editable = canEdit(fieldKey, e);
+      const isLockedToday = !!(opts.lockToRole && editable && currentUser.role === opts.lockToRole);
+      let hint = fieldHint(fieldKey, e);
+      let val = e[fieldKey] || '';
+      if(isLockedToday){
+        val = todayISO();
+        hint = 'Otomatis terkunci ke tanggal hari ini (' + fmtDate(val) + ') &mdash; tidak dapat dimundurkan atau dimajukan.';
+      }
+      const inputAttrs = !editable ? 'disabled' : (isLockedToday ? 'readonly' : '');
       const tag = type === 'textarea'
-        ? `<textarea id="fe-${fieldKey}" ${editable?'':'disabled'} placeholder="${opts.placeholder||''}">${escapeHtml(val)}</textarea>`
-        : `<input type="${type}" id="fe-${fieldKey}" value="${escapeAttr(val)}" ${editable?'':'disabled'}>`;
+        ? `<textarea id="fe-${fieldKey}" ${inputAttrs} placeholder="${opts.placeholder||''}">${escapeHtml(val)}</textarea>`
+        : `<input type="${type}" id="fe-${fieldKey}" value="${escapeAttr(val)}" ${inputAttrs}>`;
       return `<div class="field" data-editable="${editable}">
           <label>${labelText}</label>
           ${tag}
@@ -1168,7 +1174,7 @@
           <div class="section-card">
             <div class="section-head"><span class="st">2. Persetujuan Kasub BMN</span><span class="who">Kasub BMN</span></div>
             <div class="section-body">
-              ${inputField('Tanggal Persetujuan Kasub BMN','tglPersetujuan','date')}
+              ${inputField('Tanggal Persetujuan Kasub BMN','tglPersetujuan','date',{lockToRole:'kasub_bmn'})}
               ${e.tglPersetujuan && e.approvedBy ? `<div class="approved-note">Disetujui oleh <b>${escapeHtml(e.approvedBy)}</b> pada ${fmtDate(e.tglPersetujuan)}.</div>` : ''}
             </div>
           </div>
@@ -1176,7 +1182,7 @@
           <div class="section-card">
             <div class="section-head"><span class="st">3. Proses oleh Vendor</span><span class="who">Vendor</span></div>
             <div class="section-body">
-              ${inputField('Tanggal Proses Permohonan','tglProses','date')}
+              ${inputField('Tanggal Proses Permohonan','tglProses','date',{lockToRole:'vendor'})}
             </div>
           </div>
 
@@ -1196,26 +1202,24 @@
           </div>
 
           <div class="section-card">
-            <div class="section-head"><span class="st">6. Selesai Pekerjaan</span><span class="who">Vendor</span></div>
+            <div class="section-head"><span class="st">6. Selesai Pekerjaan</span><span class="who">Monitor</span></div>
             <div class="section-body">
               ${inputField('Tanggal Selesai Pekerjaan','tglSelesaiPekerjaan','date')}
             </div>
           </div>
 
-          ${readOnly ? '<div class="note">Anda masuk sebagai Monitor &mdash; tampilan ini hanya untuk melihat status, tidak dapat mengubah data.</div>' : ''}
+          ${currentUser.role === 'monitor' ? '<div class="note">Sebagai Monitor, Anda hanya dapat mengisi Tanggal Selesai Pekerjaan (setelah tahap Pemeriksaan lengkap). Field lain hanya untuk dilihat.</div>' : ''}
         </div>
         <div class="bst-modal-foot">
-          <button class="btn btn-ghost" id="bst-cancel" style="color:var(--ink);border-color:var(--line);">${readOnly ? 'Tutup' : 'Batal'}</button>
-          ${readOnly ? '' : '<button class="btn btn-primary" id="bst-save">Simpan Perubahan</button>'}
+          <button class="btn btn-ghost" id="bst-cancel" style="color:var(--ink);border-color:var(--line);">Batal</button>
+          <button class="btn btn-primary" id="bst-save">Simpan Perubahan</button>
         </div>
       </div>`;
     root.appendChild(overlay);
     document.getElementById('bst-close').addEventListener('click', closeModal);
     document.getElementById('bst-cancel').addEventListener('click', closeModal);
     overlay.addEventListener('click', ev=>{ if(ev.target === overlay) closeModal(); });
-    if(!readOnly){
-      document.getElementById('bst-save').addEventListener('click', ()=> submitEdit(id));
-    }
+    document.getElementById('bst-save').addEventListener('click', ()=> submitEdit(id));
   }
 
   async function submitEdit(id){
@@ -1232,6 +1236,12 @@
       const key = input.id.replace('fe-','');
       patch[key] = input.value.trim();
     });
+
+    // Kunci keras: Tanggal Persetujuan Kasub BMN & Tanggal Proses Permohonan (Vendor)
+    // selalu memakai tanggal hari ini, apa pun nilai yang ada di input (jaga-jaga dari
+    // manipulasi nilai lewat DevTools browser).
+    if('tglPersetujuan' in patch && currentUser.role === 'kasub_bmn'){ patch.tglPersetujuan = todayISO(); }
+    if('tglProses' in patch && currentUser.role === 'vendor'){ patch.tglProses = todayISO(); }
 
     if('nama' in patch && !patch.nama){ alert('Nama Pemohon tidak boleh kosong.'); return; }
     if('nup' in patch && !patch.nup){ alert('NUP tidak boleh kosong.'); return; }
@@ -1295,15 +1305,6 @@
 </script>
 
 <script type="module">
-  // ============================================================
-  //  Koneksi Firebase — memakai firebase-config.js di folder yang sama.
-  //  - Firebase Authentication (email + password): akun staf (Kasub BMN, Vendor, Monitor, Admin)
-  //  - Firestore:
-  //      koleksi 'bst_users'      -> profil & status persetujuan akun staf
-  //      koleksi 'bmn_permohonan' -> data permohonan servis (realtime)
-  //  Lihat PANDUAN-ADMIN.md untuk cara mengaktifkan Email/Password di Firebase
-  //  dan cara membuat Admin PERTAMA (bootstrap).
-  // ============================================================
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import {
     getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
@@ -1366,9 +1367,6 @@
       await updateDoc(doc(db, USERS_COLLECTION, uid), patch);
     },
     async deleteUserProfile(uid){
-      // Menghapus PROFIL di Firestore saja. Kredensial login di Firebase Authentication
-      // tidak ikut terhapus (keterbatasan client SDK) — hapus manual lewat Firebase Console
-      // jika ingin benar-benar menutup akses login akun tersebut.
       await deleteDoc(doc(db, USERS_COLLECTION, uid));
     },
     async adminCreateStaffAccount(name, email, password, role, adminName){
