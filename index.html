@@ -108,6 +108,7 @@
   #bst-root .user-actions{ display:flex; gap:6px; }
   #bst-root .danger-text{ color:var(--red); border-color:var(--red); }
   #bst-root .danger-text:hover{ background:var(--red-dim); }
+  #bst-root .user-self-tag{ font-size:10px; color:var(--slate); font-weight:400; }
 
   /* ---------- Header ---------- */
   #bst-root .bst-header{
@@ -533,7 +534,7 @@
           </div>
           <div class="choose-card" id="choose-staff">
             <div class="ric">&#128274;</div>
-            <div class="rn disp">Saya Staf / Petugas</div>
+            <div class="rn disp">Saya Petugas</div>
             <div class="rd">Kasub BMN, Vendor, Monitor, atau Admin. Wajib masuk dengan email &amp; kata sandi yang sudah disetujui.</div>
           </div>
         </div>
@@ -567,7 +568,7 @@
   function renderStaffLogin(errorMsg){
     root.innerHTML = `
       <div class="bst-login">
-        <h2 class="disp">Masuk sebagai Staf / Petugas</h2>
+        <h2 class="disp">Masuk sebagai Petugas</h2>
         <p>Untuk peran Kasub BMN, Vendor, Monitor, dan Admin.</p>
         ${errorMsg ? `<div class="auth-error">${escapeHtml(errorMsg)}</div>` : ''}
         <div class="bst-login-form">
@@ -857,14 +858,19 @@
       } else {
         actions = `<button class="btn btn-primary btn-sm" data-action="approve" data-uid="${u.id}">Setujui Kembali</button>`;
       }
-      return `<div class="user-row">
+      const isSelf = currentUser.uid && u.id === currentUser.uid;
+      return `<div class="user-row" data-row-uid="${u.id}">
         <div class="user-info">
-          <div class="user-name">${escapeHtml(u.name||'(tanpa nama)')}</div>
+          <div class="user-name" id="uname-${u.id}">${escapeHtml(u.name||'(tanpa nama)')}${isSelf ? ' <span class="user-self-tag">(Anda)</span>' : ''}</div>
           <div class="user-email mono">${escapeHtml(u.email||'-')}</div>
         </div>
         <select class="user-role-select" id="role-${u.id}">${roleOptions(u.role)}</select>
         ${userStatusBadge(u.status)}
-        <div class="user-actions">${actions}</div>
+        <div class="user-actions">
+          ${actions}
+          <button class="icon-btn" data-action="edit" data-uid="${u.id}" title="Edit nama">&#9998;</button>
+          ${isSelf ? '' : `<button class="icon-btn danger" data-action="delete" data-uid="${u.id}" title="Hapus akun">&#128465;</button>`}
+        </div>
       </div>`;
     }
 
@@ -899,6 +905,26 @@
           btn.disabled = true; btn.textContent = 'Memproses...';
           try{ await window.bstAuth.setUserStatus(uidTarget, { status:'rejected' }); }
           catch(err){ console.error(err); alert('Gagal mencabut akses: ' + err.message); }
+        } else if(action === 'edit'){
+          const nameEl = document.getElementById('uname-'+uidTarget);
+          if(!nameEl) return;
+          const currentName = nameEl.textContent.replace('(Anda)','').trim();
+          const newName = prompt('Ubah nama pengguna:', currentName);
+          if(newName === null) return; // dibatalkan
+          const trimmed = newName.trim();
+          if(!trimmed){ alert('Nama tidak boleh kosong.'); return; }
+          btn.disabled = true;
+          try{
+            await window.bstAuth.setUserStatus(uidTarget, { name: trimmed, role: chosenRole });
+          }catch(err){ console.error(err); alert('Gagal menyimpan perubahan: ' + err.message); }
+          finally{ btn.disabled = false; }
+        } else if(action === 'delete'){
+          const rowEl = document.querySelector('[data-row-uid="'+uidTarget+'"]');
+          const nameTxt = rowEl ? rowEl.querySelector('.user-name').textContent.trim() : 'akun ini';
+          if(!confirm('Hapus akun "'+nameTxt+'" secara permanen dari daftar pengguna? Pengguna tidak akan bisa masuk lagi.\\n\\nCatatan: ini menghapus profil di aplikasi. Kredensial login (email/kata sandi) di Firebase Authentication tidak ikut terhapus otomatis — hapus manual lewat Firebase Console jika ingin benar-benar menutup aksesnya.')) return;
+          btn.disabled = true;
+          try{ await window.bstAuth.deleteUserProfile(uidTarget); }
+          catch(err){ console.error(err); alert('Gagal menghapus pengguna: ' + err.message); }
         }
         // Tampilan akan diperbarui otomatis lewat listener realtime.
       });
@@ -1292,10 +1318,6 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Instance Firebase KEDUA (terpisah), khusus dipakai saat Admin membuat akun staf baru.
-  // Ini perlu supaya createUserWithEmailAndPassword TIDAK menggantikan sesi login Admin
-  // yang sedang aktif di instance utama (perilaku baku Firebase Auth: membuat akun baru
-  // otomatis ikut login sebagai akun itu di instance yang dipakai).
   const secondaryApp = initializeApp(firebaseConfig, "Secondary");
   const secondaryAuth = getAuth(secondaryApp);
 
@@ -1342,6 +1364,12 @@
     },
     async setUserStatus(uid, patch){
       await updateDoc(doc(db, USERS_COLLECTION, uid), patch);
+    },
+    async deleteUserProfile(uid){
+      // Menghapus PROFIL di Firestore saja. Kredensial login di Firebase Authentication
+      // tidak ikut terhapus (keterbatasan client SDK) — hapus manual lewat Firebase Console
+      // jika ingin benar-benar menutup akses login akun tersebut.
+      await deleteDoc(doc(db, USERS_COLLECTION, uid));
     },
     async adminCreateStaffAccount(name, email, password, role, adminName){
       const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
