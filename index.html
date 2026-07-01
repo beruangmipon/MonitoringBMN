@@ -64,6 +64,51 @@
     border-top:1px dashed rgba(246,243,236,0.15); padding-top:14px;
   }
 
+  /* ---------- Pilih jalur masuk (Pemohon vs Staf) ---------- */
+  #bst-root .choose-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px; max-width:520px; margin:0 auto 22px;
+  }
+  #bst-root .choose-card{
+    background:rgba(246,243,236,0.06); border:1.5px solid rgba(246,243,236,0.18);
+    border-radius:12px; padding:24px 16px; cursor:pointer; transition:all .15s ease; text-align:center;
+  }
+  #bst-root .choose-card:hover{ border-color:var(--amber); background:rgba(201,122,61,0.12); }
+  #bst-root .choose-card .ric{ font-size:30px; margin-bottom:10px; }
+  #bst-root .choose-card .rn{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; margin-bottom:6px; }
+  #bst-root .choose-card .rd{ font-size:11px; color:#B9C2CE; line-height:1.5; }
+
+  /* ---------- Link & error area login staf ---------- */
+  #bst-root .auth-links{
+    max-width:320px; margin:14px auto 0; display:flex; flex-direction:column; gap:8px; align-items:center;
+  }
+  #bst-root .auth-links a{ color:var(--amber); font-size:12.5px; text-decoration:none; }
+  #bst-root .auth-links a:hover{ text-decoration:underline; }
+  #bst-root .auth-error{
+    max-width:320px; margin:0 auto 14px; background:rgba(181,73,63,0.18); border:1px solid rgba(181,73,63,0.5);
+    color:#F0D6D2; font-size:12px; padding:9px 12px; border-radius:7px; text-align:left;
+  }
+  #bst-root .status-icon{ font-size:34px; margin-bottom:6px; }
+
+  /* ---------- Panel Kelola Pengguna (Admin) ---------- */
+  #bst-root .user-section-title{
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:11.5px; text-transform:uppercase;
+    letter-spacing:0.4px; color:var(--slate); margin:16px 0 8px;
+  }
+  #bst-root .user-section-title:first-child{ margin-top:0; }
+  #bst-root .user-row{
+    display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); flex-wrap:wrap;
+  }
+  #bst-root .user-info{ flex:1; min-width:150px; }
+  #bst-root .user-name{ font-weight:600; font-size:13px; color:var(--ink); }
+  #bst-root .user-email{ font-size:11px; color:var(--slate); margin-top:1px; }
+  #bst-root .user-role-select{
+    font-family:'Inter',sans-serif; font-size:12px; padding:6px 8px; border-radius:6px;
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+  }
+  #bst-root .user-actions{ display:flex; gap:6px; }
+  #bst-root .danger-text{ color:var(--red); border-color:var(--red); }
+  #bst-root .danger-text:hover{ background:var(--red-dim); }
+
   /* ---------- Header ---------- */
   #bst-root .bst-header{
     background:var(--ink); color:var(--paper); padding:20px 26px; border-radius:10px 10px 0 0;
@@ -201,6 +246,8 @@
     #bst-root .stepper{ padding:2px 8px 14px; }
     #bst-root .step .lbl{ display:none; }
     #bst-root .role-grid{ grid-template-columns:1fr 1fr; }
+    #bst-root .choose-grid{ grid-template-columns:1fr; }
+    #bst-root .user-row{ flex-direction:column; align-items:flex-start; }
   }
 
   /* ---------- Cetak Rekapitulasi ---------- */
@@ -223,22 +270,23 @@
 <script>
 
 (function(){
-  const USER_KEY = 'bst-current-user';
+  const USER_KEY = 'bst-pemohon-session'; // hanya dipakai untuk sesi Pemohon (tanpa password)
   const root = document.getElementById('bst-root');
 
   let entries = [];
-  let currentUser = null; // { name, role }
-  let selectedRole = null;
+  let currentUser = null; // { name, role } untuk pemohon, atau { uid, email, name, role, status } untuk staf
   let unsubscribeEntries = null;
+  let unsubscribeUsers = null;
 
   const ROLES = [
-    { key:'pemohon',   icon:'&#128100;', name:'Pemohon',    desc:'Ajukan permohonan servis baru' },
+    { key:'pemohon',   icon:'&#128100;', name:'Pemohon',    desc:'Ajukan permohonan servis baru — tanpa akun' },
     { key:'kasub_bmn', icon:'&#9989;',   name:'Kasub BMN',  desc:'Menyetujui permohonan' },
     { key:'vendor',    icon:'&#128295;', name:'Vendor',     desc:'Proses & perbaikan barang' },
     { key:'monitor',   icon:'&#128065;', name:'Monitor',    desc:'Lihat status saja (read-only)' },
-    { key:'admin',     icon:'&#128737;', name:'Admin',      desc:'Akses penuh: koreksi data & kelola seluruh permohonan' },
+    { key:'admin',     icon:'&#128737;', name:'Admin',      desc:'Akses penuh & menyetujui akun staf lain' },
   ];
   const ROLE_LABEL = Object.fromEntries(ROLES.map(r=>[r.key, r.name]));
+  const STAFF_ROLES = ROLES.filter(r=> r.key !== 'pemohon'); // peran yang wajib pakai email + password
 
   const STEPS = [
     { key:'tglPermohonan',      label:'Permohonan' },
@@ -278,7 +326,6 @@
     if(!r) return '';
     if(currentUser.role !== r.role) return 'Hanya diisi oleh peran: ' + ROLE_LABEL[r.role] + '.';
     if(r.ok(entry||{})) return '';
-    // eligible role but condition not met
     switch(fieldKey){
       case 'tglPersetujuan': return entry.tglPersetujuan ? 'Sudah disetujui.' : 'Menunggu Tanggal Permohonan.';
       case 'tglProses': return entry.tglProses ? 'Sudah diproses.' : 'Menunggu persetujuan Kasub BMN.';
@@ -290,7 +337,6 @@
     }
   }
 
-  function uid(){ return 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
   function todayISO(){
     const d = new Date();
     return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -322,28 +368,72 @@
     return '<span class="badge '+m.cls+'">'+m.txt+'</span>';
   }
 
-  /* ============ PERSISTENCE ============
-     - Sesi peran (siapa Anda saat ini) disimpan per-perangkat di localStorage.
-     - Data permohonan disimpan bersama (publik) di Firestore, koleksi 'bmn_permohonan',
-       dan disinkronkan REALTIME ke semua pengguna lewat onSnapshot (tanpa polling).
+  /* ============================================================
+     AUTENTIKASI
+     - Pemohon: tanpa akun, hanya isi nama, sesi disimpan di localStorage perangkat.
+     - Kasub BMN / Vendor / Monitor / Admin: WAJIB akun email+password (Firebase Auth),
+       dan baru bisa memakai dashboard setelah statusnya "approved" oleh seorang Admin
+       (disimpan di Firestore, koleksi 'bst_users').
   ============================================================ */
-  function loadUser(){
+  function loadPemohonSession(){
     try{
       const raw = localStorage.getItem(USER_KEY);
-      currentUser = raw ? JSON.parse(raw) : null;
-    }catch(err){ currentUser = null; }
+      const u = raw ? JSON.parse(raw) : null;
+      if(u && u.role === 'pemohon'){ currentUser = u; }
+    }catch(err){ /* abaikan */ }
   }
-  function saveUser(u){
+  function savePemohonSession(u){
     currentUser = u;
     try{ localStorage.setItem(USER_KEY, JSON.stringify(u)); }
-    catch(err){ console.error('Gagal menyimpan sesi pengguna', err); }
+    catch(err){ console.error('Gagal menyimpan sesi Pemohon', err); }
   }
-  function logout(){
-    currentUser = null;
-    try{ localStorage.removeItem(USER_KEY); }catch(err){}
+
+  async function logout(){
     if(unsubscribeEntries){ unsubscribeEntries(); unsubscribeEntries = null; }
-    renderLogin();
+    if(unsubscribeUsers){ unsubscribeUsers(); unsubscribeUsers = null; }
+    if(currentUser && currentUser.role !== 'pemohon'){
+      try{ await window.bstAuth.logoutStaff(); }catch(err){ console.error(err); }
+      // window.bstOnAuthChange akan otomatis dipanggil ulang oleh Firebase setelah sign-out
+    } else {
+      currentUser = null;
+      try{ localStorage.removeItem(USER_KEY); }catch(err){}
+      renderChoose();
+    }
   }
+
+  // Dipanggil oleh modul Firebase setiap kali status login berubah (masuk / keluar / muat ulang halaman)
+  async function handleAuthChange(fbUser){
+    if(unsubscribeEntries){ unsubscribeEntries(); unsubscribeEntries = null; }
+    if(unsubscribeUsers){ unsubscribeUsers(); unsubscribeUsers = null; }
+
+    if(fbUser){
+      let profile = null;
+      try{ profile = await window.bstAuth.getUserProfile(fbUser.uid); }
+      catch(err){ console.error('Gagal memuat profil pengguna:', err); renderChoose(); return; }
+
+      if(!profile){
+        renderPendingScreen({ email: fbUser.email, name: fbUser.email });
+        return;
+      }
+      if(profile.status === 'approved'){
+        currentUser = { uid: fbUser.uid, email: profile.email, name: profile.name || profile.email, role: profile.role, status:'approved' };
+        initDashboard();
+      } else if(profile.status === 'rejected'){
+        renderRejectedScreen(profile);
+      } else {
+        renderPendingScreen(profile);
+      }
+    } else {
+      loadPemohonSession();
+      if(currentUser && currentUser.role === 'pemohon'){
+        initDashboard();
+      } else {
+        currentUser = null;
+        renderChoose();
+      }
+    }
+  }
+  window.bstOnAuthChange = handleAuthChange; // dipanggil dari modul Firebase (lihat <script type="module">)
 
   function startEntriesSync(){
     if(unsubscribeEntries) unsubscribeEntries();
@@ -408,57 +498,163 @@
     if(txt) txt.textContent = text;
   }
 
-  /* ============ LOGIN SCREEN ============ */
-  function renderLogin(){
-    selectedRole = null;
+  function authErrorMessage(err){
+    const code = err && err.code;
+    const map = {
+      'auth/invalid-email': 'Format email tidak valid.',
+      'auth/user-disabled': 'Akun ini telah dinonaktifkan.',
+      'auth/user-not-found': 'Email atau kata sandi salah.',
+      'auth/wrong-password': 'Email atau kata sandi salah.',
+      'auth/invalid-credential': 'Email atau kata sandi salah.',
+      'auth/email-already-in-use': 'Email ini sudah terdaftar. Silakan masuk, atau hubungi Admin jika akun Anda belum disetujui.',
+      'auth/weak-password': 'Kata sandi minimal 6 karakter.',
+      'auth/too-many-requests': 'Terlalu banyak percobaan. Coba lagi beberapa saat lagi.',
+      'auth/network-request-failed': 'Gangguan jaringan. Periksa koneksi internet Anda.',
+    };
+    return map[code] || ('Terjadi kesalahan: ' + (err && err.message ? err.message : 'tidak diketahui'));
+  }
+
+  /* ============ LAYAR: PILIH JALUR MASUK ============ */
+  function renderChoose(){
     root.innerHTML = `
       <div class="bst-login">
-        <h2 class="disp">Layanan Servis BMN — Peralatan &amp; Mesin</h2>
-        <p>Pilih peran Anda untuk masuk ke dashboard. Setiap peran memiliki hak akses berbeda sesuai alur permohonan servis.</p>
-        <div class="role-grid" id="bst-role-grid">
-          ${ROLES.map(r=>`
-            <div class="role-card" data-role="${r.key}">
-              <div class="ric">${r.icon}</div>
-              <div class="rn disp">${r.name}</div>
-              <div class="rd">${r.desc}</div>
-            </div>`).join('')}
+        <h2 class="disp">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</h2>
+        <p>Pilih jalur masuk sesuai posisi Anda.</p>
+        <div class="choose-grid">
+          <div class="choose-card" id="choose-pemohon">
+            <div class="ric">&#128100;</div>
+            <div class="rn disp">Saya Pemohon</div>
+            <div class="rd">Ajukan permohonan servis baru. Cukup isi nama, tanpa akun/kata sandi.</div>
+          </div>
+          <div class="choose-card" id="choose-staff">
+            <div class="ric">&#128274;</div>
+            <div class="rn disp">Saya Staf / Petugas</div>
+            <div class="rd">Kasub BMN, Vendor, Monitor, atau Admin. Wajib masuk dengan email &amp; kata sandi yang sudah disetujui.</div>
+          </div>
         </div>
+      </div>`;
+    document.getElementById('choose-pemohon').addEventListener('click', renderPemohonForm);
+    document.getElementById('choose-staff').addEventListener('click', ()=> renderStaffLogin());
+  }
+
+  /* ============ LAYAR: FORM PEMOHON (tanpa password) ============ */
+  function renderPemohonForm(){
+    root.innerHTML = `
+      <div class="bst-login">
+        <h2 class="disp">Masuk sebagai Pemohon</h2>
+        <p>Cukup isi nama Anda. Tidak perlu akun atau kata sandi.</p>
         <div class="bst-login-form">
-          <input type="text" id="bst-login-name" placeholder="Nama lengkap Anda">
-          <button class="btn btn-primary" id="bst-login-btn" style="width:100%;" disabled>Pilih peran terlebih dahulu</button>
+          <input type="text" id="f-pemohon-name" placeholder="Nama lengkap Anda">
+          <button class="btn btn-primary" id="btn-pemohon-masuk" style="width:100%;">Masuk sebagai Pemohon</button>
+          <button class="btn btn-ghost" id="btn-pemohon-back" style="width:100%;margin-top:8px;">&larr; Kembali</button>
         </div>
-        <div class="bst-disclaimer">Catatan: ini adalah pemilihan peran sederhana untuk mengatur hak akses form pada perangkat ini, bukan sistem otentikasi kata sandi. Nama yang diisi akan tercatat pada setiap tindakan (persetujuan, pemeriksaan, dsb).</div>
-      </div>
-    `;
-    document.querySelectorAll('#bst-role-grid .role-card').forEach(card=>{
-      card.addEventListener('click', ()=>{
-        document.querySelectorAll('#bst-role-grid .role-card').forEach(c=>c.classList.remove('selected'));
-        card.classList.add('selected');
-        selectedRole = card.getAttribute('data-role');
-        updateLoginBtn();
-      });
+      </div>`;
+    document.getElementById('btn-pemohon-back').addEventListener('click', renderChoose);
+    document.getElementById('btn-pemohon-masuk').addEventListener('click', ()=>{
+      const name = document.getElementById('f-pemohon-name').value.trim();
+      if(!name){ alert('Isi nama Anda terlebih dahulu.'); return; }
+      savePemohonSession({ name, role:'pemohon' });
+      initDashboard();
     });
-    document.getElementById('bst-login-name').addEventListener('input', updateLoginBtn);
-    document.getElementById('bst-login-btn').addEventListener('click', doLogin);
   }
 
-  function updateLoginBtn(){
-    const btn = document.getElementById('bst-login-btn');
-    const name = document.getElementById('bst-login-name').value.trim();
-    if(selectedRole && name){
-      btn.disabled = false;
-      btn.textContent = 'Masuk sebagai ' + ROLE_LABEL[selectedRole];
-    } else {
-      btn.disabled = true;
-      btn.textContent = !selectedRole ? 'Pilih peran terlebih dahulu' : 'Isi nama Anda';
-    }
+  /* ============ LAYAR: LOGIN STAF (email + password) ============ */
+  function renderStaffLogin(errorMsg){
+    root.innerHTML = `
+      <div class="bst-login">
+        <h2 class="disp">Masuk sebagai Staf / Petugas</h2>
+        <p>Untuk peran Kasub BMN, Vendor, Monitor, dan Admin.</p>
+        ${errorMsg ? `<div class="auth-error">${escapeHtml(errorMsg)}</div>` : ''}
+        <div class="bst-login-form">
+          <input type="email" id="f-staff-email" placeholder="Email">
+          <input type="password" id="f-staff-password" placeholder="Kata sandi">
+          <button class="btn btn-primary" id="btn-staff-masuk" style="width:100%;">Masuk</button>
+        </div>
+        <div class="auth-links">
+          <a href="javascript:void(0)" id="link-to-register">Daftar sebagai Admin baru</a>
+          <a href="javascript:void(0)" id="link-staff-back">&larr; Kembali</a>
+        </div>
+        <div class="bst-disclaimer" style="margin-top:20px;">Akun <b>Kasub BMN, Vendor, dan Monitor</b> tidak bisa mendaftar sendiri &mdash; akun tersebut hanya dibuatkan oleh Admin lewat menu "Kelola Pengguna". Silakan hubungi Admin Anda untuk dibuatkan akun. Pendaftaran mandiri di halaman ini hanya tersedia untuk peran Admin (memerlukan persetujuan Admin lain yang sudah aktif).</div>
+      </div>`;
+    document.getElementById('link-staff-back').addEventListener('click', renderChoose);
+    document.getElementById('link-to-register').addEventListener('click', ()=> renderStaffRegister());
+    document.getElementById('btn-staff-masuk').addEventListener('click', async ()=>{
+      const email = document.getElementById('f-staff-email').value.trim();
+      const password = document.getElementById('f-staff-password').value;
+      if(!email || !password){ alert('Isi email dan kata sandi.'); return; }
+      const btn = document.getElementById('btn-staff-masuk');
+      btn.disabled = true; btn.textContent = 'Memeriksa...';
+      try{
+        await window.bstAuth.loginStaff(email, password);
+        // window.bstOnAuthChange akan otomatis dipanggil dan mengarahkan ke dashboard/layar tunggu
+      }catch(err){
+        console.error('Login gagal:', err);
+        renderStaffLogin(authErrorMessage(err));
+      }
+    });
   }
 
-  function doLogin(){
-    const name = document.getElementById('bst-login-name').value.trim();
-    if(!selectedRole || !name) return;
-    saveUser({ name, role: selectedRole });
-    initDashboard();
+  /* ============ LAYAR: DAFTAR AKUN ADMIN (satu-satunya peran yang boleh daftar mandiri) ============ */
+  function renderStaffRegister(errorMsg){
+    root.innerHTML = `
+      <div class="bst-login">
+        <h2 class="disp">Daftar Akun Admin</h2>
+        <p>Akun akan berstatus <b>menunggu persetujuan</b> hingga disetujui oleh Admin yang sudah aktif. (Akun Kasub BMN, Vendor, dan Monitor tidak mendaftar di sini &mdash; hubungi Admin untuk dibuatkan akun.)</p>
+        ${errorMsg ? `<div class="auth-error">${escapeHtml(errorMsg)}</div>` : ''}
+        <div class="bst-login-form">
+          <input type="text" id="f-reg-name" placeholder="Nama lengkap">
+          <input type="email" id="f-reg-email" placeholder="Email">
+          <input type="password" id="f-reg-password" placeholder="Kata sandi (min. 6 karakter)">
+          <input type="password" id="f-reg-password2" placeholder="Ulangi kata sandi">
+          <button class="btn btn-primary" id="btn-staff-daftar" style="width:100%;">Daftar sebagai Admin</button>
+        </div>
+        <div class="auth-links">
+          <a href="javascript:void(0)" id="link-to-login">Sudah punya akun? Masuk di sini</a>
+        </div>
+      </div>`;
+    const regRole = 'admin'; // satu-satunya peran yang boleh mendaftar sendiri
+    document.getElementById('link-to-login').addEventListener('click', ()=> renderStaffLogin());
+    document.getElementById('btn-staff-daftar').addEventListener('click', async ()=>{
+      const name = document.getElementById('f-reg-name').value.trim();
+      const email = document.getElementById('f-reg-email').value.trim();
+      const password = document.getElementById('f-reg-password').value;
+      const password2 = document.getElementById('f-reg-password2').value;
+      if(!name || !email || !password){ alert('Lengkapi semua kolom.'); return; }
+      if(password.length < 6){ alert('Kata sandi minimal 6 karakter.'); return; }
+      if(password !== password2){ alert('Konfirmasi kata sandi tidak cocok.'); return; }
+
+      const btn = document.getElementById('btn-staff-daftar');
+      btn.disabled = true; btn.textContent = 'Mendaftarkan...';
+      try{
+        await window.bstAuth.registerStaff(name, email, password, regRole);
+        // window.bstOnAuthChange akan otomatis dipanggil dan menampilkan layar "menunggu persetujuan"
+      }catch(err){
+        console.error('Registrasi gagal:', err);
+        renderStaffRegister(authErrorMessage(err));
+      }
+    });
+  }
+
+  /* ============ LAYAR: MENUNGGU / DITOLAK ============ */
+  function renderPendingScreen(profile){
+    root.innerHTML = `
+      <div class="bst-login">
+        <div class="status-icon">&#8987;</div>
+        <h2 class="disp">Menunggu Persetujuan</h2>
+        <p>Akun <b>${escapeHtml(profile.email||'')}</b>${profile.role ? ' (peran diajukan: '+escapeHtml(ROLE_LABEL[profile.role]||profile.role)+')' : ''} sedang menunggu persetujuan Admin. Anda akan bisa masuk setelah disetujui.</p>
+        <button class="btn btn-ghost" id="btn-pending-logout">Keluar</button>
+      </div>`;
+    document.getElementById('btn-pending-logout').addEventListener('click', logout);
+  }
+  function renderRejectedScreen(profile){
+    root.innerHTML = `
+      <div class="bst-login">
+        <div class="status-icon">&#10060;</div>
+        <h2 class="disp">Pendaftaran Ditolak</h2>
+        <p>Akun <b>${escapeHtml(profile.email||'')}</b> tidak disetujui. Hubungi penanggung jawab sistem untuk informasi lebih lanjut.</p>
+        <button class="btn btn-ghost" id="btn-rejected-logout">Keluar</button>
+      </div>`;
+    document.getElementById('btn-rejected-logout').addEventListener('click', logout);
   }
 
   /* ============ DASHBOARD SHELL ============ */
@@ -478,8 +674,9 @@
               <div>${escapeHtml(currentUser.name)}</div>
               <div class="bst-role-tag">${ROLE_LABEL[currentUser.role]}</div>
             </div>
-            <button class="btn btn-ghost btn-sm" id="bst-logout">Ganti Peran</button>
+            <button class="btn btn-ghost btn-sm" id="bst-logout">Keluar</button>
           </div>
+          ${currentUser.role === 'admin' ? '<button class="btn btn-ghost" id="bst-users-btn">&#128101; Kelola Pengguna</button>' : ''}
           <button class="btn btn-ghost" id="bst-print-btn">&#128424; Cetak Rekapitulasi</button>
           ${(currentUser.role === 'pemohon' || currentUser.role === 'admin') ? '<button class="btn btn-primary" id="bst-add-btn">+ Permohonan Baru</button>' : ''}
         </div>
@@ -501,6 +698,9 @@
     if(currentUser.role === 'pemohon' || currentUser.role === 'admin'){
       document.getElementById('bst-add-btn').addEventListener('click', ()=> openCreateModal());
     }
+    if(currentUser.role === 'admin'){
+      document.getElementById('bst-users-btn').addEventListener('click', openUserManagementModal);
+    }
     document.getElementById('bst-print-btn').addEventListener('click', printRecap);
     document.getElementById('bst-search').addEventListener('input', renderDashboard);
     document.getElementById('bst-filter').addEventListener('change', renderDashboard);
@@ -509,6 +709,195 @@
   function initDashboard(){
     renderShell();
     startEntriesSync();
+  }
+
+  /* ============ PANEL ADMIN: KELOLA PENGGUNA ============ */
+  function userStatusBadge(status){
+    const map = {
+      pending:{cls:'badge-proses',txt:'Menunggu'},
+      approved:{cls:'badge-selesai',txt:'Disetujui'},
+      rejected:{cls:'badge-telat',txt:'Ditolak'},
+    };
+    const m = map[status] || {cls:'badge-baru',txt:status};
+    return '<span class="badge '+m.cls+'">'+m.txt+'</span>';
+  }
+
+  function openUserManagementModal(){
+    const overlay = document.createElement('div');
+    overlay.className = 'bst-overlay';
+    overlay.id = 'bst-overlay';
+    overlay.innerHTML = `
+      <div class="bst-modal">
+        <div class="bst-modal-head">
+          <div class="disp">Kelola Pengguna Staf</div>
+          <button class="close-x" id="bst-close">&times;</button>
+        </div>
+        <div class="bst-modal-body">
+          <button class="btn btn-primary" id="bst-add-user-btn" style="width:100%;margin-bottom:16px;">+ Tambah Akun Staf</button>
+          <div id="add-user-form-area"></div>
+          <div id="user-list-area"><div class="bst-empty">Memuat daftar pengguna&hellip;</div></div>
+        </div>
+        <div class="bst-modal-foot">
+          <button class="btn btn-ghost" id="bst-cancel" style="color:var(--ink);border-color:var(--line);">Tutup</button>
+        </div>
+      </div>`;
+    root.appendChild(overlay);
+    const close = ()=>{
+      if(unsubscribeUsers){ unsubscribeUsers(); unsubscribeUsers = null; }
+      closeModal();
+    };
+    document.getElementById('bst-close').addEventListener('click', close);
+    document.getElementById('bst-cancel').addEventListener('click', close);
+    overlay.addEventListener('click', ev=>{ if(ev.target === overlay) close(); });
+    document.getElementById('bst-add-user-btn').addEventListener('click', toggleAddUserForm);
+
+    unsubscribeUsers = window.bstAuth.listenUsers(
+      (list)=> renderUserList(list),
+      (err)=>{
+        console.error('Gagal memuat daftar pengguna:', err);
+        const area = document.getElementById('user-list-area');
+        if(area) area.innerHTML = '<div class="bst-empty">Gagal memuat daftar pengguna.</div>';
+      }
+    );
+  }
+
+  function randomPassword(){
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+    let out = '';
+    for(let i=0;i<10;i++){ out += chars[Math.floor(Math.random()*chars.length)]; }
+    return out;
+  }
+
+  function toggleAddUserForm(){
+    const area = document.getElementById('add-user-form-area');
+    if(!area) return;
+    if(area.innerHTML.trim() !== ''){ area.innerHTML = ''; return; }
+
+    area.innerHTML = `
+      <div class="section-card">
+        <div class="section-head"><span class="st">Buat Akun Staf Baru</span><span class="who">Langsung Disetujui</span></div>
+        <div class="section-body">
+          <div class="field"><label>Nama Lengkap</label><input type="text" id="nu-name" placeholder="Nama lengkap staf"></div>
+          <div class="field-row">
+            <div class="field"><label>Email</label><input type="email" id="nu-email" placeholder="Email staf"></div>
+            <div class="field"><label>Peran</label>
+              <select id="nu-role">
+                ${STAFF_ROLES.map(r=>`<option value="${r.key}">${r.name}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Kata Sandi Awal</label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="nu-password" placeholder="Kata sandi awal (min. 6 karakter)" style="flex:1;">
+              <button type="button" class="btn btn-ghost btn-sm" id="nu-generate">Buat Acak</button>
+            </div>
+            <div class="field-hint">Bagikan kata sandi ini langsung/pribadi ke staf yang bersangkutan. Kata sandi tidak akan bisa dilihat lagi setelah akun dibuat.</div>
+          </div>
+          <button class="btn btn-primary" id="nu-submit" style="width:100%;">Buat Akun</button>
+        </div>
+      </div>`;
+
+    document.getElementById('nu-generate').addEventListener('click', ()=>{
+      document.getElementById('nu-password').value = randomPassword();
+    });
+    document.getElementById('nu-submit').addEventListener('click', async ()=>{
+      const name = document.getElementById('nu-name').value.trim();
+      const email = document.getElementById('nu-email').value.trim();
+      const role = document.getElementById('nu-role').value;
+      const password = document.getElementById('nu-password').value;
+      if(!name || !email || !password){ alert('Lengkapi semua kolom.'); return; }
+      if(password.length < 6){ alert('Kata sandi minimal 6 karakter.'); return; }
+
+      const btn = document.getElementById('nu-submit');
+      btn.disabled = true; btn.textContent = 'Membuat akun...';
+      try{
+        await window.bstAuth.adminCreateStaffAccount(name, email, password, role, currentUser.name);
+        alert('Akun berhasil dibuat untuk ' + name + ' (' + ROLE_LABEL[role] + ').\n\nEmail: ' + email + '\nKata sandi awal: ' + password + '\n\nCatat/salin kata sandi ini sekarang dan bagikan langsung/pribadi ke staf tersebut — kata sandi ini tidak akan ditampilkan lagi.');
+        area.innerHTML = '';
+      }catch(err){
+        console.error('Gagal membuat akun staf:', err);
+        alert('Gagal membuat akun: ' + authErrorMessage(err));
+        btn.disabled = false; btn.textContent = 'Buat Akun';
+      }
+    });
+  }
+
+  function renderUserList(list){
+    const area = document.getElementById('user-list-area');
+    if(!area) return; // modal sudah ditutup
+
+    if(list.length === 0){
+      area.innerHTML = '<div class="bst-empty">Belum ada pendaftaran akun staf.</div>';
+      return;
+    }
+
+    const order = { pending:0, approved:1, rejected:2 };
+    list.sort((a,b)=> (order[a.status]??9) - (order[b.status]??9) || (a.name||'').localeCompare(b.name||''));
+
+    const groups = { pending:[], approved:[], rejected:[] };
+    list.forEach(u=>{ (groups[u.status] || groups.pending).push(u); });
+
+    const roleOptions = (currentRole)=> STAFF_ROLES.map(r=>
+      `<option value="${r.key}" ${currentRole===r.key?'selected':''}>${r.name}</option>`
+    ).join('');
+
+    function row(u){
+      let actions = '';
+      if(u.status === 'pending'){
+        actions = `<button class="btn btn-primary btn-sm" data-action="approve" data-uid="${u.id}">Setujui</button>
+                   <button class="btn btn-ghost btn-sm danger-text" data-action="reject" data-uid="${u.id}">Tolak</button>`;
+      } else if(u.status === 'approved'){
+        actions = `<button class="btn btn-ghost btn-sm danger-text" data-action="revoke" data-uid="${u.id}">Cabut Akses</button>`;
+      } else {
+        actions = `<button class="btn btn-primary btn-sm" data-action="approve" data-uid="${u.id}">Setujui Kembali</button>`;
+      }
+      return `<div class="user-row">
+        <div class="user-info">
+          <div class="user-name">${escapeHtml(u.name||'(tanpa nama)')}</div>
+          <div class="user-email mono">${escapeHtml(u.email||'-')}</div>
+        </div>
+        <select class="user-role-select" id="role-${u.id}">${roleOptions(u.role)}</select>
+        ${userStatusBadge(u.status)}
+        <div class="user-actions">${actions}</div>
+      </div>`;
+    }
+
+    area.innerHTML = `
+      ${groups.pending.length ? `<div class="user-section-title">Menunggu Persetujuan (${groups.pending.length})</div>${groups.pending.map(row).join('')}` : ''}
+      ${groups.approved.length ? `<div class="user-section-title">Disetujui (${groups.approved.length})</div>${groups.approved.map(row).join('')}` : ''}
+      ${groups.rejected.length ? `<div class="user-section-title">Ditolak (${groups.rejected.length})</div>${groups.rejected.map(row).join('')}` : ''}
+    `;
+
+    area.querySelectorAll('button[data-action]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const uidTarget = btn.getAttribute('data-uid');
+        const action = btn.getAttribute('data-action');
+        const roleSel = document.getElementById('role-'+uidTarget);
+        const chosenRole = roleSel ? roleSel.value : null;
+
+        if(action === 'approve'){
+          btn.disabled = true; btn.textContent = 'Memproses...';
+          try{
+            await window.bstAuth.setUserStatus(uidTarget, {
+              status:'approved', role:chosenRole,
+              approvedBy: currentUser.name, approvedAt: new Date().toISOString(),
+            });
+          }catch(err){ console.error(err); alert('Gagal menyetujui pengguna: ' + err.message); }
+        } else if(action === 'reject'){
+          if(!confirm('Tolak pendaftaran akun ini?')) return;
+          btn.disabled = true; btn.textContent = 'Memproses...';
+          try{ await window.bstAuth.setUserStatus(uidTarget, { status:'rejected' }); }
+          catch(err){ console.error(err); alert('Gagal menolak pengguna: ' + err.message); }
+        } else if(action === 'revoke'){
+          if(!confirm('Cabut akses akun ini? Pengguna tidak akan bisa masuk lagi sampai disetujui ulang.')) return;
+          btn.disabled = true; btn.textContent = 'Memproses...';
+          try{ await window.bstAuth.setUserStatus(uidTarget, { status:'rejected' }); }
+          catch(err){ console.error(err); alert('Gagal mencabut akses: ' + err.message); }
+        }
+        // Tampilan akan diperbarui otomatis lewat listener realtime.
+      });
+    });
   }
 
   /* ============ LIST RENDER ============ */
@@ -638,7 +1027,7 @@
     + '</div>';
   }
 
-  /* ============ CREATE MODAL (pemohon only) ============ */
+  /* ============ CREATE MODAL (pemohon & admin) ============ */
   function openCreateModal(){
     const overlay = document.createElement('div');
     overlay.className = 'bst-overlay';
@@ -813,12 +1202,10 @@
       patch[key] = input.value.trim();
     });
 
-    // validasi identitas dasar bila sedang diubah
     if('nama' in patch && !patch.nama){ alert('Nama Pemohon tidak boleh kosong.'); return; }
     if('nup' in patch && !patch.nup){ alert('NUP tidak boleh kosong.'); return; }
     if('tglPermohonan' in patch && !patch.tglPermohonan){ alert('Tanggal Permohonan tidak boleh kosong.'); return; }
 
-    // validasi kronologis untuk tahapan berurutan
     const chronoChecks = [
       ['tglPersetujuan','tglPermohonan','Tanggal Persetujuan Kasub BMN tidak boleh sebelum Tanggal Permohonan.'],
       ['tglProses','tglPersetujuan','Tanggal Proses Permohonan tidak boleh sebelum Tanggal Persetujuan Kasub BMN.'],
@@ -831,7 +1218,6 @@
       if(curVal && prevVal && curVal < prevVal){ alert(msg); return; }
     }
 
-    // pastikan re-validasi hak akses (jaga2 dari manipulasi DOM)
     for(const key of Object.keys(patch)){
       if(!canEdit(key, e)){
         alert('Anda tidak memiliki izin untuk mengubah field ini pada tahap ini.');
@@ -842,23 +1228,18 @@
     if('tglPersetujuan' in patch && patch.tglPersetujuan){
       patch.approvedBy = currentUser.name;
     }
-    if('hasilPemeriksaan' in patch){
-      patch.hasilPemeriksaan = patch.hasilPemeriksaan; // simpan apa adanya (boleh kosong utk update)
-    }
 
-    const idx = entries.findIndex(x=>x.id===id);
     patch.lastEditedBy = currentUser.name;
     patch.lastEditedAt = new Date().toISOString();
 
     closeModal();
-    await updateEntryRemote(id, patch); // tampilan akan otomatis diperbarui oleh listener realtime
+    await updateEntryRemote(id, patch);
   }
 
   async function deleteEntry(id){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
 
-    // Permohonan yang sudah disetujui Kasub BMN terkunci dari penghapusan, kecuali oleh Admin.
     if(e.tglPersetujuan && currentUser.role !== 'admin'){
       alert('Permohonan ini sudah disetujui oleh Kasub BMN ('+(e.approvedBy?escapeHtml(e.approvedBy):'-')+' pada '+fmtDate(e.tglPersetujuan)+') sehingga tidak dapat dihapus.');
       return;
@@ -868,7 +1249,7 @@
       ? 'PERINGATAN: permohonan ini sudah disetujui Kasub BMN dan mungkin sedang/sudah diproses. Menghapus akan menghilangkan seluruh riwayat proses secara permanen. Lanjutkan sebagai Admin?'
       : 'Hapus permohonan ini? Tindakan ini tidak dapat dibatalkan.';
     if(!confirm(confirmMsg)) return;
-    await deleteEntryRemote(id); // tampilan akan otomatis diperbarui oleh listener realtime
+    await deleteEntryRemote(id);
   }
 
   function closeModal(){
@@ -876,36 +1257,47 @@
     if(overlay) overlay.remove();
   }
 
-  /* ============ BOOT ============ */
-  function boot(){
-    loadUser();
-    if(currentUser && currentUser.name && currentUser.role){
-      initDashboard();
-    } else {
-      renderLogin();
-    }
-  }
-  window.bstBoot = boot; // dipanggil setelah Firestore siap (lihat modul init di bawah)
+  window.bstBoot = function(){ renderChoose(); }; // fallback awal sebelum status auth pertama diketahui
+  window.bstBoot();
 })();
 
 </script>
 
 <script type="module">
   // ============================================================
-  //  Koneksi Firestore — memakai firebase-config.js yang SAMA
-  //  dengan yang sudah dipakai di login.html / dashboard.html Anda.
-  //  Data permohonan disimpan di koleksi Firestore: bmn_permohonan
+  //  Koneksi Firebase — memakai firebase-config.js di folder yang sama.
+  //  - Firebase Authentication (email + password): akun staf (Kasub BMN, Vendor, Monitor, Admin)
+  //  - Firestore:
+  //      koleksi 'bst_users'      -> profil & status persetujuan akun staf
+  //      koleksi 'bmn_permohonan' -> data permohonan servis (realtime)
+  //  Lihat PANDUAN-ADMIN.md untuk cara mengaktifkan Email/Password di Firebase
+  //  dan cara membuat Admin PERTAMA (bootstrap).
   // ============================================================
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import {
-    getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+    signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, getDoc, setDoc
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { firebaseConfig } from "./firebase-config.js";
 
   const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
   const db = getFirestore(app);
-  const COLLECTION_NAME = 'bmn_permohonan';
-  const entriesCol = collection(db, COLLECTION_NAME);
+
+  // Instance Firebase KEDUA (terpisah), khusus dipakai saat Admin membuat akun staf baru.
+  // Ini perlu supaya createUserWithEmailAndPassword TIDAK menggantikan sesi login Admin
+  // yang sedang aktif di instance utama (perilaku baku Firebase Auth: membuat akun baru
+  // otomatis ikut login sebagai akun itu di instance yang dipakai).
+  const secondaryApp = initializeApp(firebaseConfig, "Secondary");
+  const secondaryAuth = getAuth(secondaryApp);
+
+  const ENTRIES_COLLECTION = 'bmn_permohonan';
+  const USERS_COLLECTION = 'bst_users';
+  const entriesCol = collection(db, ENTRIES_COLLECTION);
+  const usersCol = collection(db, USERS_COLLECTION);
 
   window.bstFirestore = {
     listenEntries(onData, onError){
@@ -914,21 +1306,62 @@
         onData(list);
       }, onError);
     },
-    async addEntry(data){
-      await addDoc(entriesCol, data);
+    async addEntry(data){ await addDoc(entriesCol, data); },
+    async updateEntry(id, patch){ await updateDoc(doc(db, ENTRIES_COLLECTION, id), patch); },
+    async deleteEntry(id){ await deleteDoc(doc(db, ENTRIES_COLLECTION, id)); },
+  };
+
+  window.bstAuth = {
+    async registerStaff(name, email, password, role){
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, USERS_COLLECTION, cred.user.uid), {
+        name, email, role, status: 'pending', createdAt: new Date().toISOString(),
+      });
+      return cred.user.uid;
     },
-    async updateEntry(id, patch){
-      await updateDoc(doc(db, COLLECTION_NAME, id), patch);
+    async loginStaff(email, password){
+      return await signInWithEmailAndPassword(auth, email, password);
     },
-    async deleteEntry(id){
-      await deleteDoc(doc(db, COLLECTION_NAME, id));
+    async logoutStaff(){
+      await signOut(auth);
+    },
+    async getUserProfile(uid){
+      const snap = await getDoc(doc(db, USERS_COLLECTION, uid));
+      return snap.exists() ? snap.data() : null;
+    },
+    listenUsers(onData, onError){
+      return onSnapshot(usersCol, (snap)=>{
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        onData(list);
+      }, onError);
+    },
+    async setUserStatus(uid, patch){
+      await updateDoc(doc(db, USERS_COLLECTION, uid), patch);
+    },
+    // Dipanggil dari panel "Kelola Pengguna" Admin. Memakai instance Firebase KEDUA untuk
+    // membuat akun Authentication baru (lihat catatan secondaryApp di atas), lalu memakai
+    // Firestore dari instance UTAMA (tetap terautentikasi sebagai Admin yang sedang login)
+    // untuk menulis profil pengguna — supaya lolos Firestore Rules yang mensyaratkan
+    // "yang membuat dokumen ini adalah admin yang sudah disetujui".
+    async adminCreateStaffAccount(name, email, password, role, adminName){
+      const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+      const newUid = cred.user.uid;
+      await signOut(secondaryAuth); // bersihkan sesi kedua, tidak dipakai lagi
+      await setDoc(doc(db, USERS_COLLECTION, newUid), {
+        name, email, role, status: 'approved',
+        createdAt: new Date().toISOString(),
+        approvedBy: adminName, approvedAt: new Date().toISOString(),
+        createdByAdmin: true,
+      });
+      return newUid;
     },
   };
 
-  // Modul ini dimuat sebagai <script type="module">, otomatis ditunda (mirip "defer"),
-  // sehingga skrip aplikasi klasik di bawah sudah pasti selesai dieksekusi lebih dulu
-  // dan window.bstBoot sudah tersedia.
-  window.bstBoot();
+  // Dipicu setiap kali status login (instance UTAMA) berubah: baru buka halaman, berhasil
+  // masuk, berhasil daftar (otomatis ter-login), atau keluar.
+  onAuthStateChanged(auth, (fbUser)=>{
+    if(window.bstOnAuthChange){ window.bstOnAuthChange(fbUser); }
+  });
 </script>
 
 </body>
