@@ -137,6 +137,11 @@
   #bst-root .btn-ghost{ background:transparent; color:var(--paper); border:1px solid rgba(246,243,236,0.35); }
   #bst-root .btn-ghost:hover{ background:rgba(246,243,236,0.1); }
   #bst-root .btn-sm{ padding:5px 10px; font-size:12px; border-radius:5px; }
+  #bst-root .btn-logout{
+    background:transparent; color:var(--amber); border:1.5px solid var(--amber);
+    font-weight:700;
+  }
+  #bst-root .btn-logout:hover{ background:var(--amber); color:#fff; }
 
   /* user bar */
   #bst-root .bst-userbar{
@@ -674,8 +679,8 @@
               <div>${escapeHtml(currentUser.name)}</div>
               <div class="bst-role-tag">${ROLE_LABEL[currentUser.role]}</div>
             </div>
-            <button class="btn btn-ghost btn-sm" id="bst-logout">Keluar</button>
           </div>
+          <button class="btn btn-logout" id="bst-logout">&#10148; Keluar</button>
           ${currentUser.role === 'admin' ? '<button class="btn btn-ghost" id="bst-users-btn">&#128101; Kelola Pengguna</button>' : ''}
           <button class="btn btn-ghost" id="bst-print-btn">&#128424; Cetak Rekapitulasi</button>
           ${(currentUser.role === 'pemohon' || currentUser.role === 'admin') ? '<button class="btn btn-primary" id="bst-add-btn">+ Permohonan Baru</button>' : ''}
@@ -1338,15 +1343,10 @@
     async setUserStatus(uid, patch){
       await updateDoc(doc(db, USERS_COLLECTION, uid), patch);
     },
-    // Dipanggil dari panel "Kelola Pengguna" Admin. Memakai instance Firebase KEDUA untuk
-    // membuat akun Authentication baru (lihat catatan secondaryApp di atas), lalu memakai
-    // Firestore dari instance UTAMA (tetap terautentikasi sebagai Admin yang sedang login)
-    // untuk menulis profil pengguna — supaya lolos Firestore Rules yang mensyaratkan
-    // "yang membuat dokumen ini adalah admin yang sudah disetujui".
     async adminCreateStaffAccount(name, email, password, role, adminName){
       const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
       const newUid = cred.user.uid;
-      await signOut(secondaryAuth); // bersihkan sesi kedua, tidak dipakai lagi
+      await signOut(secondaryAuth);
       await setDoc(doc(db, USERS_COLLECTION, newUid), {
         name, email, role, status: 'approved',
         createdAt: new Date().toISOString(),
@@ -1357,8 +1357,6 @@
     },
   };
 
-  // Dipicu setiap kali status login (instance UTAMA) berubah: baru buka halaman, berhasil
-  // masuk, berhasil daftar (otomatis ter-login), atau keluar.
   onAuthStateChanged(auth, (fbUser)=>{
     if(window.bstOnAuthChange){ window.bstOnAuthChange(fbUser); }
   });
