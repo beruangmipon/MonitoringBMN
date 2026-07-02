@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Layanan Servis BMN — Peralatan & Mesin | Bappebti</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   #bst-root {
     --ink:#0F1720;
@@ -30,14 +30,17 @@
     --slate:#64748B;
     font-family:'Inter',sans-serif;
     color:var(--ink);
-    background:var(--paper);
+    background:
+      radial-gradient(circle at 100% 0%, rgba(5,150,105,0.06) 0%, transparent 38%),
+      radial-gradient(circle at 0% 100%, rgba(217,119,6,0.045) 0%, transparent 42%),
+      var(--paper);
     border-radius:14px;
     padding:0;
     min-height:100%;
     box-sizing:border-box;
   }
   #bst-root *{ box-sizing:border-box; }
-  #bst-root .disp{ font-family:'Space Grotesk',sans-serif; }
+  #bst-root .disp{ font-family:'Sora',sans-serif; }
   #bst-root .mono{ font-family:'JetBrains Mono',monospace; }
 
   @keyframes bstFadeIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
@@ -47,11 +50,30 @@
 
   /* ---------- Login screen ---------- */
   #bst-root .bst-login{
-    padding:48px 26px; text-align:center;
+    position:relative; overflow:hidden;
+    padding:52px 26px 40px; text-align:center;
     background:linear-gradient(150deg, #0F1720 0%, #17222E 55%, #101A22 100%);
     border-radius:14px; color:var(--paper);
   }
-  #bst-root .bst-login h2{ font-family:'Space Grotesk',sans-serif; font-size:23px; margin:0 0 6px; }
+  #bst-root .bst-login::before{
+    content:""; position:absolute; top:-120px; left:50%; transform:translateX(-50%);
+    width:640px; height:640px; border-radius:50%;
+    background:radial-gradient(circle, rgba(5,150,105,0.22) 0%, rgba(5,150,105,0) 70%);
+    pointer-events:none;
+  }
+  #bst-root .bst-building{
+    position:absolute; left:0; right:0; bottom:0; width:100%; height:auto;
+    opacity:0.16; pointer-events:none; color:#fff;
+  }
+  #bst-root .bst-login > *:not(.bst-building){ position:relative; z-index:1; }
+  #bst-root .bst-login-badge{
+    display:inline-flex; align-items:center; gap:7px; padding:6px 14px; border-radius:20px;
+    background:rgba(5,150,105,0.14); border:1px solid rgba(5,150,105,0.4);
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#6EE7B7;
+    text-transform:uppercase; letter-spacing:0.6px; margin-bottom:16px;
+  }
+  #bst-root .bst-login-badge .dot{ width:6px; height:6px; border-radius:50%; background:#6EE7B7; animation:bstpulse 2s infinite; }
+  #bst-root .bst-login h2{ font-family:'Sora',sans-serif; font-weight:800; font-size:25px; margin:0 0 6px; letter-spacing:-0.2px; }
   #bst-root .bst-login p{ color:#A6B1BE; font-size:13px; margin:0 0 26px; max-width:460px; margin-left:auto; margin-right:auto; }
   #bst-root .role-grid{
     display:grid; grid-template-columns:repeat(5,1fr); gap:10px; max-width:780px; margin:0 auto 22px;
@@ -64,7 +86,7 @@
   #bst-root .role-card:hover{ border-color:var(--primary); background:rgba(5,150,105,0.14); transform:translateY(-2px); }
   #bst-root .role-card.selected{ border-color:var(--primary); background:rgba(5,150,105,0.2); }
   #bst-root .role-card .ric{ font-size:22px; margin-bottom:8px; }
-  #bst-root .role-card .rn{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px; }
+  #bst-root .role-card .rn{ font-family:'Sora',sans-serif; font-weight:700; font-size:13.5px; }
   #bst-root .role-card .rd{ font-size:10.5px; color:#A6B1BE; margin-top:4px; line-height:1.4; }
   #bst-root .bst-login-form{ max-width:320px; margin:0 auto; }
   #bst-root .bst-login-form input, #bst-root .bst-login-form select{
@@ -96,7 +118,7 @@
   }
   #bst-root .choose-card:hover{ border-color:var(--primary); background:rgba(5,150,105,0.14); transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,0.25); }
   #bst-root .choose-card .ric{ font-size:32px; margin-bottom:10px; }
-  #bst-root .choose-card .rn{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; margin-bottom:6px; }
+  #bst-root .choose-card .rn{ font-family:'Sora',sans-serif; font-weight:700; font-size:15px; margin-bottom:6px; }
   #bst-root .choose-card .rd{ font-size:11px; color:#A6B1BE; line-height:1.5; }
 
   /* ---------- Link & error area login staf ---------- */
@@ -113,7 +135,7 @@
 
   /* ---------- Panel Kelola Pengguna (Admin) ---------- */
   #bst-root .user-section-title{
-    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:11.5px; text-transform:uppercase;
+    font-family:'Sora',sans-serif; font-weight:700; font-size:11.5px; text-transform:uppercase;
     letter-spacing:0.4px; color:var(--slate); margin:16px 0 8px;
   }
   #bst-root .user-section-title:first-child{ margin-top:0; }
@@ -179,7 +201,7 @@
   #bst-root .bst-avatar{
     width:26px; height:26px; border-radius:50%; background:var(--primary); color:#fff;
     display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;
-    font-family:'Space Grotesk',sans-serif;
+    font-family:'Sora',sans-serif;
   }
   #bst-root .bst-role-tag{
     font-family:'JetBrains Mono',monospace; font-size:10px; color:#9CA9B6;
@@ -215,7 +237,7 @@
     border-radius:0 0 14px 14px;
   }
   #bst-root .bst-footer-title{
-    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:11px;
+    font-family:'Sora',sans-serif; font-weight:700; font-size:11px;
     text-transform:uppercase; letter-spacing:0.4px; color:var(--ink);
   }
   #bst-root .bst-footer-right{ text-align:right; }
@@ -224,6 +246,11 @@
     font-size:10.5px; color:var(--slate);
   }
   #bst-root .bst-empty{ text-align:center; padding:56px 20px; color:var(--slate); }
+  #bst-root .bst-empty .empty-icon{
+    font-size:38px; margin-bottom:12px; opacity:.55;
+    display:inline-block; padding:18px; border-radius:50%;
+    background:var(--paper-dim); border:1px dashed var(--line);
+  }
   #bst-root .bst-empty .disp{ font-size:16px; margin-bottom:6px; color:var(--ink); }
 
   #bst-root .ticket{
@@ -243,7 +270,7 @@
   #bst-root .ticket-selesai-merah{ border-left-color:var(--red); }
 
   #bst-root .ticket-top{ display:flex; align-items:flex-start; justify-content:space-between; padding:14px 18px 8px; gap:12px; flex-wrap:wrap; }
-  #bst-root .ticket-name{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; color:var(--ink); }
+  #bst-root .ticket-name{ font-family:'Sora',sans-serif; font-weight:700; font-size:16px; color:var(--ink); }
   #bst-root .ticket-jenis{ font-size:12.5px; color:var(--slate); margin-top:2px; }
   #bst-root .ticket-kendala{ font-size:11.5px; color:var(--slate); margin-top:3px; font-style:italic; max-width:420px; }
   #bst-root .badge{ font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; padding:4px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.3px; white-space:nowrap; }
@@ -260,15 +287,31 @@
   #bst-root .icon-btn:hover{ background:var(--paper-dim); color:var(--ink); transform:translateY(-1px); }
   #bst-root .icon-btn.danger:hover{ background:var(--red-dim); color:var(--red); border-color:var(--red); }
 
-  #bst-root .stepper{ display:flex; align-items:center; padding:4px 18px 16px; gap:0; }
+  #bst-root .stepper{ display:flex; align-items:flex-start; padding:10px 18px 18px; gap:0; }
   #bst-root .step{ display:flex; flex-direction:column; align-items:center; flex:1; position:relative; }
-  #bst-root .step .node{ width:15px; height:15px; border-radius:50%; background:var(--paper-dim); border:2px solid var(--line); z-index:1; transition:all .18s ease; }
-  #bst-root .step.done .node{ background:var(--primary); border-color:var(--primary); }
-  #bst-root .step.current .node{ background:var(--amber); border-color:var(--amber); box-shadow:0 0 0 4px var(--amber-dim); }
-  #bst-root .step .lbl{ font-size:9.5px; font-family:'JetBrains Mono',monospace; color:var(--slate); margin-top:5px; text-align:center; line-height:1.25; max-width:78px; }
+  #bst-root .step .node{
+    width:30px; height:30px; border-radius:50%; background:var(--paper-dim); border:2px solid var(--line);
+    z-index:1; transition:all .22s ease; display:flex; align-items:center; justify-content:center;
+    font-size:13px; color:var(--slate);
+  }
+  #bst-root .step.done .node{
+    background:linear-gradient(135deg, var(--primary), #10B981); border-color:transparent; color:#fff;
+    box-shadow:0 3px 8px rgba(5,150,105,0.4);
+  }
+  #bst-root .step.current .node{
+    background:linear-gradient(135deg, var(--amber), #F59E0B); border-color:transparent; color:#fff;
+    box-shadow:0 0 0 5px var(--amber-dim), 0 3px 10px rgba(217,119,6,0.4);
+    animation:bstStepPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes bstStepPulse{
+    0%,100%{ box-shadow:0 0 0 5px var(--amber-dim), 0 3px 10px rgba(217,119,6,0.4); }
+    50%{ box-shadow:0 0 0 8px var(--amber-dim), 0 3px 14px rgba(217,119,6,0.55); }
+  }
+  #bst-root .step .lbl{ font-size:9.5px; font-family:'JetBrains Mono',monospace; color:var(--slate); margin-top:7px; text-align:center; line-height:1.25; max-width:78px; }
+  #bst-root .step.done .lbl, #bst-root .step.current .lbl{ color:var(--ink); font-weight:600; }
   #bst-root .step .dt{ font-size:9.5px; color:var(--ink); font-weight:600; margin-top:1px; font-family:'JetBrains Mono',monospace; }
-  #bst-root .step:not(:last-child)::after{ content:""; position:absolute; top:6.5px; left:calc(50% + 10px); right:calc(-50% + 10px); height:2px; background:var(--line); z-index:0; }
-  #bst-root .step.done:not(:last-child)::after{ background:var(--primary); }
+  #bst-root .step:not(:last-child)::after{ content:""; position:absolute; top:14px; left:calc(50% + 18px); right:calc(-50% + 18px); height:3px; border-radius:2px; background:var(--line); z-index:0; }
+  #bst-root .step.done:not(:last-child)::after{ background:linear-gradient(90deg, var(--primary), #10B981); }
 
   #bst-root .ticket-foot{ display:flex; justify-content:space-between; align-items:center; padding:10px 18px; background:var(--paper-dim); border-top:1px dashed var(--line); font-size:11.5px; color:var(--slate); flex-wrap:wrap; gap:6px; }
   #bst-root .ticket-foot .nup{ font-family:'JetBrains Mono',monospace; color:var(--ink); font-weight:600; }
@@ -297,7 +340,7 @@
 
   #bst-root .section-card{ border:1px solid var(--line); border-radius:12px; margin-bottom:14px; overflow:hidden; }
   #bst-root .section-head{ display:flex; align-items:center; justify-content:space-between; padding:9px 14px; background:var(--paper-dim); border-bottom:1px solid var(--line); }
-  #bst-root .section-head .st{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px; }
+  #bst-root .section-head .st{ font-family:'Sora',sans-serif; font-weight:700; font-size:12.5px; }
   #bst-root .section-head .who{ font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--slate); text-transform:uppercase; }
   #bst-root .section-body{ padding:14px; }
   #bst-root .section-card.locked .section-head{ background:var(--paper-dim); }
@@ -353,7 +396,7 @@
 
   /* ---------- Cetak Rekapitulasi ---------- */
   #bst-print-area{ display:none; }
-  #bst-print-area .print-head h1{ font-family:'Space Grotesk',sans-serif; font-size:16px; margin:0 0 4px; color:#0F1720; }
+  #bst-print-area .print-head h1{ font-family:'Sora',sans-serif; font-size:16px; margin:0 0 4px; color:#0F1720; }
   #bst-print-area .print-meta{ font-size:10.5px; color:#555; margin-bottom:14px; font-family:'JetBrains Mono',monospace; }
   #bst-print-area .print-table{ width:100%; border-collapse:collapse; font-size:9px; font-family:'Inter',sans-serif; }
   #bst-print-area .print-table th, #bst-print-area .print-table td{ border:1px solid #999; padding:4px 5px; text-align:left; vertical-align:top; }
@@ -381,6 +424,11 @@ const DUK_DATA = {
       "nama": "ANITA NURAHMI, S.E.",
       "nip": "199410182022032013",
       "jabatan": "Penelaah Teknis Kebijakan"
+    },
+    {
+      "nama": "ANZAR NISPIANSYAH",
+      "nip": "198704142025211069",
+      "jabatan": "Pengadministrasi Perkantoran"
     },
     {
       "nama": "APRILIYANTO, S.P., M.M.",
@@ -448,6 +496,11 @@ const DUK_DATA = {
       "jabatan": "Pranata Hubungan Masyarakat Ahli Pertama"
     },
     {
+      "nama": "HARRI YANSAH, S.E",
+      "nip": "199007062025211038",
+      "jabatan": "Analis SDM Aparatur Ahli Pertama"
+    },
+    {
       "nama": "HARRY PRIHATMOKO, S.E.,M.M.",
       "nip": "198202152006041004",
       "jabatan": "Analis Pengelolaan Keuangan Anggaran Pendapatan dan Belanja Negara Ahli Madya"
@@ -486,6 +539,11 @@ const DUK_DATA = {
       "nama": "LAURENTIUS SANTOSO WIBOWO, S.P., M.Si.",
       "nip": "198407042009121001",
       "jabatan": "Perencana Ahli Muda"
+    },
+    {
+      "nama": "LELI WULANDARI, A.Md",
+      "nip": "198402062025212015",
+      "jabatan": "Pengelola Layanan Operasional"
     },
     {
       "nama": "MELINDA, S.E.",
@@ -561,6 +619,11 @@ const DUK_DATA = {
       "nama": "SYAM HABIB PAMUNGKAS, S.T.",
       "nip": "199106282025051001",
       "jabatan": "Pranata Komputer Ahli Pertama"
+    },
+    {
+      "nama": "TIRTA KARMA SENJAYA, S.Si. M.SE.",
+      "nip": "197507182005021001",
+      "jabatan": "Kepala Badan Pengawas Perdagangan Berjangka Komoditi"
     },
     {
       "nama": "VERA HENDRIAS KUMALASARI, S.E., M.M.",
@@ -1244,12 +1307,36 @@ const DUK_DATA = {
   const STAFF_ROLES = ROLES.filter(r=> r.key !== 'pemohon'); // peran yang wajib pakai email + password
 
   const STEPS = [
-    { key:'tglPermohonan',      label:'Permohonan' },
-    { key:'tglPersetujuan',     label:'Persetujuan Kasub BMN' },
-    { key:'tglProses',          label:'Proses Permohonan' },
-    { key:'tglPemeriksaan',     label:'Pemeriksaan' },
-    { key:'tglSelesaiPekerjaan',label:'Selesai Pekerjaan' },
+    { key:'tglPermohonan',      label:'Permohonan',          icon:'&#128221;' },
+    { key:'tglPersetujuan',     label:'Persetujuan Kasub BMN',icon:'&#9989;' },
+    { key:'tglProses',          label:'Proses Permohonan',   icon:'&#128295;' },
+    { key:'tglPemeriksaan',     label:'Pemeriksaan',         icon:'&#128269;' },
+    { key:'tglSelesaiPekerjaan',label:'Selesai Pekerjaan',   icon:'&#127937;' },
   ];
+
+  // Ilustrasi siluet gedung (dekoratif, generik — bukan foto/lambang resmi apa pun)
+  const BUILDING_SVG = `<svg class="bst-building" viewBox="0 0 900 300" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+    <rect x="130" y="284" width="640" height="12"/>
+    <rect x="155" y="270" width="590" height="12"/>
+    <rect x="180" y="256" width="540" height="12"/>
+    <rect x="190" y="234" width="520" height="20"/>
+    <rect x="212" y="112" width="16" height="120"/>
+    <rect x="258" y="112" width="16" height="120"/>
+    <rect x="304" y="112" width="16" height="120"/>
+    <rect x="350" y="112" width="16" height="120"/>
+    <rect x="396" y="112" width="16" height="120"/>
+    <rect x="442" y="112" width="16" height="120"/>
+    <rect x="488" y="112" width="16" height="120"/>
+    <rect x="534" y="112" width="16" height="120"/>
+    <rect x="580" y="112" width="16" height="120"/>
+    <rect x="626" y="112" width="16" height="120"/>
+    <rect x="672" y="112" width="16" height="120"/>
+    <rect x="196" y="96" width="508" height="16"/>
+    <polygon points="450,26 196,96 704,96"/>
+    <rect x="90" y="70" width="6" height="216"/>
+    <polygon points="96,70 156,84 96,98"/>
+  </svg>`;
+  const INSTANSI_BADGE = `<div class="bst-login-badge"><span class="dot"></span>Kementerian Perdagangan RI &middot; Bappebti</div>`;
 
   // ---- field permission rules: who can edit + when ----
   const FIELD_RULES = {
@@ -1565,6 +1652,8 @@ const DUK_DATA = {
   function renderChoose(){
     root.innerHTML = `
       <div class="bst-login">
+        ${BUILDING_SVG}
+        ${INSTANSI_BADGE}
         <h2 class="disp">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</h2>
         <p>Pilih jalur masuk sesuai posisi Anda.</p>
         <div class="choose-grid">
@@ -1590,6 +1679,7 @@ const DUK_DATA = {
     const eselonList = Object.keys(DUK_DATA);
     root.innerHTML = `
       <div class="bst-login">
+        ${BUILDING_SVG}
         <h2 class="disp">Masuk sebagai Pemohon</h2>
         <p>Pilih Eselon II dan nama Anda sesuai Daftar Urut Kepangkatan (DUK). Tidak perlu akun atau kata sandi.</p>
         <div class="bst-login-form">
@@ -1669,6 +1759,7 @@ const DUK_DATA = {
   function renderStaffLogin(errorMsg){
     root.innerHTML = `
       <div class="bst-login">
+        ${BUILDING_SVG}
         <h2 class="disp">Masuk sebagai Petugas</h2>
         <p>Untuk peran Kasub BMN, Vendor, Monitor, dan Admin.</p>
         ${errorMsg ? `<div class="auth-error">${escapeHtml(errorMsg)}</div>` : ''}
@@ -1705,6 +1796,7 @@ const DUK_DATA = {
   function renderStaffRegister(errorMsg){
     root.innerHTML = `
       <div class="bst-login">
+        ${BUILDING_SVG}
         <h2 class="disp">Daftar Akun Admin</h2>
         <p>Akun akan berstatus <b>menunggu persetujuan</b> hingga disetujui oleh Admin yang sudah aktif. (Akun Kasub BMN, Vendor, dan Monitor tidak mendaftar di sini &mdash; hubungi Admin untuk dibuatkan akun.)</p>
         ${errorMsg ? `<div class="auth-error">${escapeHtml(errorMsg)}</div>` : ''}
@@ -2127,7 +2219,7 @@ const DUK_DATA = {
     if(countPill) countPill.textContent = entries.length + ' permohonan';
 
     if(filtered.length === 0){
-      bodyEl.innerHTML = '<div class="bst-empty"><div class="disp">Belum ada permohonan yang cocok</div>'
+      bodyEl.innerHTML = '<div class="bst-empty"><div class="empty-icon">&#128203;</div><div class="disp" style="font-size:16px;margin-bottom:6px;">Belum ada permohonan yang cocok</div>'
         + ((currentUser.role === 'pemohon' || currentUser.role === 'admin') ? 'Klik "+ Permohonan Baru" untuk mulai mencatat, atau ubah pencarian/filter.' : 'Coba ubah kata kunci pencarian atau filter status.')
         + '</div>';
       return;
@@ -2150,7 +2242,8 @@ const DUK_DATA = {
       const val = e[s.key];
       let cls = '';
       if(val) cls = 'done'; else if(idx === doneCount) cls = 'current';
-      return '<div class="step '+cls+'"><div class="node"></div><div class="lbl">'+s.label+'</div>'
+      const nodeIcon = val ? '&#10003;' : s.icon;
+      return '<div class="step '+cls+'"><div class="node"><span class="node-icon">'+nodeIcon+'</span></div><div class="lbl">'+s.label+'</div>'
         + (val ? '<div class="dt">'+fmtDate(val)+'</div>' : '') + '</div>';
     }).join('');
 
