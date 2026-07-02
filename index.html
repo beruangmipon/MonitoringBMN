@@ -67,13 +67,20 @@
   #bst-root .role-card .rn{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px; }
   #bst-root .role-card .rd{ font-size:10.5px; color:#A6B1BE; margin-top:4px; line-height:1.4; }
   #bst-root .bst-login-form{ max-width:320px; margin:0 auto; }
-  #bst-root .bst-login-form input{
+  #bst-root .bst-login-form input, #bst-root .bst-login-form select{
     width:100%; padding:11px 13px; border-radius:9px; border:1px solid rgba(255,255,255,0.14);
     background:rgba(255,255,255,0.06); color:var(--paper); font-family:'Inter',sans-serif; font-size:13.5px;
     margin-bottom:12px; transition:border-color .15s ease, background .15s ease;
   }
+  #bst-root .bst-login-form select{ cursor:pointer; }
+  #bst-root .bst-login-form select:disabled{ opacity:.5; cursor:not-allowed; }
+  #bst-root .bst-login-form select option{ color:#111; }
   #bst-root .bst-login-form input::placeholder{ color:#7C8896; }
-  #bst-root .bst-login-form input:focus{ outline:none; border-color:var(--primary); background:rgba(5,150,105,0.08); }
+  #bst-root .bst-login-form input:focus, #bst-root .bst-login-form select:focus{ outline:none; border-color:var(--primary); background:rgba(5,150,105,0.08); }
+  #bst-root #pemohon-preview .note{
+    background:rgba(5,150,105,0.12); border:1px solid rgba(5,150,105,0.4); color:#D1FAE5;
+    text-align:left; font-size:12px; line-height:1.6;
+  }
   #bst-root .bst-disclaimer{
     font-size:10.5px; color:#7C8896; max-width:420px; margin:18px auto 0; line-height:1.5;
     border-top:1px dashed rgba(255,255,255,0.12); padding-top:14px;
@@ -363,6 +370,859 @@
 <div id="bst-root"></div>
 
 <script>
+const DUK_DATA = {
+  "Sekretariat": [
+    {
+      "nama": "ADITYA G ANGGALAKSANA, S.E",
+      "nip": "198505112025211026",
+      "jabatan": "Penata layanan operasional"
+    },
+    {
+      "nama": "ANITA NURAHMI, S.E.",
+      "nip": "199410182022032013",
+      "jabatan": "Penelaah Teknis Kebijakan"
+    },
+    {
+      "nama": "APRILIYANTO, S.P., M.M.",
+      "nip": "198204082010121004",
+      "jabatan": "Kepala Subbagian Barang Milik Negara dan Rumah Tangga"
+    },
+    {
+      "nama": "ARDHIE ACHMAD FARIDY, S.AB.",
+      "nip": "199605202025051001",
+      "jabatan": "Analis Kebijakan Ahli Pertama"
+    },
+    {
+      "nama": "ARYO GURITNO, M.M.",
+      "nip": "197407212008011005",
+      "jabatan": "Analis Kebijakan Ahli Muda"
+    },
+    {
+      "nama": "ASTINA CLAUDEA AZARIA, S.E",
+      "nip": "199710282022032006",
+      "jabatan": "Penelaah Teknis Kebijakan"
+    },
+    {
+      "nama": "DARA RESMI ASBIANTARI, S.E., M.Si.",
+      "nip": "198709102009122004",
+      "jabatan": "Analis SDM Aparatur Ahli Muda"
+    },
+    {
+      "nama": "DENI U SUTISNA",
+      "nip": "198402062025212015",
+      "jabatan": "Pengadministrasi Perkantoran"
+    },
+    {
+      "nama": "DIESE MARIA IRIANTY, S.E.",
+      "nip": "198412302008012004",
+      "jabatan": "Pustakawan Ahli Pertama"
+    },
+    {
+      "nama": "DWI ANJANI KAMISWARA, S.E.",
+      "nip": "198709232014022004",
+      "jabatan": "Analis SDM Aparatur Ahli Pertama"
+    },
+    {
+      "nama": "ERNI ARTATI, S.E., M.M.",
+      "nip": "197108222002122003",
+      "jabatan": "Analis Pengelolaan Keuangan Anggaran Pendapatan dan Belanja Negara Ahli Muda"
+    },
+    {
+      "nama": "FAHMI SYAEFUL MILLAH, S.ST.",
+      "nip": "199106112024211008",
+      "jabatan": "Perencana Ahli Pertama"
+    },
+    {
+      "nama": "FITRIANA PUJI LESTARI, A.Md.M.",
+      "nip": "199503052020122016",
+      "jabatan": "Pengolah Data dan Informasi"
+    },
+    {
+      "nama": "GURUH SETYO NUGROHO, S.T.",
+      "nip": "199504012024211012",
+      "jabatan": "Arsiparis Ahli Pertama"
+    },
+    {
+      "nama": "HARIS FADILAH HUSEIN, S.I.Kom.",
+      "nip": "199902222023211001",
+      "jabatan": "Pranata Hubungan Masyarakat Ahli Pertama"
+    },
+    {
+      "nama": "HARRY PRIHATMOKO, S.E.,M.M.",
+      "nip": "198202152006041004",
+      "jabatan": "Analis Pengelolaan Keuangan Anggaran Pendapatan dan Belanja Negara Ahli Madya"
+    },
+    {
+      "nama": "HENDRA GUNAWAN",
+      "nip": "198203282025211023",
+      "jabatan": "Pengadministrasi Perkantoran"
+    },
+    {
+      "nama": "HENDRAWAN SETYAJI JOEWARTO, S.E.",
+      "nip": "198110252009121001",
+      "jabatan": "Analis Pengelolaan Keuangan Anggaran Pendapatan dan Belanja Negara Ahli Muda"
+    },
+    {
+      "nama": "INTAN PURNAMA, A.Md",
+      "nip": "199011102020122017",
+      "jabatan": "Pengolah Data dan Informasi"
+    },
+    {
+      "nama": "IRTAN WAHYUDIN, S.E",
+      "nip": "197710252025211015",
+      "jabatan": "Analis Kebijakan Ahli Pertama"
+    },
+    {
+      "nama": "IVAN FITHRIYANTO, S.T., M.S.E.",
+      "nip": "197311032003121006",
+      "jabatan": "Sekretaris Bappebti"
+    },
+    {
+      "nama": "JOSE NATANAEL SITUMEANG, S.E.",
+      "nip": "199912262025051001",
+      "jabatan": "Perencana Ahli Pertama"
+    },
+    {
+      "nama": "LAURENTIUS SANTOSO WIBOWO, S.P., M.Si.",
+      "nip": "198407042009121001",
+      "jabatan": "Perencana Ahli Muda"
+    },
+    {
+      "nama": "MELINDA, S.E.",
+      "nip": "198305022010122003",
+      "jabatan": "Pranata Keuangan APBN Mahir"
+    },
+    {
+      "nama": "MUARA MAS MURNI ROSALINA, S.P., M.S.E.",
+      "nip": "198403142009122001",
+      "jabatan": "Kepala Bagian Program dan Kerja Sama"
+    },
+    {
+      "nama": "MUFLIHAH WIDIYANI, S.P., M.Si.",
+      "nip": "198509282009122001",
+      "jabatan": "Pranata Hubungan Masyarakat Ahli Madya"
+    },
+    {
+      "nama": "MUHAMAD RIZKY SAPUTRA, S.Ak.",
+      "nip": "199601092025211019",
+      "jabatan": "Penata layanan operasional"
+    },
+    {
+      "nama": "NURHADI PANCA WIBOWO, S.E.",
+      "nip": "198306012009121001",
+      "jabatan": "Perencana Ahli Muda"
+    },
+    {
+      "nama": "NURI SYAMSIAH, S.E.",
+      "nip": "198303102006042004",
+      "jabatan": "Pranata Keuangan APBN Penyelia"
+    },
+    {
+      "nama": "RENA AFRIANY, S.E.",
+      "nip": "198104102005022001",
+      "jabatan": "Analis Anggaran Muda"
+    },
+    {
+      "nama": "RENATHA SAVIRA EKASETYA PUTRI, S.S",
+      "nip": "197608182006042001",
+      "jabatan": "Penelaah Teknis Kebijakan"
+    },
+    {
+      "nama": "RISA TRIJULIYANI",
+      "nip": "199206232025212022",
+      "jabatan": "Pengadministrasi Perkantoran"
+    },
+    {
+      "nama": "SAMINO",
+      "nip": "197108112025211025",
+      "jabatan": "Operator Layanan Operasional"
+    },
+    {
+      "nama": "SEPTI ANGGRAENI, S.AB",
+      "nip": "199106152024212029",
+      "jabatan": "Pranata Hubungan Masyarakat Ahli Pertama"
+    },
+    {
+      "nama": "SUNNA LAILA AZHARI, A.Md.Bns.",
+      "nip": "199806112025052006",
+      "jabatan": "Pranata Keuangan APBN Terampil"
+    },
+    {
+      "nama": "SUTRISNO, S.E.",
+      "nip": "198512102005021001",
+      "jabatan": "Kepala Bagian Umum"
+    },
+    {
+      "nama": "SUYATNO",
+      "nip": "197908022025211015",
+      "jabatan": "Pengadministrasi Perkantoran"
+    },
+    {
+      "nama": "SYAM HABIB PAMUNGKAS, S.T.",
+      "nip": "199106282025051001",
+      "jabatan": "Pranata Komputer Ahli Pertama"
+    },
+    {
+      "nama": "VERA HENDRIAS KUMALASARI, S.E., M.M.",
+      "nip": "198203232006042027",
+      "jabatan": "Analis SDM Aparatur Ahli Madya"
+    },
+    {
+      "nama": "VERAWATI",
+      "nip": "199404052025212032",
+      "jabatan": "Pengadministrasi Perkantoran"
+    },
+    {
+      "nama": "WINDY WULANDARI, S.Kom.",
+      "nip": "198402052009122002",
+      "jabatan": "Pranata Keuangan APBN Penyelia"
+    },
+    {
+      "nama": "YESSI ULI CAHAYANA, S.E.",
+      "nip": "198707192022032002",
+      "jabatan": "Perencana Ahli Pertama"
+    },
+    {
+      "nama": "YETTY WIDYAWARINI, S.Kom, M.Si.",
+      "nip": "197801292002122001",
+      "jabatan": "Perencana Ahli Madya"
+    },
+    {
+      "nama": "YOANITA",
+      "nip": "199204222025212025",
+      "jabatan": "Pengadministrasi Perkantoran"
+    }
+  ],
+  "Biro Peraturan Perundang-undangan PBK, SRG, PBK": [
+    {
+      "nama": "ANASTASIA, S.A.B.",
+      "nip": "199703292025052003",
+      "jabatan": "Perencana Ahli Pertama"
+    },
+    {
+      "nama": "ANDY PANROYTUA ZULKARNAEN,S.H.",
+      "nip": "198609232022031001",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "ASEP IRVAN NUROHIM, S.H.",
+      "nip": "198412262019021002",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "DWI RISA PUSTI,S.E.",
+      "nip": "199009302022032004",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "FITRHAH ADZAN, S.H.",
+      "nip": "199210232015022002",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "HANNA HERVIANA, S.H.",
+      "nip": "198212142010122002",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "HARY LESMANA,S.H.",
+      "nip": "198507292014021004",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "IRA DELVINA, S.E., M.Ak., CA",
+      "nip": "198910032014022001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "MAS AJI ENGGAR BUWONO, S.M",
+      "nip": "199612202025211017",
+      "jabatan": "Penata layanan operasional"
+    },
+    {
+      "nama": "MUHAMMAD IQBAL ISNAENI, S.H.",
+      "nip": "199109142018011001",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "NANDA AINNUR ROCHMAH, A.Md.Ak.",
+      "nip": "200303082025052001",
+      "jabatan": "Pranata Keuangan APBN Terampil"
+    },
+    {
+      "nama": "NILAM DYAH PUSPITO SARI, S.H.,M.",
+      "nip": "198310062009122003",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "OCTAVIAN HENDRYANSYAH",
+      "nip": "199710042025211031",
+      "jabatan": "Penata Layanan Operasional"
+    },
+    {
+      "nama": "REZA ARDIANSYAH, S.Kom.",
+      "nip": "199204092024211012",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "RIDWAN FACHRUDIN,S.TP.",
+      "nip": "199410232019021006",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "RIFAH ARINY, S.H., MSi.",
+      "nip": "197905122002122002",
+      "jabatan": "Kepala Biro Perundang-Undangan PBK, SRG dan PLK"
+    },
+    {
+      "nama": "RIO RAMADHANI, S.H.",
+      "nip": "198804242014021004",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "ROSA WINARNI, S.E.",
+      "nip": "196909111989032001",
+      "jabatan": "Kepala Subbagian Tata Usaha"
+    },
+    {
+      "nama": "SIGIT NUGROHO,S.E.,S.H., M.H.",
+      "nip": "197905192006041001",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "TEUKU FERNANDI NOVAL,S.E.",
+      "nip": "197911082014021001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "TRINANDA ULTARI, S.P.,M.S.E.",
+      "nip": "198908172014022002",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "WIDYANINGSIH SARI S, S.H., M.H.",
+      "nip": "198708182009122002",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "YOVIAN ANDRI P.,S.H.,S.E.,Ak., M.M.,L.L.M",
+      "nip": "197904022005021001",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "YULIA KURNIASARI, A.Md",
+      "nip": "199307042020122023",
+      "jabatan": "Pengolah Data dan Informasi"
+    }
+  ],
+  "Biro Pengawasan dan Penindakan PBK, SRG, PLK": [
+    {
+      "nama": "AGUS SALIM SUSENO, S.H.,LL.M.",
+      "nip": "198808172015021001",
+      "jabatan": "Pengawas Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "AGUS SULISTIYANTO, S.Kom, M.E.",
+      "nip": "198011082009011007",
+      "jabatan": "Pengawas Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "AMSER IRAWAN PANJAITAN, S.H.",
+      "nip": "198203282009011003",
+      "jabatan": "Pengawas Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "ANGGIA SHINTIA DEWI, S.E., M.M.",
+      "nip": "198509082010122003",
+      "jabatan": "Kepala Subbagian Tata Usaha"
+    },
+    {
+      "nama": "APRILIA RAHMADINI, S.E",
+      "nip": "198704292025212010",
+      "jabatan": "Pemeriksa PBK Ahli Pertama"
+    },
+    {
+      "nama": "APRILLIA RIZKY DWI UTAMI, S.E.",
+      "nip": "199804272025052004",
+      "jabatan": "Perencana Ahli Pertama"
+    },
+    {
+      "nama": "AULIA PUSPA RAMADHANI, S.T.P.",
+      "nip": "199801272022032005",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "BERNARD ASIDO SILITONGA, S.H.",
+      "nip": "199008242014021001",
+      "jabatan": "Pengawas Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "CHANDRA FREDRIK PURBA, S.E.",
+      "nip": "198812142020121007",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "CHRISTIAN ANGGORO, S.E.",
+      "nip": "198911032019021006",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "DAROJATUN MAYUNIRMALA, S.E.",
+      "nip": "198005032006042005",
+      "jabatan": "Pengawas Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "DEVI PRIYANTI, S.T.P.",
+      "nip": "200012222025052003",
+      "jabatan": "Pemeriksa PBK Ahli Pertama"
+    },
+    {
+      "nama": "DHARMAWAN PRAKARSO RY PUTRA, M.M.",
+      "nip": "197604302010121002",
+      "jabatan": "Pengawas Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "ERYALFAN SETYO PRAKOSO, S.TP.",
+      "nip": "199306042022031003",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "FAHMIANDI KABUL AHSAN, S.E.",
+      "nip": "199611042022031005",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "GRESIA B, S.P",
+      "nip": "199904292022032011",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "HASNA ANINTYA ISNURSASI, S.T.P.",
+      "nip": "199602022022032005",
+      "jabatan": "Pengawas Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "INDRA SETIAWAN, S.Kom., M.M.",
+      "nip": "198306062006041003",
+      "jabatan": "Pengawas Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "INSANIYAH MAHARANI, S.T.P.",
+      "nip": "199912232025052008",
+      "jabatan": "Pemeriksa PBK Ahli Pertama"
+    },
+    {
+      "nama": "MATHEUS HENDRO PURNOMO, S.T., M.S.E.",
+      "nip": "196812271989011001",
+      "jabatan": "Kepala Ronabang PBK, SRG, PLK"
+    },
+    {
+      "nama": "MAWARDI KARTASASMITA, S.TP.",
+      "nip": "199207062019021003",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "MELINDA ARIANI, S.E",
+      "nip": "198306042025212015",
+      "jabatan": "Pemeriksa PBK Ahli Pertama"
+    },
+    {
+      "nama": "MUHAMAD IRZAL, S.E., M.E.",
+      "nip": "197902032009011007",
+      "jabatan": "Pengawas Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "PAULUS TARIPAR LUMBAN BATU, S.E.",
+      "nip": "198909292024211016",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "PIRDAUS SABANA, SP, M.P.",
+      "nip": "198804052019021005",
+      "jabatan": "Pengawas Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "RAIZA GUMALA, S.Psi.",
+      "nip": "199510302024212023",
+      "jabatan": "Arsiparis Ahli Pertama"
+    },
+    {
+      "nama": "RENDY CISARA SANDY, S.T.P.",
+      "nip": "199707042022031003",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "REYSA RACHMAT TOENGKAGIE, S.H., M.S.E.",
+      "nip": "199202082018011001",
+      "jabatan": "Pengawas Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "RIZKA TRIANITA, S.Sos",
+      "nip": "198709272025212038",
+      "jabatan": "Penata layanan operasional"
+    },
+    {
+      "nama": "SHILLA NOVIRA PERTIWI, S.P.",
+      "nip": "199911102022032002",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "SRI SUNDAYANI, S.E.,Ak. M.Si.",
+      "nip": "197404072002122004",
+      "jabatan": "Pengawas Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "SYLVIA SHELA SONDANG H, A.Md.Ak.",
+      "nip": "200302052025052003",
+      "jabatan": "Pranata Keuangan APBN Terampil"
+    },
+    {
+      "nama": "TAUFIK HIDAYAT, S.E., M.E.",
+      "nip": "198110192006041001",
+      "jabatan": "Pengawas Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "TITO YASSIN, S.TP., MM",
+      "nip": "199103272022031002",
+      "jabatan": "Pengawas Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "VINA HARIYUNINGSIH, A.Md.",
+      "nip": "199806022020122010",
+      "jabatan": "Pengolah Data dan Informasi"
+    },
+    {
+      "nama": "YASA ISKANDAR, A.Md",
+      "nip": "199211242025211034",
+      "jabatan": "Pengelola Layanan Operasional"
+    },
+    {
+      "nama": "YESI ADVENTINA SINAGA",
+      "nip": "199812172025052004",
+      "jabatan": "Pemeriksa PBK Ahli Pertama"
+    }
+  ],
+  "Biro Pembinaan dan Pengembangan SRG dan PLK": [
+    {
+      "nama": "ANGGA FARIZ PRAYOGA, SE",
+      "nip": "198905132019021004",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "ANINDYA DEWI SEKARTAJI, S.H.",
+      "nip": "200003152022032003",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "APRILIA ANGGITA PUTRI",
+      "nip": "200104052025052004",
+      "jabatan": "Analis Kebijakan Ahli Pertama"
+    },
+    {
+      "nama": "ATHIKA BUDI PRIHATINI, S.P. M.Si.",
+      "nip": "198310272009012002",
+      "jabatan": "Analis Kebijakan Ahli Madya"
+    },
+    {
+      "nama": "AULIA EDLIN PRADANA, S.H.",
+      "nip": "199608012022031005",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "BUSROL KARIM, S.E.,M.M.",
+      "nip": "197106301992031002",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "CHRISTIANI FANOLO DAELI, S.P.",
+      "nip": "199512102022032009",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "DARA LAKSMITA AYUNINGTYAS K, S.E",
+      "nip": "198706262022032001",
+      "jabatan": "Analis Pengelolaan Keuangan Anggaran Pendapatan dan Belanja Negara Ahli Pertama"
+    },
+    {
+      "nama": "DIAH SANDITA ARISANTI, S.E., Msi",
+      "nip": "197504052002122004",
+      "jabatan": "Kepala Biro Pembinaan dan Pengembangan Sistem Resi Gudang, dan Pasar Lelang"
+    },
+    {
+      "nama": "EKKY ENDAH SAFITRI, S.E.",
+      "nip": "199603082020122016",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "LAVINIA CINDY CAROLINA, S.E",
+      "nip": "199504052025212069",
+      "jabatan": "Pemeriksa PBK Ahli Pertama"
+    },
+    {
+      "nama": "MAULIDA AFIATY, S.H.",
+      "nip": "198312282009122001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "MEINDRO BAYU K, S.E., M.Si., M.App.Ec.",
+      "nip": "198105012009121002",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "MOHAMMAD HAIRULLOH, S.kom",
+      "nip": "197908072025211041",
+      "jabatan": "Penata Layanan Operasional"
+    },
+    {
+      "nama": "MUHAMMAD RASYID SHIDIQ, S.E.",
+      "nip": "199709032022031008",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "MUTIA ENDANG NOVIANTI, S.E.",
+      "nip": "198311202009122002",
+      "jabatan": "Kepala Subbagian Tata Usaha"
+    },
+    {
+      "nama": "NAHDA RATU AULIA, S.A.B.",
+      "nip": "200110172025052003",
+      "jabatan": "Analis Kebijakan Ahli Pertama"
+    },
+    {
+      "nama": "NOVAL NAZWANURIL WAFI, S.TP",
+      "nip": "199505282018011001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "PUTRANTI MUMPUNI, SE.",
+      "nip": "199209192024212020",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "RACHMAD WAHYUDI, S.Kom.",
+      "nip": "197905202006041002",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "RAYUNG KIRTI MALINI, S.T.P.",
+      "nip": "199804292022032009",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "RIDA ZUANDA, S.T.P.",
+      "nip": "198904082018011003",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "RISKY IRAWAN, S.E",
+      "nip": "198607122025211062",
+      "jabatan": "Pemeriksa PBK Ahli Pertama"
+    },
+    {
+      "nama": "RUTKAYA SIMANUNGKALIT, SP",
+      "nip": "198701132020122010",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "SRI PUJI ASTUTI, S.T.P.",
+      "nip": "199505262022032009",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "SYIFA YASMINE SEPTIANI, S.E.",
+      "nip": "199909092022032007",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "TIARA KENCANA AYU, S.Stat.",
+      "nip": "198802092014022001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "TOMI SETIAWAN, S.IP., M.Eng.",
+      "nip": "197906022008011011",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "YUDHA SKRIPSI ANGGRAHITA, S.H.",
+      "nip": "198307022018011002",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    }
+  ],
+  "Biro Pembinaan dan Pengembangan PBK": [
+    {
+      "nama": "ALVIN RIFQY ABDILLA, S.T.P.",
+      "nip": "199603312020121010",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "ANISA WAHYU UTAMI, S.T.P",
+      "nip": "199710312020122017",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "ARIFUDIN AKBAR, S.E., Ak.",
+      "nip": "198607152010121002",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "BOBBY RAJA INDRA, S.E.",
+      "nip": "199206252020121011",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "COHEN WILLIAM MANGGADING N, S.M.",
+      "nip": "199302042020121010",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "DANNY AGUS SETIANTO S.E., M.SE.",
+      "nip": "198008022002121002",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "DIAN ILLUH LENTARI, S.E.",
+      "nip": "198105312006042003",
+      "jabatan": "Penelaah Teknis Kebijakan"
+    },
+    {
+      "nama": "DODY FRANDIKA A. SIMANJUNTAK, SE, M.Sc.",
+      "nip": "198602122014021001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "Drs. SAHUDI, M.M.",
+      "nip": "196108011982031002",
+      "jabatan": "Analis Perdagangan Ahli Utama"
+    },
+    {
+      "nama": "ELISABET MARTAULINA BR.S., S.H.",
+      "nip": "198209182006042002",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "ENI BAITI SARAH, S.E.",
+      "nip": "198209102025212027",
+      "jabatan": "Penata layanan operasional"
+    },
+    {
+      "nama": "GITA REGINA NAPITUPULU, S.I.P., MIDS, MPA",
+      "nip": "198607222014022001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "HAIDIR ALI, S.I.Kom",
+      "nip": "199409032025211022",
+      "jabatan": "Pemeriksa PBK Ahli Pertama"
+    },
+    {
+      "nama": "HERA LIANA, S.T.P.",
+      "nip": "199306042020122016",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "HERMAWAN SUSANTO, S.T.",
+      "nip": "198512172010121002",
+      "jabatan": "Kepala Subbagian Tata Usaha"
+    },
+    {
+      "nama": "HILDA ROMA ULI SIAHAAN, S.Sosio.",
+      "nip": "199104302019022006",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "IMA SITI FATIMAH, S.Kom., M.Si.",
+      "nip": "197907022002122002",
+      "jabatan": "Kepala Biro Pembinaan dan Pengembangan Perdagangan Berjangka Komoditi"
+    },
+    {
+      "nama": "IVANA ELABAESA SUMBAYAK,S.E.",
+      "nip": "199103142020122012",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "KURNIATI, A.Md.",
+      "nip": "198910292020122011",
+      "jabatan": "Pengolah Data dan Informasi"
+    },
+    {
+      "nama": "LAMINAR PURBA, S.T.P.",
+      "nip": "199706072022032005",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "LELY RACHMA SEPTIANA, S.T.P., M.Si.",
+      "nip": "198809042019022005",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "M. SYIST, S.H., M.H.",
+      "nip": "196110221993011001",
+      "jabatan": "Analis Perdagangan Ahli Utama"
+    },
+    {
+      "nama": "NIEKE LINA IKAWATI, S.P., M.M.",
+      "nip": "198408052014022001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "PIPIET FAIZAL AMIN, S.T., M.T.I.",
+      "nip": "198507282009011006",
+      "jabatan": "Pranata Komputer Ahli Madya"
+    },
+    {
+      "nama": "POPPY JULIYANTI, S.S., M.M.",
+      "nip": "197607172008012019",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    },
+    {
+      "nama": "RAFII RABBANI THALIB, A.Md.Kom",
+      "nip": "199803302025211007",
+      "jabatan": "Pengelola Layanan Operasional"
+    },
+    {
+      "nama": "REZKY FEBRIANSYAH, SH, MH",
+      "nip": "198202012010121001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "RIANA SEPTIANI, S.Kom",
+      "nip": "199309252025212030",
+      "jabatan": "Pemeriksa PBK Ahli Pertama"
+    },
+    {
+      "nama": "SAMURI, S.M.",
+      "nip": "198901042024211007",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "SONI SUGIHARTO, S.E",
+      "nip": "198411202020121006",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "TASHA KHARISMAPUTRI, S.H.I",
+      "nip": "199206062019022009",
+      "jabatan": "Analis Perdagangan Ahli Pertama"
+    },
+    {
+      "nama": "VERDINA LARAS, S.M.",
+      "nip": "200110052025052007",
+      "jabatan": "Perencana Ahli Pertama"
+    },
+    {
+      "nama": "WINAHYU SARASWATI, S.E.",
+      "nip": "198710162010122001",
+      "jabatan": "Analis Perdagangan Ahli Muda"
+    },
+    {
+      "nama": "YEVI ATHALIA, M.S.M.",
+      "nip": "198401022010122002",
+      "jabatan": "Analis Perdagangan Ahli Madya"
+    }
+  ]
+};
+
 
 (function(){
   const USER_KEY = 'bst-pemohon-session'; // hanya dipakai untuk sesi Pemohon (tanpa password)
@@ -393,9 +1253,10 @@
 
   // ---- field permission rules: who can edit + when ----
   const FIELD_RULES = {
-    nama:               { role:'pemohon',   ok:e=> !e.tglPersetujuan },
-    nip:                { role:'pemohon',   ok:e=> !e.tglPersetujuan },
-    eselonII:           { role:'pemohon',   ok:e=> !e.tglPersetujuan },
+    nama:               { role:'pemohon',   ok:e=> false },
+    nip:                { role:'pemohon',   ok:e=> false },
+    eselonII:           { role:'pemohon',   ok:e=> false },
+    jabatan:            { role:'pemohon',   ok:e=> false },
     nup:                { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     jenis:              { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     kendala:            { role:'pemohon',   ok:e=> !e.tglPersetujuan },
@@ -424,6 +1285,8 @@
     if(currentUser.role !== r.role) return 'Hanya diisi oleh peran: ' + ROLE_LABEL[r.role] + '.';
     if(r.ok(entry||{})) return '';
     switch(fieldKey){
+      case 'nama': case 'nip': case 'eselonII': case 'jabatan':
+        return 'Dipilih dari Daftar Urut Kepangkatan (DUK) saat masuk sebagai Pemohon, tidak dapat diketik ulang.';
       case 'tglPersetujuan': return entry.tglPersetujuan ? 'Sudah disetujui.' : 'Menunggu Tanggal Permohonan.';
       case 'tglProses': return entry.tglProses ? 'Sudah diproses.' : 'Menunggu persetujuan Kasub BMN.';
       case 'tglPemeriksaan': return entry.tglPemeriksaan ? 'Sudah diperiksa.' : 'Menunggu tahap Proses Permohonan.';
@@ -724,25 +1587,80 @@
 
   /* ============ LAYAR: FORM PEMOHON (tanpa password) ============ */
   function renderPemohonForm(){
+    const eselonList = Object.keys(DUK_DATA);
     root.innerHTML = `
       <div class="bst-login">
         <h2 class="disp">Masuk sebagai Pemohon</h2>
-        <p>Isi data berikut. Tidak perlu akun atau kata sandi.</p>
+        <p>Pilih Eselon II dan nama Anda sesuai Daftar Urut Kepangkatan (DUK). Tidak perlu akun atau kata sandi.</p>
         <div class="bst-login-form">
-          <input type="text" id="f-pemohon-name" placeholder="Nama lengkap Anda">
-          <input type="text" id="f-pemohon-nip" placeholder="NIP">
-          <input type="text" id="f-pemohon-eselon2" placeholder="Eselon II">
-          <button class="btn btn-primary" id="btn-pemohon-masuk" style="width:100%;">Masuk sebagai Pemohon</button>
+          <select id="f-pemohon-eselon2">
+            <option value="">-- Pilih Eselon II --</option>
+            ${eselonList.map(es => `<option value="${escapeAttr(es)}">${escapeHtml(es)}</option>`).join('')}
+          </select>
+          <select id="f-pemohon-name" disabled>
+            <option value="">-- Pilih Eselon II dahulu --</option>
+          </select>
+          <div id="pemohon-preview"></div>
+          <button class="btn btn-primary" id="btn-pemohon-masuk" style="width:100%;" disabled>Pilih nama Anda terlebih dahulu</button>
           <button class="btn btn-ghost" id="btn-pemohon-back" style="width:100%;margin-top:8px;">&larr; Kembali</button>
         </div>
+        <div class="bst-disclaimer">Daftar nama bersumber dari Daftar Urut Kepangkatan (DUK) per unit Eselon II. Jika nama Anda belum/tidak terdaftar, hubungi Admin.</div>
       </div>`;
+
+    const eselonSel = document.getElementById('f-pemohon-eselon2');
+    const nameSel = document.getElementById('f-pemohon-name');
+    const preview = document.getElementById('pemohon-preview');
+    const masukBtn = document.getElementById('btn-pemohon-masuk');
+
+    let selectedPerson = null;
+
+    function updateMasukBtn(){
+      if(selectedPerson){
+        masukBtn.disabled = false;
+        masukBtn.textContent = 'Masuk sebagai Pemohon';
+      } else {
+        masukBtn.disabled = true;
+        masukBtn.textContent = 'Pilih nama Anda terlebih dahulu';
+      }
+    }
+
+    eselonSel.addEventListener('change', ()=>{
+      const es = eselonSel.value;
+      selectedPerson = null;
+      preview.innerHTML = '';
+      updateMasukBtn();
+      if(!es){
+        nameSel.innerHTML = '<option value="">-- Pilih Eselon II dahulu --</option>';
+        nameSel.disabled = true;
+        return;
+      }
+      const people = DUK_DATA[es] || [];
+      nameSel.innerHTML = '<option value="">-- Pilih Nama --</option>'
+        + people.map((p,i)=> `<option value="${i}">${escapeHtml(p.nama)}</option>`).join('');
+      nameSel.disabled = false;
+    });
+
+    nameSel.addEventListener('change', ()=>{
+      const es = eselonSel.value;
+      const idx = nameSel.value;
+      if(es && idx !== ''){
+        selectedPerson = DUK_DATA[es][idx];
+        preview.innerHTML = `<div class="note">NIP: <b>${escapeHtml(selectedPerson.nip)}</b><br>Jabatan: ${escapeHtml(selectedPerson.jabatan || '-')}</div>`;
+      } else {
+        selectedPerson = null;
+        preview.innerHTML = '';
+      }
+      updateMasukBtn();
+    });
+
     document.getElementById('btn-pemohon-back').addEventListener('click', renderChoose);
-    document.getElementById('btn-pemohon-masuk').addEventListener('click', ()=>{
-      const name = document.getElementById('f-pemohon-name').value.trim();
-      const nip = document.getElementById('f-pemohon-nip').value.trim();
-      const eselonII = document.getElementById('f-pemohon-eselon2').value.trim();
-      if(!name || !nip || !eselonII){ alert('Nama, NIP, dan Eselon II wajib diisi.'); return; }
-      savePemohonSession({ name, nip, eselonII, role:'pemohon' });
+    masukBtn.addEventListener('click', ()=>{
+      if(!selectedPerson) return;
+      savePemohonSession({
+        name: selectedPerson.nama, nip: selectedPerson.nip,
+        eselonII: eselonSel.value, jabatan: selectedPerson.jabatan,
+        role:'pemohon',
+      });
       initDashboard();
     });
   }
@@ -1165,6 +2083,7 @@
         + '<td>'+escapeHtml(e.nama)+'</td>'
         + '<td>'+escapeHtml(e.nip||'-')+'</td>'
         + '<td>'+escapeHtml(e.eselonII||'-')+'</td>'
+        + '<td>'+escapeHtml(e.jabatan||'-')+'</td>'
         + '<td>'+escapeHtml(e.nup)+'</td>'
         + '<td>'+escapeHtml(e.jenis||'-')+'</td>'
         + '<td>'+escapeHtml(e.kendala||'-')+'</td>'
@@ -1190,7 +2109,7 @@
       + '<div class="print-meta">Dicetak oleh: '+escapeHtml(currentUser.name)+' ('+ROLE_LABEL[currentUser.role]+') &middot; '+new Date().toLocaleString('id-ID')+' &middot; Total: '+list.length+' permohonan</div>'
       + '</div>'
       + '<table class="print-table"><thead><tr>'
-        + '<th>No</th><th>Nama Pemohon</th><th>NIP</th><th>Eselon II</th><th>NUP</th><th>Jenis Peralatan &amp; Mesin</th><th>Kendala</th>'
+        + '<th>No</th><th>Nama Pemohon</th><th>NIP</th><th>Eselon II</th><th>Jabatan</th><th>NUP</th><th>Jenis Peralatan &amp; Mesin</th><th>Kendala</th>'
         + '<th>Tgl Permohonan</th><th>Tgl Persetujuan Kasub BMN</th><th>Tgl Proses</th><th>Tgl Pemeriksaan</th>'
         + '<th>Hasil Pemeriksaan</th><th>Estimasi Selesai</th><th>Tgl Selesai Pekerjaan</th><th>Status</th>'
       + '</tr></thead><tbody>'+rows+'</tbody></table>';
@@ -1264,6 +2183,7 @@
 
   /* ============ CREATE MODAL (pemohon & admin) ============ */
   function openCreateModal(){
+    const isPemohon = currentUser.role === 'pemohon';
     const overlay = document.createElement('div');
     overlay.className = 'bst-overlay';
     overlay.id = 'bst-overlay';
@@ -1274,14 +2194,22 @@
           <button class="close-x" id="bst-close">&times;</button>
         </div>
         <div class="bst-modal-body">
+          ${isPemohon ? `
+          <div class="note">Diajukan sebagai: <b>${escapeHtml(currentUser.name)}</b> (NIP ${escapeHtml(currentUser.nip||'-')})<br>${escapeHtml(currentUser.eselonII||'-')} &middot; ${escapeHtml(currentUser.jabatan||'-')}</div>
+          ` : `
           <div class="field-row">
             <div class="field"><label>Nama Pemohon <span class="req">*</span></label>
-              <input type="text" id="f-nama" placeholder="Nama lengkap pemohon" value="${currentUser.role==='pemohon' ? escapeAttr(currentUser.name) : ''}"></div>
+              <input type="text" id="f-nama" placeholder="Nama lengkap pemohon"></div>
             <div class="field"><label>NIP <span class="req">*</span></label>
-              <input type="text" id="f-nip" placeholder="NIP" value="${currentUser.role==='pemohon' ? escapeAttr(currentUser.nip||'') : ''}"></div>
+              <input type="text" id="f-nip" placeholder="NIP"></div>
           </div>
-          <div class="field"><label>Eselon II <span class="req">*</span></label>
-            <input type="text" id="f-eselon2" placeholder="Eselon II" value="${currentUser.role==='pemohon' ? escapeAttr(currentUser.eselonII||'') : ''}"></div>
+          <div class="field-row">
+            <div class="field"><label>Eselon II <span class="req">*</span></label>
+              <input type="text" id="f-eselon2" placeholder="Eselon II"></div>
+            <div class="field"><label>Jabatan</label>
+              <input type="text" id="f-jabatan" placeholder="Jabatan"></div>
+          </div>
+          `}
           <div class="field-row">
             <div class="field"><label>NUP <span class="req">*</span></label>
               <input type="text" id="f-nup" placeholder="Nomor Urut Pendaftaran"></div>
@@ -1307,17 +2235,24 @@
   }
 
   async function submitCreate(){
-    const nama = document.getElementById('f-nama').value.trim();
-    const nip = document.getElementById('f-nip').value.trim();
-    const eselonII = document.getElementById('f-eselon2').value.trim();
+    const isPemohon = currentUser.role === 'pemohon';
+    let nama, nip, eselonII, jabatan;
+    if(isPemohon){
+      nama = currentUser.name; nip = currentUser.nip; eselonII = currentUser.eselonII; jabatan = currentUser.jabatan;
+    } else {
+      nama = document.getElementById('f-nama').value.trim();
+      nip = document.getElementById('f-nip').value.trim();
+      eselonII = document.getElementById('f-eselon2').value.trim();
+      jabatan = document.getElementById('f-jabatan').value.trim();
+      if(!nama || !nip || !eselonII){ alert('Nama, NIP, dan Eselon II wajib diisi.'); return; }
+    }
     const nup = document.getElementById('f-nup').value.trim();
     const tglPermohonan = document.getElementById('f-tglPermohonan').value;
-    if(!nama || !nip || !eselonII){ alert('Nama, NIP, dan Eselon II wajib diisi.'); return; }
     if(!nup){ alert('NUP wajib diisi.'); return; }
     if(!tglPermohonan){ alert('Tanggal Permohonan wajib diisi.'); return; }
 
     const entryData = {
-      nama, nip, eselonII, nup,
+      nama, nip, eselonII, jabatan, nup,
       jenis: document.getElementById('f-jenis').value.trim(),
       kendala: document.getElementById('f-kendala').value.trim(),
       tglPermohonan,
@@ -1378,7 +2313,10 @@
                 ${inputField('Nama Pemohon','nama','text')}
                 ${inputField('NIP','nip','text')}
               </div>
-              ${inputField('Eselon II','eselonII','text')}
+              <div class="field-row">
+                ${inputField('Eselon II','eselonII','text')}
+                ${inputField('Jabatan','jabatan','text')}
+              </div>
               <div class="field-row">
                 ${inputField('NUP','nup','text')}
                 ${inputField('Jenis Peralatan &amp; Mesin','jenis','text')}
