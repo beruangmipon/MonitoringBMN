@@ -135,37 +135,42 @@
   }
 
   /* ---------- Grafik RKBMN (layar awal, sebelum login) ---------- */
-  #bst-root .rkbmn-section{
-    margin-top:34px; padding-top:28px;
-    text-align:left; max-width:660px; margin-left:auto; margin-right:auto;
+  #bst-root .data-columns{
+    display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:34px; align-items:start;
   }
-  #bst-root .rkbmn-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
-  #bst-root .rkbmn-title{ font-size:15px; font-weight:700; color:var(--paper); }
-  #bst-root .rkbmn-sub{ font-size:11px; color:#A6B1BE; margin-top:3px; font-family:'JetBrains Mono',monospace; }
-  #bst-root .rkbmn-tabs{ display:flex; gap:6px; flex-wrap:wrap; }
+  #bst-root .rkbmn-section{
+    text-align:left; height:100%;
+    background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09);
+    border-radius:14px; padding:20px;
+  }
+  #bst-root .rkbmn-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  #bst-root .rkbmn-title{ font-size:16px; font-weight:700; color:var(--paper); }
+  #bst-root .rkbmn-sub{ font-size:11.5px; color:#A6B1BE; margin-top:3px; font-family:'JetBrains Mono',monospace; line-height:1.5; }
+  #bst-root .rkbmn-tabs{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
   #bst-root .rkbmn-tab{
-    font-family:'Inter',sans-serif; font-size:11px; font-weight:600; padding:6px 12px; border-radius:20px;
+    font-family:'Inter',sans-serif; font-size:11.5px; font-weight:600; padding:7px 13px; border-radius:20px;
     background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.16); color:#A6B1BE; cursor:pointer;
     transition:all .15s ease;
   }
   #bst-root .rkbmn-tab:hover{ background:rgba(5,150,105,0.18); color:#fff; border-color:rgba(5,150,105,0.4); }
   #bst-root .rkbmn-tab.active{ background:var(--primary); border-color:var(--primary); color:#fff; }
-  #bst-root .rkbmn-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:22px; }
-  #bst-root .rkbmn-stat{ background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px; text-align:center; }
-  #bst-root .rkbmn-stat-num{ font-family:'Sora',sans-serif; font-weight:800; font-size:20px; color:var(--primary); }
-  #bst-root .rkbmn-stat-lbl{ font-size:9.5px; color:#A6B1BE; margin-top:3px; text-transform:uppercase; letter-spacing:.4px; }
+  #bst-root .rkbmn-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+  #bst-root .rkbmn-stat{ background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px 8px; text-align:center; }
+  #bst-root .rkbmn-stat-num{ font-family:'Sora',sans-serif; font-weight:800; font-size:19px; color:var(--primary); }
+  #bst-root .rkbmn-stat-lbl{ font-size:10px; color:#A6B1BE; margin-top:3px; text-transform:uppercase; letter-spacing:.4px; }
   #bst-root .rkbmn-table-wrap{ overflow-x:auto; border-radius:12px; border:1px solid rgba(255,255,255,0.1); }
-  #bst-root .rkbmn-table{ width:100%; border-collapse:collapse; font-size:11.5px; }
+  #bst-root .rkbmn-table{ width:100%; border-collapse:collapse; font-size:12px; }
   #bst-root .rkbmn-table thead th{
-    text-align:left; font-family:'JetBrains Mono',monospace; font-size:9.5px; text-transform:uppercase;
+    text-align:left; font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase;
     letter-spacing:.4px; color:#A6B1BE; background:rgba(255,255,255,0.05);
-    padding:9px 12px; border-bottom:1px solid rgba(255,255,255,0.1);
+    padding:9px 10px; border-bottom:1px solid rgba(255,255,255,0.1); white-space:nowrap;
   }
   #bst-root .rkbmn-table thead th:last-child, #bst-root .rkbmn-table td.rkbmn-td-jumlah{ text-align:right; }
   #bst-root .rkbmn-table thead th:first-child, #bst-root .rkbmn-table td.rkbmn-td-no{ text-align:center; }
-  #bst-root .rkbmn-table tbody td{ padding:9px 12px; border-bottom:1px solid rgba(255,255,255,0.06); vertical-align:middle; }
+  #bst-root .rkbmn-table tbody td{ padding:9px 10px; border-bottom:1px solid rgba(255,255,255,0.06); vertical-align:middle; }
+  #bst-root .rkbmn-table tbody tr:nth-child(even){ background:rgba(255,255,255,0.018); }
   #bst-root .rkbmn-table tbody tr:last-child td{ border-bottom:none; }
-  #bst-root .rkbmn-table tbody tr:hover{ background:rgba(255,255,255,0.04); }
+  #bst-root .rkbmn-table tbody tr:hover{ background:rgba(5,150,105,0.08); }
   #bst-root .rkbmn-td-no{ color:#7C8896; font-family:'JetBrains Mono',monospace; font-size:10.5px; }
   #bst-root .rkbmn-td-nama{ color:#D8DEE4; font-weight:600; }
   #bst-root .rkbmn-td-kode{ color:#7C8896; font-family:'JetBrains Mono',monospace; font-size:9.5px; margin-top:1px; }
@@ -175,10 +180,10 @@
   }
   #bst-root .rkbmn-kat-kendaraan{ background:var(--amber-dim); color:var(--amber-text); }
   #bst-root .rkbmn-kat-elektronik{ background:var(--primary-dim); color:var(--primary-text); }
-  #bst-root .rkbmn-td-jumlah{ font-family:'JetBrains Mono',monospace; font-weight:700; color:#fff; font-size:13px; }
+  #bst-root .rkbmn-td-jumlah{ font-family:'JetBrains Mono',monospace; font-weight:700; color:#fff; font-size:14px; }
   #bst-root .rkbmn-td-pct{ display:block; font-size:9px; font-weight:400; color:#7C8896; margin-top:1px; }
   #bst-root .rkbmn-empty{ font-size:12px; color:#A6B1BE; padding:14px; text-align:center; }
-  #bst-root .rkbmn-footnote{ margin-top:16px; font-size:10px; color:#7C8896; font-family:'JetBrains Mono',monospace; line-height:1.6; }
+  #bst-root .rkbmn-footnote{ margin-top:14px; font-size:10px; color:#7C8896; font-family:'JetBrains Mono',monospace; line-height:1.6; }
   #bst-root .rkbmn-changes{
     margin-top:20px; padding:14px 16px; border-radius:12px;
     background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
@@ -197,36 +202,42 @@
   #bst-root .rkbmn-change-detail .rkbmn-delta-turun{ color:#FCA5A5; }
 
   /* ---------- Sandingan RKBMN vs RKAKL ---------- */
-  #bst-root .compare-section{ margin-top:34px; padding-top:28px; }
-  #bst-root .compare-legend{ display:flex; gap:18px; margin-bottom:18px; flex-wrap:wrap; }
+  #bst-root .compare-legend{ display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap; }
   #bst-root .compare-legend-item{ display:flex; align-items:center; gap:6px; font-size:11px; color:#A6B1BE; }
   #bst-root .compare-swatch{ width:10px; height:10px; border-radius:3px; display:inline-block; }
   #bst-root .compare-swatch-rkbmn{ background:linear-gradient(90deg, var(--primary), #34D399); }
   #bst-root .compare-swatch-rkakl{ background:linear-gradient(90deg, #60A5FA, var(--info)); }
-  #bst-root .compare-chart{ display:flex; flex-direction:column; gap:12px; }
-  #bst-root .compare-row{ display:grid; grid-template-columns:1fr 168px 1fr; align-items:center; gap:10px; }
-  #bst-root .compare-side{ display:flex; align-items:center; gap:8px; }
-  #bst-root .compare-left{ flex-direction:row-reverse; }
+  #bst-root .compare-chart{ display:flex; flex-direction:column; gap:13px; }
+  #bst-root .compare-row{ display:grid; grid-template-columns:1fr 118px 1fr; align-items:center; gap:8px; }
+  #bst-root .compare-side{ display:flex; align-items:center; gap:6px; }
   #bst-root .compare-track{ flex:1; height:9px; border-radius:5px; background:rgba(255,255,255,0.08); overflow:hidden; }
-  #bst-root .compare-left .compare-track{ display:flex; justify-content:flex-end; }
+  #bst-root .compare-right .compare-track{ display:flex; justify-content:flex-end; }
   #bst-root .compare-fill{ height:100%; border-radius:5px; transition:width .3s ease; }
   #bst-root .compare-fill-rkbmn{ background:linear-gradient(90deg, var(--primary), #34D399); }
   #bst-root .compare-fill-rkakl{ background:linear-gradient(90deg, #60A5FA, var(--info)); }
-  #bst-root .compare-val{ font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; color:#fff; min-width:26px; text-align:center; }
-  #bst-root .compare-label{ font-size:11px; color:#D8DEE4; text-align:center; font-weight:600; line-height:1.3; }
+  #bst-root .compare-val{ font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:#fff; min-width:22px; text-align:center; }
+  #bst-root .compare-label{ font-size:10.5px; color:#D8DEE4; text-align:center; font-weight:600; line-height:1.3; }
 
   /* ---------- Rekomendasi Tindak Lanjut ---------- */
-  #bst-root .rekom-section{ margin-top:34px; padding-top:28px; }
-  #bst-root .rekom-list{ display:flex; flex-direction:column; gap:14px; }
-  #bst-root .rekom-item{ display:flex; gap:12px; align-items:flex-start; }
+  #bst-root .rekom-section{ margin-top:26px; }
+  #bst-root .rekom-list{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  #bst-root .rekom-item{
+    display:flex; gap:12px; align-items:flex-start; padding:14px; border-radius:12px;
+    background:rgba(255,255,255,0.03); border-left:3px solid var(--primary);
+    transition:transform .15s ease, background .15s ease;
+  }
+  #bst-root .rekom-item:hover{ transform:translateY(-2px); background:rgba(255,255,255,0.055); }
+  #bst-root .rekom-accent-a{ border-left-color:var(--primary); }
+  #bst-root .rekom-accent-b{ border-left-color:var(--info); }
+  #bst-root .rekom-accent-c{ border-left-color:var(--amber); }
   #bst-root .rekom-num{
-    width:26px; height:26px; border-radius:50%; flex-shrink:0;
+    width:24px; height:24px; border-radius:50%; flex-shrink:0;
     background:linear-gradient(135deg, var(--primary), #34D399); color:#fff;
-    font-family:'Sora',sans-serif; font-weight:800; font-size:12px;
+    font-family:'Sora',sans-serif; font-weight:800; font-size:11px;
     display:flex; align-items:center; justify-content:center;
   }
-  #bst-root .rekom-judul{ font-size:12.5px; font-weight:700; color:var(--paper); margin-bottom:3px; }
-  #bst-root .rekom-isi{ font-size:11.5px; color:#A6B1BE; line-height:1.6; }
+  #bst-root .rekom-judul{ font-size:12.5px; font-weight:700; color:var(--paper); margin-bottom:4px; line-height:1.3; }
+  #bst-root .rekom-isi{ font-size:11px; color:#A6B1BE; line-height:1.6; }
 
   /* ---------- Rekap Proses Pemeliharaan (inline, di dalam kartu login yang sama) ---------- */
   #bst-root .rekap-inline{ margin-top:30px; text-align:left; max-width:660px; margin-left:auto; margin-right:auto; }
@@ -262,7 +273,7 @@
   #bst-root .choose-card:hover{ border-color:var(--primary); background:rgba(5,150,105,0.14); transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,0.25); }
   #bst-root .choose-card .ric{ font-size:32px; margin-bottom:10px; }
   #bst-root .choose-card .rn{ font-family:'Sora',sans-serif; font-weight:700; font-size:15px; margin-bottom:6px; }
-  #bst-root .choose-card .rd{ font-size:11px; color:#A6B1BE; line-height:1.5; }
+  #bst-root .choose-card .rd{ font-size:11.5px; color:#A6B1BE; line-height:1.55; }
 
   /* ---------- Link & error area login staf ---------- */
   #bst-root .auth-links{
@@ -496,6 +507,11 @@
   #bst-root .bst-modal-foot{ padding:14px 22px 20px; display:flex; justify-content:flex-end; gap:10px; }
   #bst-root .close-x{ background:transparent; border:none; color:var(--paper); cursor:pointer; font-size:18px; width:26px; height:26px; }
   #bst-root .note{ font-size:11px; color:var(--slate); background:var(--paper-dim); border:1px solid var(--line); border-radius:9px; padding:9px 12px; margin-top:2px; }
+
+  @media (max-width:860px){
+    #bst-root .data-columns{ grid-template-columns:1fr; }
+    #bst-root .rekom-list{ grid-template-columns:1fr; }
+  }
 
   @media (max-width:560px){
     #bst-root .rekap-inline-stats{ grid-template-columns:1fr; gap:8px; }
@@ -1559,14 +1575,14 @@ const DUK_DATA = {
             <div class="rkbmn-title disp">Data RKBMN &mdash; Rencana Pemeliharaan TA ${RKBMN_DATA.tahun}</div>
             <div class="rkbmn-sub">Sekretariat Bappebti &middot; ${total} unit aset &middot; direvisi ${RKBMN_DATA.revisi}</div>
           </div>
-          <div class="rkbmn-tabs" id="rkbmn-tabs">
-            <button class="rkbmn-tab active" data-cat="semua">Semua</button>
-            <button class="rkbmn-tab" data-cat="kendaraan">Kendaraan Dinas</button>
-            <button class="rkbmn-tab" data-cat="elektronik">Elektronik &amp; Fasilitas</button>
-          </div>
+        </div>
+        <div class="rkbmn-tabs" id="rkbmn-tabs">
+          <button class="rkbmn-tab active" data-cat="semua">Semua</button>
+          <button class="rkbmn-tab" data-cat="kendaraan">Kendaraan Dinas</button>
+          <button class="rkbmn-tab" data-cat="elektronik">Elektronik &amp; Fasilitas</button>
         </div>
         <div class="rkbmn-stats">
-          <div class="rkbmn-stat"><div class="rkbmn-stat-num">${total}</div><div class="rkbmn-stat-lbl">Total Unit Aset</div></div>
+          <div class="rkbmn-stat"><div class="rkbmn-stat-num">${total}</div><div class="rkbmn-stat-lbl">Total Unit</div></div>
           <div class="rkbmn-stat"><div class="rkbmn-stat-num">100%</div><div class="rkbmn-stat-lbl">Kondisi Baik</div></div>
           <div class="rkbmn-stat"><div class="rkbmn-stat-num">${RKBMN_DATA.items.length}</div><div class="rkbmn-stat-lbl">Jenis Barang</div></div>
         </div>
@@ -1579,7 +1595,6 @@ const DUK_DATA = {
         ${rkbmnPerubahanHtml()}
         <div class="rkbmn-footnote">Sumber: RKBMN Pemeliharaan TA ${RKBMN_DATA.tahun} (revisi ${RKBMN_DATA.revisi}) &middot; Kuasa Pengguna Barang, Sekretariat Bappebti</div>
       </div>
-      ${renderCompareSection()}
     `;
   }
 
@@ -1605,13 +1620,13 @@ const DUK_DATA = {
       const rightPct = c.rkakl === 0 ? 0 : Math.max(4, Math.round(c.rkakl/rowMax*100));
       return `<div class="compare-row">
         <div class="compare-side compare-left" title="RKBMN: ${c.rkbmn} unit">
-          <span class="compare-val">${c.rkbmn}</span>
           <div class="compare-track"><div class="compare-fill compare-fill-rkbmn" style="width:${leftPct}%"></div></div>
+          <span class="compare-val">${c.rkbmn}</span>
         </div>
         <div class="compare-label">${escapeHtml(c.nama)}</div>
         <div class="compare-side compare-right" title="RKAKL: ${c.rkakl} unit">
-          <div class="compare-track"><div class="compare-fill compare-fill-rkakl" style="width:${rightPct}%"></div></div>
           <span class="compare-val">${c.rkakl}</span>
+          <div class="compare-track"><div class="compare-fill compare-fill-rkakl" style="width:${rightPct}%"></div></div>
         </div>
       </div>`;
     }).join('');
@@ -1620,16 +1635,25 @@ const DUK_DATA = {
       <div class="rkbmn-section compare-section">
         <div class="rkbmn-header">
           <div>
-            <div class="rkbmn-title disp">Sandingan RKBMN vs RKAKL &mdash; Pemeliharaan TA 2026</div>
-            <div class="rkbmn-sub">Jumlah unit menurut catatan BMN dibanding jumlah unit yang dianggarkan (Revisi 5)</div>
+            <div class="rkbmn-title disp">Sandingan RKBMN vs RKAKL</div>
+            <div class="rkbmn-sub">Jumlah unit BMN dibanding jumlah unit yang dianggarkan (Revisi 5)</div>
           </div>
         </div>
         <div class="compare-legend">
-          <span class="compare-legend-item"><span class="compare-swatch compare-swatch-rkbmn"></span>RKBMN (catatan BMN)</span>
-          <span class="compare-legend-item"><span class="compare-swatch compare-swatch-rkakl"></span>RKAKL Revisi 5 (dianggarkan)</span>
+          <span class="compare-legend-item"><span class="compare-swatch compare-swatch-rkbmn"></span>RKBMN</span>
+          <span class="compare-legend-item"><span class="compare-swatch compare-swatch-rkakl"></span>RKAKL Revisi 5</span>
         </div>
         <div class="compare-chart">${rows}</div>
         <div class="rkbmn-footnote">Sumber RKAKL: Rincian Kertas Kerja Satker T.A. 2026 Revisi 5, akun 523121 Belanja Pemeliharaan Peralatan dan Mesin (hal. 25). Angka RKBMN mencerminkan catatan BMN Sekretariat; angka RKAKL adalah volume yang dianggarkan untuk satu Satuan Kerja (BADAN PENGAWAS PERDAGANGAN BERJANGKA KOMODITI) sehingga cakupannya bisa lebih luas &mdash; selisih besar (mis. PC/Laptop/Notebook, Motor Listrik) wajar terjadi karena perbedaan cakupan ini, bukan berarti kesalahan data.</div>
+      </div>
+    `;
+  }
+
+  function renderDataSection(){
+    return `
+      <div class="data-columns">
+        <div class="data-col">${renderRkbmnSection()}</div>
+        <div class="data-col">${renderCompareSection()}</div>
       </div>
       ${renderRekomendasiSection()}
     `;
@@ -1668,8 +1692,9 @@ const DUK_DATA = {
   ];
 
   function renderRekomendasiSection(){
+    const accents = ['rekom-accent-a','rekom-accent-b','rekom-accent-c'];
     const items = REKOMENDASI_DATA.map((r, idx)=> `
-      <div class="rekom-item">
+      <div class="rekom-item ${accents[idx % accents.length]}">
         <div class="rekom-num">${idx+1}</div>
         <div>
           <div class="rekom-judul">${escapeHtml(r.judul)}</div>
@@ -2079,7 +2104,7 @@ const DUK_DATA = {
           </div>
         </div>
         ${renderPemeliharaanRekapInline()}
-        ${renderRkbmnSection()}
+        ${renderDataSection()}
         <div class="bst-disclaimer">Dirancang sebagai prototipe &middot; &copy; 2026 &mdash; dibuat oleh beruangmipon</div>
       </div>`;
     document.getElementById('choose-pemohon').addEventListener('click', ()=>{ stopLandingRecap(); renderPemohonForm(); });
