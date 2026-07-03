@@ -185,7 +185,7 @@
   #bst-root .rkbmn-empty{ font-size:12px; color:#A6B1BE; padding:14px; text-align:center; }
   #bst-root .rkbmn-footnote{ margin-top:14px; font-size:10px; color:#7C8896; font-family:'JetBrains Mono',monospace; line-height:1.6; }
   #bst-root .rkbmn-changes{
-    margin-top:20px; padding:14px 16px; border-radius:12px;
+    margin-top:18px; padding:16px; border-radius:14px;
     background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
   }
   #bst-root .rkbmn-changes-title{ font-size:11.5px; font-weight:700; color:var(--paper); margin-bottom:10px; }
@@ -1592,7 +1592,6 @@ const DUK_DATA = {
             <tbody id="rkbmn-chart">${rkbmnRowsHtml('semua')}</tbody>
           </table>
         </div>
-        ${rkbmnPerubahanHtml()}
         <div class="rkbmn-footnote">Sumber: RKBMN Pemeliharaan TA ${RKBMN_DATA.tahun} (revisi ${RKBMN_DATA.revisi}) &middot; Kuasa Pengguna Barang, Sekretariat Bappebti</div>
       </div>
     `;
@@ -1646,6 +1645,7 @@ const DUK_DATA = {
         <div class="compare-chart">${rows}</div>
         <div class="rkbmn-footnote">Sumber RKAKL: Rincian Kertas Kerja Satker T.A. 2026 Revisi 5, akun 523121 Belanja Pemeliharaan Peralatan dan Mesin (hal. 25). Angka RKBMN mencerminkan catatan BMN Sekretariat; angka RKAKL adalah volume yang dianggarkan untuk satu Satuan Kerja (BADAN PENGAWAS PERDAGANGAN BERJANGKA KOMODITI) sehingga cakupannya bisa lebih luas &mdash; selisih besar (mis. PC/Laptop/Notebook, Motor Listrik) wajar terjadi karena perbedaan cakupan ini, bukan berarti kesalahan data.</div>
       </div>
+      ${rkbmnPerubahanHtml()}
     `;
   }
 
