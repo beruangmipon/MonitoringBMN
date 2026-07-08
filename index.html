@@ -642,6 +642,17 @@
   #bst-root .ticket-foot .estimasi.overdue{ color:var(--red); font-weight:600; }
   #bst-root .hasil-preview{ font-size:12px; color:var(--primary-text); background:var(--primary-dim); margin:0 20px 14px; border-radius:var(--r-sm); padding:10px 13px; line-height:1.55; border:1px solid rgba(11,158,110,0.18); }
   #bst-root .hasil-preview b{ font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; display:block; margin-bottom:3px; color:var(--primary-text); }
+  #bst-root .catatan-preview{ background:var(--info-dim); color:var(--info-text); border-color:rgba(37,99,235,0.18); }
+  #bst-root .catatan-preview b{ color:var(--info-text); }
+  #bst-root .lacak-note{
+    margin-top:12px; padding:9px 12px; border-radius:var(--r-sm);
+    background:rgba(96,165,250,0.09); border:1px solid rgba(96,165,250,0.28);
+    font-size:11.5px; color:#C9DCF8; line-height:1.6; text-align:left;
+  }
+  #bst-root .lacak-note b{
+    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.1em; display:block; margin-bottom:3px; color:#93BEF5;
+  }
 
   /* ---------- Modal ---------- */
   #bst-root .bst-overlay{ position:fixed; inset:0; background:rgba(8,14,11,0.62); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px; }
@@ -659,9 +670,10 @@
   #bst-root .field{ margin-bottom:15px; }
   #bst-root .field label{ display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; color:var(--slate); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.1em; }
   #bst-root .field .req{ color:var(--red); }
-  #bst-root .field input, #bst-root .field textarea{ width:100%; padding:10px 13px; border-radius:var(--r-sm); border:1px solid var(--line); background:#fff; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); transition:border-color .15s ease, box-shadow .15s ease; }
-  #bst-root .field input:focus, #bst-root .field textarea:focus{ outline:none; border-color:var(--primary); box-shadow:var(--focus-ring); }
-  #bst-root .field input:disabled, #bst-root .field textarea:disabled{ background:var(--paper-dim); color:var(--slate); cursor:not-allowed; }
+  #bst-root .field input, #bst-root .field textarea, #bst-root .field select{ width:100%; padding:10px 13px; border-radius:var(--r-sm); border:1px solid var(--line); background:#fff; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); transition:border-color .15s ease, box-shadow .15s ease; }
+  #bst-root .field select{ cursor:pointer; }
+  #bst-root .field input:focus, #bst-root .field textarea:focus, #bst-root .field select:focus{ outline:none; border-color:var(--primary); box-shadow:var(--focus-ring); }
+  #bst-root .field input:disabled, #bst-root .field textarea:disabled, #bst-root .field select:disabled{ background:var(--paper-dim); color:var(--slate); cursor:not-allowed; }
   #bst-root .field input:read-only{ background:var(--primary-dim); color:var(--primary-text); cursor:default; border-color:rgba(11,158,110,0.4); }
   #bst-root .field textarea{ resize:vertical; min-height:60px; font-family:'Inter',sans-serif; line-height:1.5; }
   #bst-root .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
@@ -733,7 +745,7 @@
     #bst-root .btn{ min-height:44px; font-size:14px; }
     #bst-root .btn-sm{ min-height:36px; }
     #bst-root .icon-btn{ width:38px; height:38px; }
-    #bst-root .field input, #bst-root .field textarea,
+    #bst-root .field input, #bst-root .field textarea, #bst-root .field select,
     #bst-root .bst-search, #bst-root select.bst-filter,
     #bst-root .bst-login-form input, #bst-root .user-role-select{ font-size:16px; }
 
@@ -1651,13 +1663,16 @@ const DUK_DATA = {
 
   const ROLES = [
     { key:'pemohon',   icon:'&#128100;', name:'Pemohon',    desc:'Ajukan permohonan servis baru — tanpa akun' },
-    { key:'kasub_bmn', icon:'&#9989;',   name:'Kasub BMN',  desc:'Menyetujui permohonan' },
+    { key:'kasub_bmn', icon:'&#9989;',   name:'Kasub BMN',  desc:'Menyetujui permohonan & Tanggal Selesai Pekerjaan' },
     { key:'vendor',    icon:'&#128295;', name:'Vendor',     desc:'Pemeriksaan & Estimasi Penyelesaian' },
-    { key:'monitor',   icon:'&#128065;', name:'Monitor',    desc:'Proses Permohonan & Tanggal Selesai Pekerjaan' },
+    { key:'monitor',   icon:'&#128065;', name:'Monitor',    desc:'Proses Permohonan' },
     { key:'admin',     icon:'&#128737;', name:'Admin',      desc:'Akses penuh & menyetujui akun staf lain' },
   ];
   const ROLE_LABEL = Object.fromEntries(ROLES.map(r=>[r.key, r.name]));
   const STAFF_ROLES = ROLES.filter(r=> r.key !== 'pemohon'); // peran yang wajib pakai email + password
+
+  // Pilihan baku Jenis Peralatan & Mesin — dipilih, bukan diketik, agar nama seragam
+  const JENIS_OPTIONS = ['PC Komputer','Printer','Scanner','Mesin Fotokopi','Laptop','AC'];
 
   const STEPS = [
     { key:'tglPermohonan',      label:'Permohonan',          icon:'&#128221;' },
@@ -1915,7 +1930,8 @@ const DUK_DATA = {
     tglPemeriksaan:     { role:'vendor',    ok:e=> !!e.tglProses && !e.tglPemeriksaan },
     hasilPemeriksaan:   { role:'vendor',    ok:e=> !!e.tglProses && !e.tglSelesaiPekerjaan },
     estimasi:           { role:'vendor',    ok:e=> !!e.tglProses && !e.tglSelesaiPekerjaan },
-    tglSelesaiPekerjaan:{ role:'monitor',   ok:e=> !!e.tglPemeriksaan && !!e.hasilPemeriksaan && !e.tglSelesaiPekerjaan },
+    tglSelesaiPekerjaan:{ role:'kasub_bmn', ok:e=> !!e.tglPemeriksaan && !!e.hasilPemeriksaan && !e.tglSelesaiPekerjaan },
+    catatanSelesai:     { role:'kasub_bmn', ok:e=> !!e.tglPemeriksaan && !!e.hasilPemeriksaan && !e.tglSelesaiPekerjaan },
   };
 
   function canEdit(fieldKey, entry){
@@ -1942,6 +1958,7 @@ const DUK_DATA = {
       case 'hasilPemeriksaan': return entry.tglSelesaiPekerjaan ? 'Pekerjaan sudah selesai, tidak dapat diubah.' : 'Menunggu tahap Proses Permohonan.';
       case 'estimasi': return entry.tglSelesaiPekerjaan ? 'Pekerjaan sudah selesai.' : 'Menunggu tahap Proses Permohonan.';
       case 'tglSelesaiPekerjaan': return entry.tglSelesaiPekerjaan ? 'Sudah selesai.' : 'Menunggu Tanggal Pemeriksaan & Hasil Pemeriksaan diisi.';
+      case 'catatanSelesai': return entry.tglSelesaiPekerjaan ? 'Pekerjaan sudah selesai, catatan terkunci.' : 'Menunggu Tanggal Pemeriksaan & Hasil Pemeriksaan diisi. Isi bersamaan dengan Tanggal Selesai Pekerjaan.';
       default: return entry.tglPersetujuan ? 'Sudah disetujui, data terkunci.' : '';
     }
   }
@@ -2329,6 +2346,7 @@ const DUK_DATA = {
         ${statusBadge(status, e)}
       </div>
       <div class="stepper">${stepsHtml}</div>
+      ${e.catatanSelesai ? `<div class="lacak-note"><b>Catatan Kasub BMN</b>${escapeHtml(e.catatanSelesai)}</div>` : ''}
       <div class="lacak-foot">
         <span class="lacak-stage">${stage}</span>
         <span class="lacak-est ${estCls}">${est}</span>
@@ -2911,6 +2929,7 @@ const DUK_DATA = {
         + '<td>'+escapeHtml(e.hasilPemeriksaan||'-')+'</td>'
         + '<td>'+(e.estimasi?fmtDate(e.estimasi):'-')+'</td>'
         + '<td>'+(e.tglSelesaiPekerjaan?fmtDate(e.tglSelesaiPekerjaan):'-')+'</td>'
+        + '<td>'+escapeHtml(e.catatanSelesai||'-')+'</td>'
         + '<td>'+statusText(status, e)+'</td>'
         + '</tr>';
     }).join('');
@@ -2928,7 +2947,7 @@ const DUK_DATA = {
       + '<table class="print-table"><thead><tr>'
         + '<th>No</th><th>Nama Pemohon</th><th>NIP</th><th>Eselon II</th><th>Jabatan</th><th>NUP</th><th>Jenis Peralatan &amp; Mesin</th><th>Kendala</th>'
         + '<th>Tgl Permohonan</th><th>Tgl Persetujuan Kasub BMN</th><th>Tgl Proses</th><th>Tgl Pemeriksaan</th>'
-        + '<th>Hasil Pemeriksaan</th><th>Estimasi Selesai</th><th>Tgl Selesai Pekerjaan</th><th>Status</th>'
+        + '<th>Hasil Pemeriksaan</th><th>Estimasi Selesai</th><th>Tgl Selesai Pekerjaan</th><th>Catatan Kasub BMN</th><th>Status</th>'
       + '</tr></thead><tbody>'+rows+'</tbody></table>';
 
     setTimeout(()=> window.print(), 80);
@@ -2992,6 +3011,7 @@ const DUK_DATA = {
       + '</div>'
       + '<div class="stepper">'+stepsHtml+'</div>'
       + (e.hasilPemeriksaan ? '<div class="hasil-preview"><b>Hasil Pemeriksaan</b>'+escapeHtml(e.hasilPemeriksaan)+'</div>' : '')
+      + (e.catatanSelesai ? '<div class="hasil-preview catatan-preview"><b>Catatan Kasub BMN</b>'+escapeHtml(e.catatanSelesai)+'</div>' : '')
       + '<div class="ticket-foot">'
         + '<span>NUP: <span class="nup">'+escapeHtml(e.nup||'-')+'</span> &middot; NIP: <span class="nup">'+escapeHtml(e.nip||'-')+'</span></span>'
         + '<span class="estimasi '+(overdue?'overdue':'')+'">Estimasi selesai: '+(e.estimasi ? fmtDate(e.estimasi) : '-')+(overdue ? ' (lewat)' : '')+'</span>'
@@ -3031,8 +3051,11 @@ const DUK_DATA = {
           <div class="field-row">
             <div class="field"><label>NUP <span class="req">*</span></label>
               <input type="text" id="f-nup" placeholder="Nomor Urut Pendaftaran"></div>
-            <div class="field"><label>Jenis Peralatan &amp; Mesin</label>
-              <input type="text" id="f-jenis" placeholder="mis. Printer, AC, Laptop"></div>
+            <div class="field"><label>Jenis Peralatan &amp; Mesin <span class="req">*</span></label>
+              <select id="f-jenis">
+                <option value="">-- Pilih Jenis --</option>
+                ${JENIS_OPTIONS.map(j=> `<option value="${escapeAttr(j)}">${escapeHtml(j)}</option>`).join('')}
+              </select></div>
           </div>
           <div class="field"><label>Kendala / Keluhan dari Pemohon</label>
             <textarea id="f-kendala" placeholder="Jelaskan kendala atau kerusakan yang dialami"></textarea></div>
@@ -3065,13 +3088,15 @@ const DUK_DATA = {
       if(!nama || !nip || !eselonII){ alert('Nama, NIP, dan Eselon II wajib diisi.'); return; }
     }
     const nup = document.getElementById('f-nup').value.trim();
+    const jenis = document.getElementById('f-jenis').value;
     const tglPermohonan = document.getElementById('f-tglPermohonan').value;
     if(!nup){ alert('NUP wajib diisi.'); return; }
+    if(!jenis){ alert('Pilih Jenis Peralatan & Mesin.'); return; }
     if(!tglPermohonan){ alert('Tanggal Permohonan wajib diisi.'); return; }
 
     const entryData = {
       nama, nip, eselonII, jabatan, nup,
-      jenis: document.getElementById('f-jenis').value.trim(),
+      jenis,
       kendala: document.getElementById('f-kendala').value.trim(),
       tglPermohonan,
       tglPersetujuan: null, approvedBy: null, persetujuanStatus: null,
@@ -3080,6 +3105,7 @@ const DUK_DATA = {
       tglPemeriksaan: null, hasilPemeriksaan: '',
       estimasi: null,
       tglSelesaiPekerjaan: null,
+      catatanSelesai: '',
       createdBy: currentUser.name, createdByRole: currentUser.role,
       createdAt: new Date().toISOString(),
     };
@@ -3103,9 +3129,19 @@ const DUK_DATA = {
         hint = 'Otomatis terkunci ke tanggal hari ini (' + fmtDate(val) + ') &mdash; tidak dapat dimundurkan atau dimajukan.';
       }
       const inputAttrs = !editable ? 'disabled' : (isLockedToday ? 'readonly' : '');
-      const tag = type === 'textarea'
-        ? `<textarea id="fe-${fieldKey}" ${inputAttrs} placeholder="${opts.placeholder||''}">${escapeHtml(val)}</textarea>`
-        : `<input type="${type}" id="fe-${fieldKey}" value="${escapeAttr(val)}" ${inputAttrs}>`;
+      let tag;
+      if(type === 'select'){
+        const opts_ = (opts.options || []).slice();
+        if(val && !opts_.includes(val)) opts_.unshift(val); // nilai lama (di luar daftar baku) tetap tampil
+        tag = `<select id="fe-${fieldKey}" ${!editable ? 'disabled' : ''}>
+            <option value="">-- Pilih --</option>
+            ${opts_.map(o=> `<option value="${escapeAttr(o)}" ${o===val?'selected':''}>${escapeHtml(o)}</option>`).join('')}
+          </select>`;
+      } else if(type === 'textarea'){
+        tag = `<textarea id="fe-${fieldKey}" ${inputAttrs} placeholder="${opts.placeholder||''}">${escapeHtml(val)}</textarea>`;
+      } else {
+        tag = `<input type="${type}" id="fe-${fieldKey}" value="${escapeAttr(val)}" ${inputAttrs}>`;
+      }
       return `<div class="field" data-editable="${editable}">
           <label>${labelText}</label>
           ${tag}
@@ -3137,7 +3173,7 @@ const DUK_DATA = {
               </div>
               <div class="field-row">
                 ${inputField('NUP','nup','text')}
-                ${inputField('Jenis Peralatan &amp; Mesin','jenis','text')}
+                ${inputField('Jenis Peralatan &amp; Mesin','jenis','select',{options:JENIS_OPTIONS})}
               </div>
               ${inputField('Kendala / Keluhan dari Pemohon','kendala','textarea')}
               ${inputField('Tanggal Permohonan','tglPermohonan','date')}
@@ -3174,13 +3210,15 @@ const DUK_DATA = {
           </div>
 
           <div class="section-card">
-            <div class="section-head"><span class="st">6. Selesai Pekerjaan</span><span class="who">Monitor</span></div>
+            <div class="section-head"><span class="st">6. Selesai Pekerjaan</span><span class="who">Kasub BMN</span></div>
             <div class="section-body">
               ${inputField('Tanggal Selesai Pekerjaan','tglSelesaiPekerjaan','date')}
+              ${inputField('Catatan Kasub BMN','catatanSelesai','textarea',{placeholder:'Catatan penyelesaian, kualitas hasil pekerjaan, atau hal yang perlu ditindaklanjuti (opsional)'})}
             </div>
           </div>
 
-          ${currentUser.role === 'monitor' ? '<div class="note">Sebagai Monitor, Anda dapat mengisi Tanggal Proses Permohonan (setelah Kasub BMN menyetujui) dan Tanggal Selesai Pekerjaan (setelah tahap Pemeriksaan lengkap). Field lain hanya untuk dilihat.</div>' : ''}
+          ${currentUser.role === 'monitor' ? '<div class="note">Sebagai Monitor, Anda dapat mengisi Tanggal Proses Permohonan (setelah Kasub BMN menyetujui). Field lain hanya untuk dilihat.</div>' : ''}
+          ${currentUser.role === 'kasub_bmn' ? '<div class="note">Sebagai Kasub BMN, Anda memberikan keputusan Persetujuan (tahap 2) dan mengisi Tanggal Selesai Pekerjaan (tahap 6, setelah Tanggal Pemeriksaan &amp; Hasil Pemeriksaan diisi Vendor). Field lain hanya untuk dilihat.</div>' : ''}
         </div>
         <div class="bst-modal-foot">
           <button class="btn btn-ghost" id="bst-cancel" style="color:var(--ink);border-color:var(--line);">Batal</button>
@@ -3209,7 +3247,7 @@ const DUK_DATA = {
 
     const patch = {};
     editableFields.forEach(fieldDiv=>{
-      const input = fieldDiv.querySelector('input, textarea');
+      const input = fieldDiv.querySelector('input, textarea, select');
       if(!input) return;
       const key = input.id.replace('fe-','');
       patch[key] = input.value.trim();
