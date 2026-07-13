@@ -343,62 +343,6 @@
   #bst-root .rekap-num{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:23px; color:#fff; line-height:1.1; font-variant-numeric:tabular-nums; letter-spacing:-0.02em; }
   #bst-root .rekap-lbl{ font-size:9.5px; font-weight:600; color:var(--dk-muted); margin-top:3px; text-transform:uppercase; letter-spacing:0.12em; }
 
-  /* ---------- Lacak Permohonan (publik, tanpa login) ---------- */
-  #bst-root .lacak-section{ margin-top:36px; text-align:left; max-width:680px; margin-left:auto; margin-right:auto; }
-  #bst-root .lacak-search{ position:relative; margin-top:2px; }
-  #bst-root .lacak-search .lacak-ic{ position:absolute; left:18px; top:50%; transform:translateY(-50%); font-size:14px; opacity:.55; pointer-events:none; }
-  #bst-root .lacak-search input{
-    width:100%; padding:13px 20px 13px 46px; border-radius:999px; border:1px solid var(--dk-line-hi);
-    background:rgba(255,255,255,0.055); color:var(--dk-ink); font-family:'Inter',sans-serif; font-size:14px;
-    transition:border-color .15s ease, background .15s ease, box-shadow .15s ease;
-  }
-  #bst-root .lacak-search input::placeholder{ color:var(--dk-faint); }
-  #bst-root .lacak-search input:focus{
-    outline:none; border-color:var(--primary-bright); background:rgba(16,185,129,0.08); box-shadow:var(--focus-ring);
-  }
-  #bst-root .lacak-results{ margin-top:12px; display:flex; flex-direction:column; gap:10px; }
-  #bst-root .lacak-hint{
-    font-size:12px; color:var(--dk-faint); text-align:center; padding:16px 14px; line-height:1.65;
-    border:1px dashed var(--dk-line-hi); border-radius:var(--r-md); background:rgba(255,255,255,0.015);
-  }
-  #bst-root .lacak-card{
-    background:var(--dk-card); border:1px solid var(--dk-line); border-left:3px solid var(--dk-line-hi);
-    border-radius:var(--r-md); padding:16px 18px 13px; text-align:left;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
-    animation:bstFadeIn .25s ease both;
-  }
-  #bst-root .lacak-card.ticket-baru{ border-left-color:rgba(255,255,255,0.28); }
-  #bst-root .lacak-card.ticket-disetujui{ border-left-color:#60A5FA; }
-  #bst-root .lacak-card.ticket-proses{ border-left-color:#F5A946; }
-  #bst-root .lacak-card.ticket-telat, #bst-root .lacak-card.ticket-ditolak,
-  #bst-root .lacak-card.ticket-selesai-merah{ border-left-color:#F87171; }
-  #bst-root .lacak-card.ticket-selesai{ border-left-color:var(--primary-bright); }
-  #bst-root .lacak-card.ticket-selesai-kuning{ border-left-color:#FACC15; }
-  #bst-root .lacak-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; }
-  #bst-root .lacak-name{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; color:var(--dk-ink); letter-spacing:-0.01em; }
-  #bst-root .lacak-meta{ font-size:11.5px; color:var(--dk-muted); margin-top:3px; }
-  #bst-root .lacak-card .stepper{ padding:14px 0 2px; }
-  #bst-root .lacak-card .step .node{
-    width:27px; height:27px; font-size:11px;
-    background:rgba(255,255,255,0.05); border-color:var(--dk-line-hi); color:var(--dk-faint);
-  }
-  #bst-root .lacak-card .step .lbl{ color:var(--dk-faint); max-width:74px; }
-  #bst-root .lacak-card .step.done .lbl, #bst-root .lacak-card .step.current .lbl{ color:var(--dk-ink); }
-  #bst-root .lacak-card .step .dt{ color:var(--dk-mint); }
-  #bst-root .lacak-card .step:not(:last-child)::after{ top:13px; left:calc(50% + 17px); right:calc(-50% + 17px); background:rgba(255,255,255,0.1); }
-  #bst-root .lacak-card .step.done:not(:last-child)::after{ background:linear-gradient(90deg, var(--primary), var(--primary-bright)); }
-  #bst-root .lacak-card .step.current .node{ box-shadow:0 0 0 4px rgba(217,119,6,0.22), 0 3px 10px rgba(217,119,6,0.4); }
-  #bst-root .lacak-foot{
-    display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;
-    margin-top:12px; padding-top:11px; border-top:1px solid rgba(255,255,255,0.07);
-    font-size:11.5px; color:var(--dk-muted);
-  }
-  #bst-root .lacak-stage b{ color:var(--dk-ink); font-weight:600; }
-  #bst-root .lacak-est{ font-family:'JetBrains Mono',monospace; font-size:10.5px; font-variant-numeric:tabular-nums; letter-spacing:0.02em; }
-  #bst-root .lacak-est.overdue{ color:#FCA5A5; font-weight:600; }
-  #bst-root .lacak-est.done{ color:var(--dk-mint); font-weight:600; }
-  #bst-root .lacak-more{ font-size:10.5px; color:var(--dk-faint); text-align:center; font-family:'JetBrains Mono',monospace; padding:4px 0; }
-
   /* ---------- Pilih jalur masuk (Pemohon vs Staf) ---------- */
   #bst-root .choose-grid{
     display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:560px; margin:0 auto 26px;
@@ -644,15 +588,6 @@
   #bst-root .hasil-preview b{ font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; display:block; margin-bottom:3px; color:var(--primary-text); }
   #bst-root .catatan-preview{ background:var(--info-dim); color:var(--info-text); border-color:rgba(37,99,235,0.18); }
   #bst-root .catatan-preview b{ color:var(--info-text); }
-  #bst-root .lacak-note{
-    margin-top:12px; padding:9px 12px; border-radius:var(--r-sm);
-    background:rgba(96,165,250,0.09); border:1px solid rgba(96,165,250,0.28);
-    font-size:11.5px; color:#C9DCF8; line-height:1.6; text-align:left;
-  }
-  #bst-root .lacak-note b{
-    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600;
-    text-transform:uppercase; letter-spacing:0.1em; display:block; margin-bottom:3px; color:#93BEF5;
-  }
 
   /* ---------- Modal ---------- */
   #bst-root .bst-overlay{ position:fixed; inset:0; background:rgba(8,14,11,0.62); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px; }
@@ -1659,7 +1594,6 @@ const DUK_DATA = {
   let unsubscribeEntries = null;
   let unsubscribeUsers = null;
   let unsubscribeLandingRecap = null;
-  let landingEntries = null; // cache untuk pelacak publik: null=belum dimuat, 'error'=gangguan, []=data
 
   const ROLES = [
     { key:'pemohon',   icon:'&#128100;', name:'Pemohon',    desc:'Ajukan permohonan servis baru — tanpa akun' },
@@ -2246,18 +2180,14 @@ const DUK_DATA = {
     if(!window.bstFirestore) return;
     unsubscribeLandingRecap = window.bstFirestore.listenEntries(
       (list)=>{
-        landingEntries = list;
         const selesai = list.filter(e=> getStatus(e) === 'selesai').length;
         const proses = list.filter(e=> ['disetujui','proses','telat'].includes(getStatus(e))).length;
         const permohonan = list.filter(e=> getStatus(e) === 'baru').length;
         updateLandingRecapUI(selesai, proses, permohonan, true);
-        renderLacakResults();
       },
       (err)=>{
         console.error('Gagal memuat rekap layar awal:', err);
-        if(landingEntries === null) landingEntries = 'error';
         updateLandingRecapUI(null, null, null, false);
-        renderLacakResults();
       }
     );
   }
@@ -2287,96 +2217,6 @@ const DUK_DATA = {
       </div>`;
   }
 
-  /* ============ LACAK PERMOHONAN (publik, tanpa login) ============ */
-  function renderLacakSection(){
-    return `
-      <div class="lacak-section">
-        <div class="rkbmn-header">
-          <div>
-            <div class="rkbmn-title disp">Lacak Permohonan Anda</div>
-            <div class="rkbmn-sub">Lihat tahapan proses &amp; estimasi penyelesaian &mdash; tanpa perlu masuk</div>
-          </div>
-        </div>
-        <div class="lacak-search">
-          <span class="lacak-ic">&#128269;</span>
-          <input type="text" id="lacak-input" placeholder="Ketik nama Anda, NUP, atau NIP&hellip;" autocomplete="off">
-        </div>
-        <div class="lacak-results" id="lacak-results">${lacakHintHtml()}</div>
-      </div>`;
-  }
-
-  function lacakHintHtml(msg){
-    return `<div class="lacak-hint">${msg || 'Masukkan minimal 2 karakter nama, NUP, atau NIP untuk melihat sudah sampai mana proses permohonan Anda beserta estimasi penyelesaiannya.'}</div>`;
-  }
-
-  function renderLacakCard(e){
-    const status = getStatus(e);
-    const statusCls = statusCssClass(status, e);
-    const doneCount = STEPS.filter(s=>e[s.key]).length;
-    const stepsHtml = STEPS.map((s, idx)=>{
-      const val = e[s.key];
-      let cls = '';
-      if(val) cls = 'done'; else if(idx === doneCount) cls = 'current';
-      return '<div class="step '+cls+'"><div class="node">'+(val ? '&#10003;' : s.icon)+'</div><div class="lbl">'+s.label+'</div>'
-        + (val ? '<div class="dt">'+fmtDate(val)+'</div>' : '') + '</div>';
-    }).join('');
-
-    let stage;
-    if(status === 'ditolak') stage = 'Permohonan tidak disetujui';
-    else if(status === 'selesai') stage = 'Seluruh tahap selesai';
-    else stage = 'Tahap berikutnya: <b>'+STEPS[doneCount].label+'</b>';
-
-    let est = '', estCls = '';
-    if(status === 'ditolak'){ est = '&mdash;'; }
-    else if(e.tglSelesaiPekerjaan){ est = 'Selesai '+fmtDate(e.tglSelesaiPekerjaan); estCls = 'done'; }
-    else if(e.estimasi){
-      const over = e.estimasi < todayISO();
-      est = 'Estimasi selesai '+fmtDate(e.estimasi)+(over ? ' (lewat)' : '');
-      if(over) estCls = 'overdue';
-    } else {
-      est = 'Estimasi menunggu pemeriksaan vendor';
-    }
-
-    return `<div class="lacak-card ${statusCls}">
-      <div class="lacak-top">
-        <div>
-          <div class="lacak-name">${escapeHtml(e.nama||'(tanpa nama)')}</div>
-          <div class="lacak-meta">${escapeHtml(e.jenis||'-')} &middot; NUP ${escapeHtml(e.nup||'-')}</div>
-        </div>
-        ${statusBadge(status, e)}
-      </div>
-      <div class="stepper">${stepsHtml}</div>
-      ${e.catatanSelesai ? `<div class="lacak-note"><b>Catatan Kasub BMN</b>${escapeHtml(e.catatanSelesai)}</div>` : ''}
-      <div class="lacak-foot">
-        <span class="lacak-stage">${stage}</span>
-        <span class="lacak-est ${estCls}">${est}</span>
-      </div>
-    </div>`;
-  }
-
-  function renderLacakResults(){
-    const box = document.getElementById('lacak-results');
-    const input = document.getElementById('lacak-input');
-    if(!box || !input) return;
-    const q = input.value.trim().toLowerCase();
-    if(q.length < 2){ box.innerHTML = lacakHintHtml(); return; }
-    if(landingEntries === 'error'){ box.innerHTML = lacakHintHtml('Gangguan koneksi &mdash; data permohonan tidak dapat dimuat. Coba muat ulang halaman.'); return; }
-    if(landingEntries === null){ box.innerHTML = lacakHintHtml('Memuat data permohonan&hellip;'); return; }
-    const hits = landingEntries.filter(e=>
-      (e.nama||'').toLowerCase().includes(q) ||
-      (e.nup||'').toLowerCase().includes(q) ||
-      (e.nip||'').toLowerCase().includes(q) ||
-      (e.jenis||'').toLowerCase().includes(q)
-    ).sort((a,b)=> (b.tglPermohonan||'').localeCompare(a.tglPermohonan||''));
-    if(hits.length === 0){
-      box.innerHTML = lacakHintHtml('Tidak ditemukan permohonan yang cocok dengan &ldquo;'+escapeHtml(input.value.trim())+'&rdquo;. Periksa kembali ejaan nama, NUP, atau NIP Anda.');
-      return;
-    }
-    const MAX = 5;
-    box.innerHTML = hits.slice(0, MAX).map(renderLacakCard).join('')
-      + (hits.length > MAX ? '<div class="lacak-more">+'+(hits.length-MAX)+' permohonan lain cocok &mdash; persempit kata kunci</div>' : '');
-  }
-
   /* ============ LAYAR: PILIH JALUR MASUK ============ */
   function renderChoose(){
     stopLandingRecap();
@@ -2398,14 +2238,12 @@ const DUK_DATA = {
             <div class="rd">Kasub BMN, Vendor, Monitor, atau Admin. Wajib masuk dengan email &amp; kata sandi yang sudah disetujui.</div>
           </div>
         </div>
-        ${renderLacakSection()}
         ${renderPemeliharaanRekapInline()}
         ${renderDataSection()}
         <div class="bst-disclaimer">Dirancang sebagai prototipe &middot; &copy; 2026 &mdash; dibuat oleh beruangmipon</div>
       </div>`;
     document.getElementById('choose-pemohon').addEventListener('click', ()=>{ stopLandingRecap(); renderPemohonForm(); });
     document.getElementById('choose-staff').addEventListener('click', ()=>{ stopLandingRecap(); renderStaffLogin(); });
-    document.getElementById('lacak-input').addEventListener('input', renderLacakResults);
     document.querySelectorAll('#rkbmn-tabs .rkbmn-tab').forEach(btn=>{
       btn.addEventListener('click', ()=>{
         document.querySelectorAll('#rkbmn-tabs .rkbmn-tab').forEach(b=>b.classList.remove('active'));
@@ -2606,7 +2444,7 @@ const DUK_DATA = {
       <div class="bst-header">
         <div>
           <div class="bst-title disp">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</div>
-          <div class="bst-sub">Pelacakan permohonan servis - Bappebti</div>
+          <div class="bst-sub">${currentUser.role === 'pemohon' ? 'Permohonan servis Anda - Bappebti' : 'Pelacakan permohonan servis - Bappebti'}</div>
         </div>
         <div class="bst-header-actions">
           <span class="bst-count-pill mono" id="bst-count-pill">0 permohonan</span>
@@ -2619,12 +2457,12 @@ const DUK_DATA = {
           </div>
           <button class="btn btn-logout" id="bst-logout">Keluar</button>
           ${currentUser.role === 'admin' ? '<button class="btn btn-ghost" id="bst-users-btn">&#128101; Kelola Pengguna</button>' : ''}
-          <button class="btn btn-ghost" id="bst-print-btn">&#128424; Cetak Rekapitulasi</button>
+          <button class="btn btn-ghost" id="bst-print-btn">&#128424; ${currentUser.role === 'pemohon' ? 'Cetak Permohonan Saya' : 'Cetak Rekapitulasi'}</button>
           ${(currentUser.role === 'pemohon' || currentUser.role === 'admin') ? '<button class="btn btn-primary" id="bst-add-btn">+ Permohonan Baru</button>' : ''}
         </div>
       </div>
       <div class="bst-toolbar">
-        <input type="text" class="bst-search" id="bst-search" placeholder="Cari nama pemohon, NIP, NUP, atau jenis peralatan...">
+        <input type="text" class="bst-search" id="bst-search" placeholder="${currentUser.role === 'pemohon' ? 'Cari NUP atau jenis peralatan Anda...' : 'Cari nama pemohon, NIP, NUP, atau jenis peralatan...'}">
         <select class="bst-filter" id="bst-filter">
           <option value="all">Semua Status</option>
           <option value="baru">Baru</option>
@@ -2886,7 +2724,7 @@ const DUK_DATA = {
     const q = (searchEl && searchEl.value.trim().toLowerCase()) || '';
     const filter = (filterEl && filterEl.value) || 'all';
 
-    let filtered = entries.filter(e=>{
+    let filtered = visibleEntries().filter(e=>{
       const matchQ = !q || (e.nama||'').toLowerCase().includes(q) || (e.nup||'').toLowerCase().includes(q) || (e.jenis||'').toLowerCase().includes(q) || (e.nip||'').toLowerCase().includes(q);
       const status = getStatus(e);
       const matchF = filter === 'all' || status === filter;
@@ -2894,6 +2732,22 @@ const DUK_DATA = {
     });
     filtered.sort((a,b)=> (b.tglPermohonan||'').localeCompare(a.tglPermohonan||''));
     return filtered;
+  }
+
+  // Pemohon hanya melihat permohonan miliknya sendiri; staf melihat semua.
+  function isOwnEntry(e){
+    if(!currentUser) return false;
+    if(e.nip && currentUser.nip) return String(e.nip).trim() === String(currentUser.nip).trim();
+    return (e.nama||'').trim().toLowerCase() === (currentUser.name||'').trim().toLowerCase();
+  }
+  function visibleEntries(){
+    return (currentUser && currentUser.role === 'pemohon') ? entries.filter(isOwnEntry) : entries;
+  }
+
+  // Hasil Pemeriksaan hanya boleh DILIHAT oleh Admin & Kasub BMN.
+  // Vendor tetap dapat mengakses field-nya di modal karena dialah yang mengisi.
+  function canViewHasil(){
+    return currentUser && (currentUser.role === 'admin' || currentUser.role === 'kasub_bmn');
   }
 
   function statusText(status, e){
@@ -2926,7 +2780,7 @@ const DUK_DATA = {
         + '<td>'+(e.tglPersetujuan?(fmtDate(e.tglPersetujuan)+(e.approvedBy?(' ('+escapeHtml(e.approvedBy)+')'):'')):'-')+'</td>'
         + '<td>'+(e.tglProses?fmtDate(e.tglProses):'-')+'</td>'
         + '<td>'+(e.tglPemeriksaan?fmtDate(e.tglPemeriksaan):'-')+'</td>'
-        + '<td>'+escapeHtml(e.hasilPemeriksaan||'-')+'</td>'
+        + '<td>'+(canViewHasil() ? escapeHtml(e.hasilPemeriksaan||'-') : (e.hasilPemeriksaan ? '(terbatas)' : '-'))+'</td>'
         + '<td>'+(e.estimasi?fmtDate(e.estimasi):'-')+'</td>'
         + '<td>'+(e.tglSelesaiPekerjaan?fmtDate(e.tglSelesaiPekerjaan):'-')+'</td>'
         + '<td>'+escapeHtml(e.catatanSelesai||'-')+'</td>'
@@ -2942,7 +2796,7 @@ const DUK_DATA = {
     }
     printArea.innerHTML = '<div class="print-head">'
       + '<h1>Rekapitulasi Layanan Servis BMN &mdash; Peralatan &amp; Mesin</h1>'
-      + '<div class="print-meta">Dicetak oleh: '+escapeHtml(currentUser.name)+' ('+ROLE_LABEL[currentUser.role]+') &middot; '+new Date().toLocaleString('id-ID')+' &middot; Total: '+list.length+' permohonan</div>'
+      + '<div class="print-meta">Dicetak oleh: '+escapeHtml(currentUser.name)+' ('+ROLE_LABEL[currentUser.role]+') &middot; '+new Date().toLocaleString('id-ID')+' &middot; Total: '+list.length+' permohonan'+(currentUser.role === 'pemohon' ? ' (hanya permohonan Anda)' : '')+'</div>'
       + '</div>'
       + '<table class="print-table"><thead><tr>'
         + '<th>No</th><th>Nama Pemohon</th><th>NIP</th><th>Eselon II</th><th>Jabatan</th><th>NUP</th><th>Jenis Peralatan &amp; Mesin</th><th>Kendala</th>'
@@ -2960,10 +2814,13 @@ const DUK_DATA = {
 
     const filtered = getFilteredEntries();
 
-    if(countPill) countPill.textContent = entries.length + ' permohonan';
+    if(countPill) countPill.textContent = visibleEntries().length + (currentUser.role === 'pemohon' ? ' permohonan Anda' : ' permohonan');
 
     if(filtered.length === 0){
-      bodyEl.innerHTML = '<div class="bst-empty"><div class="empty-icon">&#128203;</div><div class="disp" style="font-size:16px;margin-bottom:6px;">Belum ada permohonan yang cocok</div>'
+      const emptyTitle = (currentUser.role === 'pemohon' && visibleEntries().length === 0)
+        ? 'Anda belum pernah mengajukan permohonan servis'
+        : 'Belum ada permohonan yang cocok';
+      bodyEl.innerHTML = '<div class="bst-empty"><div class="empty-icon">&#128203;</div><div class="disp" style="font-size:16px;margin-bottom:6px;">'+emptyTitle+'</div>'
         + ((currentUser.role === 'pemohon' || currentUser.role === 'admin') ? 'Klik "+ Permohonan Baru" untuk mulai mencatat, atau ubah pencarian/filter.' : 'Coba ubah kata kunci pencarian atau filter status.')
         + '</div>';
       return;
@@ -3010,7 +2867,7 @@ const DUK_DATA = {
         + '</div>'
       + '</div>'
       + '<div class="stepper">'+stepsHtml+'</div>'
-      + (e.hasilPemeriksaan ? '<div class="hasil-preview"><b>Hasil Pemeriksaan</b>'+escapeHtml(e.hasilPemeriksaan)+'</div>' : '')
+      + (canViewHasil() && e.hasilPemeriksaan ? '<div class="hasil-preview"><b>Hasil Pemeriksaan</b>'+escapeHtml(e.hasilPemeriksaan)+'</div>' : '')
       + (e.catatanSelesai ? '<div class="hasil-preview catatan-preview"><b>Catatan Kasub BMN</b>'+escapeHtml(e.catatanSelesai)+'</div>' : '')
       + '<div class="ticket-foot">'
         + '<span>NUP: <span class="nup">'+escapeHtml(e.nup||'-')+'</span> &middot; NIP: <span class="nup">'+escapeHtml(e.nip||'-')+'</span></span>'
@@ -3117,6 +2974,7 @@ const DUK_DATA = {
   function openDetailModal(id){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
+    if(currentUser.role === 'pemohon' && !isOwnEntry(e)){ alert('Anda hanya dapat melihat permohonan Anda sendiri.'); return; }
 
     function inputField(labelText, fieldKey, type, opts){
       opts = opts || {};
@@ -3198,7 +3056,12 @@ const DUK_DATA = {
             <div class="section-head"><span class="st">4. Pemeriksaan</span><span class="who">Vendor</span></div>
             <div class="section-body">
               ${inputField('Tanggal Pemeriksaan','tglPemeriksaan','date')}
-              ${inputField('Hasil Pemeriksaan','hasilPemeriksaan','textarea',{placeholder:'Diagnosis / temuan kerusakan / tindakan yang diperlukan'})}
+              ${(canViewHasil() || currentUser.role === 'vendor')
+                ? inputField('Hasil Pemeriksaan','hasilPemeriksaan','textarea',{placeholder:'Diagnosis / temuan kerusakan / tindakan yang diperlukan'})
+                : `<div class="field">
+                    <label>Hasil Pemeriksaan</label>
+                    <div class="note">${e.hasilPemeriksaan ? 'Sudah diisi oleh Vendor.' : 'Belum diisi.'} Isi hasil pemeriksaan hanya dapat dilihat oleh Admin dan Kasub BMN.</div>
+                  </div>`}
             </div>
           </div>
 
@@ -3241,6 +3104,7 @@ const DUK_DATA = {
   async function submitEdit(id){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
+    if(currentUser.role === 'pemohon' && !isOwnEntry(e)){ alert('Anda hanya dapat mengubah permohonan Anda sendiri.'); return; }
 
     const editableFields = Array.from(document.querySelectorAll('#bst-overlay .field[data-editable="true"]'));
     if(editableFields.length === 0){ closeModal(); return; }
@@ -3298,6 +3162,7 @@ const DUK_DATA = {
   async function deleteEntry(id){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
+    if(currentUser.role === 'pemohon' && !isOwnEntry(e)){ alert('Anda hanya dapat menghapus permohonan Anda sendiri.'); return; }
 
     if(e.tglPersetujuan && currentUser.role !== 'admin'){
       alert('Permohonan ini sudah disetujui oleh Kasub BMN ('+(e.approvedBy?escapeHtml(e.approvedBy):'-')+' pada '+fmtDate(e.tglPersetujuan)+') sehingga tidak dapat dihapus.');
