@@ -614,6 +614,21 @@
   #bst-root .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   #bst-root .field-hint{ font-size:11px; color:var(--slate); margin-top:5px; font-style:italic; line-height:1.45; }
   #bst-root .field-hint.locked{ color:#A39A87; }
+  #bst-root .field input[type=file]{ padding:9px 11px; background:var(--paper-dim); cursor:pointer; font-size:12.5px; }
+  #bst-root .field input[type=file]::file-selector-button{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:12px; color:var(--primary-text);
+    background:var(--primary-dim); border:1px solid rgba(11,158,110,0.35); border-radius:8px;
+    padding:6px 12px; margin-right:10px; cursor:pointer;
+  }
+  #bst-root .foto-thumb{
+    display:block; max-width:100%; max-height:200px; margin-top:6px; border-radius:var(--r-sm);
+    border:1px solid var(--line); box-shadow:var(--shadow-card); cursor:zoom-in; object-fit:contain;
+  }
+  .foto-lightbox{
+    position:fixed; inset:0; z-index:2000; background:rgba(8,14,11,0.88); backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:center; padding:24px; cursor:zoom-out;
+  }
+  .foto-lightbox img{ max-width:96%; max-height:92vh; border-radius:12px; box-shadow:0 24px 70px rgba(0,0,0,0.6); }
 
   #bst-root .section-card{ border:1px solid var(--line); border-radius:var(--r-md); margin-bottom:14px; overflow:hidden; background:#fff; }
   #bst-root .section-head{ display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--paper-dim); border-bottom:1px solid var(--line); }
@@ -1850,6 +1865,76 @@ const DUK_DATA = {
 
 
   // ---- field permission rules: who can edit + when ----
+  /* ---------- Foto barang: kompresi di browser lalu disimpan base64 di Firestore ----------
+     Batas dokumen Firestore = 1 MiB, jadi foto di-resize (maks 1024px) & dikompresi JPEG
+     hingga hasil encode aman di bawah ~800 KB. Tanpa Firebase Storage / biaya tambahan. */
+  let pendingFotoData = null;      // foto untuk permohonan baru
+  let pendingEditFotoData = null;  // foto pengganti di modal edit
+
+  function compressImageFile(file){
+    return new Promise((resolve, reject)=>{
+      if(!file || !file.type || !file.type.startsWith('image/')){
+        reject(new Error('File harus berupa gambar (JPEG/PNG).')); return;
+      }
+      if(file.size > 2 * 1024 * 1024){
+        reject(new Error('Ukuran file maksimal 2 MB.')); return;
+      }
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = ()=>{
+        URL.revokeObjectURL(url);
+        const attempt = (maxSide, quality)=>{
+          const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+          const w = Math.max(1, Math.round(img.width * scale));
+          const h = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          return canvas.toDataURL('image/jpeg', quality);
+        };
+        let dataUrl = attempt(1024, 0.72);
+        if(dataUrl.length > 780000) dataUrl = attempt(800, 0.6);
+        if(dataUrl.length > 780000) dataUrl = attempt(640, 0.5);
+        if(dataUrl.length > 780000){ reject(new Error('Foto terlalu kompleks untuk dikompresi. Coba foto lain.')); return; }
+        resolve(dataUrl);
+      };
+      img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('File gambar tidak dapat dibaca.')); };
+      img.src = url;
+    });
+  }
+
+  // Pasang handler pada input file: kompres, tampilkan pratinjau, teruskan hasil ke setter
+  function wireFotoInput(inputId, previewId, setData){
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    if(!input) return;
+    input.addEventListener('change', async ()=>{
+      const file = input.files && input.files[0];
+      setData(null);
+      if(preview) preview.innerHTML = '';
+      if(!file) return;
+      if(preview) preview.innerHTML = '<div class="field-hint">Mengompresi foto&hellip;</div>';
+      try{
+        const dataUrl = await compressImageFile(file);
+        setData(dataUrl);
+        const kb = Math.round(dataUrl.length * 3 / 4 / 1024);
+        if(preview) preview.innerHTML = '<img class="foto-thumb" src="'+dataUrl+'" alt="Pratinjau foto barang">'
+          + '<div class="field-hint">Terkompresi otomatis &mdash; &plusmn;'+kb+' KB tersimpan.</div>';
+      }catch(err){
+        input.value = '';
+        if(preview) preview.innerHTML = '<div class="field-hint" style="color:var(--red);">'+escapeHtml(err.message)+'</div>';
+      }
+    });
+  }
+
+  function showFotoLightbox(src){
+    const box = document.createElement('div');
+    box.className = 'foto-lightbox';
+    box.innerHTML = '<img src="'+src+'" alt="Foto barang">';
+    box.addEventListener('click', ()=> box.remove());
+    document.body.appendChild(box);
+  }
+
   const FIELD_RULES = {
     nama:               { role:'pemohon',   ok:e=> false },
     nip:                { role:'pemohon',   ok:e=> false },
@@ -1857,6 +1942,7 @@ const DUK_DATA = {
     jabatan:            { role:'pemohon',   ok:e=> false },
     nup:                { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     jenis:              { role:'pemohon',   ok:e=> !e.tglPersetujuan },
+    fotoBarang:         { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     kendala:            { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     tglPermohonan:      { role:'pemohon',   ok:e=> !e.tglPersetujuan },
     tglPersetujuan:     { role:'kasub_bmn', ok:e=> !!e.tglPermohonan && !e.tglPersetujuan },
@@ -2916,6 +3002,10 @@ const DUK_DATA = {
           </div>
           <div class="field"><label>Kendala / Keluhan dari Pemohon</label>
             <textarea id="f-kendala" placeholder="Jelaskan kendala atau kerusakan yang dialami"></textarea></div>
+          <div class="field"><label>Foto Barang yang Diajukan <span class="req">*</span></label>
+            <input type="file" id="f-foto" accept="image/jpeg,image/png,image/webp" capture="environment">
+            <div class="field-hint">JPEG/PNG, maks 2 MB &mdash; foto akan dikompresi otomatis. Di ponsel dapat langsung memotret.</div>
+            <div id="f-foto-preview"></div></div>
           <div class="field"><label>Tanggal Permohonan</label>
             <input type="date" id="f-tglPermohonan" value="${todayISO()}"></div>
           <div class="note">Setelah diajukan, permohonan menunggu persetujuan Kasub BMN sebelum dapat diproses vendor.</div>
@@ -2926,6 +3016,8 @@ const DUK_DATA = {
         </div>
       </div>`;
     root.appendChild(overlay);
+    pendingFotoData = null;
+    wireFotoInput('f-foto', 'f-foto-preview', d=>{ pendingFotoData = d; });
     document.getElementById('bst-close').addEventListener('click', closeModal);
     document.getElementById('bst-cancel').addEventListener('click', closeModal);
     overlay.addEventListener('click', ev=>{ if(ev.target === overlay) closeModal(); });
@@ -2949,11 +3041,13 @@ const DUK_DATA = {
     const tglPermohonan = document.getElementById('f-tglPermohonan').value;
     if(!nup){ alert('NUP wajib diisi.'); return; }
     if(!jenis){ alert('Pilih Jenis Peralatan & Mesin.'); return; }
+    if(!pendingFotoData){ alert('Foto barang wajib dilampirkan (JPEG/PNG).'); return; }
     if(!tglPermohonan){ alert('Tanggal Permohonan wajib diisi.'); return; }
 
     const entryData = {
       nama, nip, eselonII, jabatan, nup,
       jenis,
+      fotoBarang: pendingFotoData,
       kendala: document.getElementById('f-kendala').value.trim(),
       tglPermohonan,
       tglPersetujuan: null, approvedBy: null, persetujuanStatus: null,
@@ -3034,6 +3128,16 @@ const DUK_DATA = {
                 ${inputField('Jenis Peralatan &amp; Mesin','jenis','select',{options:JENIS_OPTIONS})}
               </div>
               ${inputField('Kendala / Keluhan dari Pemohon','kendala','textarea')}
+              <div class="field"><label>Foto Barang</label>
+                ${e.fotoBarang
+                  ? `<img class="foto-thumb" id="fe-foto-view" src="${e.fotoBarang}" alt="Foto barang" title="Klik untuk memperbesar">`
+                  : `<div class="field-hint">Tidak ada foto (permohonan dibuat sebelum lampiran foto diwajibkan).</div>`}
+                ${canEdit('fotoBarang', e)
+                  ? `<input type="file" id="fe-foto" accept="image/jpeg,image/png,image/webp" capture="environment" style="margin-top:8px;">
+                     <div class="field-hint">${e.fotoBarang ? 'Pilih file baru untuk mengganti foto.' : 'Lampirkan foto barang (JPEG/PNG).'}</div>
+                     <div id="fe-foto-preview"></div>`
+                  : `<div class="field-hint">${e.tglPersetujuan ? 'Terkunci setelah persetujuan.' : 'Hanya dapat diubah oleh Pemohon atau Admin.'}</div>`}
+              </div>
               ${inputField('Tanggal Permohonan','tglPermohonan','date')}
             </div>
           </div>
@@ -3093,6 +3197,10 @@ const DUK_DATA = {
     document.getElementById('bst-cancel').addEventListener('click', closeModal);
     overlay.addEventListener('click', ev=>{ if(ev.target === overlay) closeModal(); });
     document.getElementById('bst-save').addEventListener('click', ()=> submitEdit(id));
+    pendingEditFotoData = null;
+    wireFotoInput('fe-foto', 'fe-foto-preview', d=>{ pendingEditFotoData = d; });
+    const fotoView = document.getElementById('fe-foto-view');
+    if(fotoView) fotoView.addEventListener('click', ()=> showFotoLightbox(e.fotoBarang));
     const setujuBtn = document.getElementById('btn-setuju');
     const tolakBtn = document.getElementById('btn-tolak');
     const resetBtn = document.getElementById('btn-reset-persetujuan');
@@ -3107,7 +3215,7 @@ const DUK_DATA = {
     if(currentUser.role === 'pemohon' && !isOwnEntry(e)){ alert('Anda hanya dapat mengubah permohonan Anda sendiri.'); return; }
 
     const editableFields = Array.from(document.querySelectorAll('#bst-overlay .field[data-editable="true"]'));
-    if(editableFields.length === 0){ closeModal(); return; }
+    if(editableFields.length === 0 && !pendingEditFotoData){ closeModal(); return; }
 
     const patch = {};
     editableFields.forEach(fieldDiv=>{
@@ -3116,6 +3224,7 @@ const DUK_DATA = {
       const key = input.id.replace('fe-','');
       patch[key] = input.value.trim();
     });
+    if(pendingEditFotoData && canEdit('fotoBarang', e)){ patch.fotoBarang = pendingEditFotoData; }
 
     // Kunci keras: Tanggal Persetujuan Kasub BMN & Tanggal Proses Permohonan (Vendor)
     // selalu memakai tanggal hari ini, apa pun nilai yang ada di input (jaga-jaga dari
@@ -3179,6 +3288,8 @@ const DUK_DATA = {
   function closeModal(){
     const overlay = document.getElementById('bst-overlay');
     if(overlay) overlay.remove();
+    pendingFotoData = null;
+    pendingEditFotoData = null;
   }
 
   window.bstBoot = function(){ renderChoose(); }; // fallback awal sebelum status auth pertama diketahui
