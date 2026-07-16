@@ -394,8 +394,10 @@
   #bst-root .user-email{ font-size:11.5px; color:var(--slate); margin-top:2px; }
   #bst-root .user-role-select{
     font-family:'Inter',sans-serif; font-size:12.5px; padding:7px 9px; border-radius:9px;
-    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border:1px solid var(--line); background:#fff; color:var(--ink); cursor:pointer;
+    transition:opacity .15s ease;
   }
+  #bst-root .user-role-select:disabled{ opacity:.55; cursor:wait; }
   #bst-root .user-actions{ display:flex; gap:6px; }
   #bst-root .danger-text{ color:var(--red); border-color:var(--red); }
   #bst-root .danger-text:hover{ background:var(--red-dim); }
@@ -2568,7 +2570,7 @@ const DUK_DATA = {
         </div>
         <div class="bst-footer-right">
           <div class="bst-footer-title">Dirancang sebagai prototipe</div>
-          <div class="bst-footer-sub">&copy; 2026 &mdash; dibuat oleh beruangmipon</div>
+          <div class="bst-footer-sub">&copy; 2026 &mdash; dibuat oleh beruangmipon &middot; v14.07.2026-foto</div>
         </div>
       </div>
     `;
@@ -2736,7 +2738,7 @@ const DUK_DATA = {
           <div class="user-name" id="uname-${u.id}">${escapeHtml(u.name||'(tanpa nama)')}${isSelf ? ' <span class="user-self-tag">(Anda)</span>' : ''}</div>
           <div class="user-email mono">${escapeHtml(u.email||'-')}</div>
         </div>
-        <select class="user-role-select" id="role-${u.id}">${roleOptions(u.role)}</select>
+        <select class="user-role-select" id="role-${u.id}" data-uid="${u.id}" ${isSelf && u.role==='admin' ? 'title="Anda dapat mengubah peran sendiri, tetapi berhati-hatilah agar tidak kehilangan akses admin."' : ''}>${roleOptions(u.role)}</select>
         ${userStatusBadge(u.status)}
         <div class="user-actions">
           ${actions}
@@ -2751,6 +2753,34 @@ const DUK_DATA = {
       ${groups.approved.length ? `<div class="user-section-title">Disetujui (${groups.approved.length})</div>${groups.approved.map(row).join('')}` : ''}
       ${groups.rejected.length ? `<div class="user-section-title">Ditolak (${groups.rejected.length})</div>${groups.rejected.map(row).join('')}` : ''}
     `;
+
+    area.querySelectorAll('select.user-role-select').forEach(sel=>{
+      sel.addEventListener('change', async ()=>{
+        const uidTarget = sel.getAttribute('data-uid');
+        const target = list.find(x=> x.id === uidTarget);
+        if(!target) return;
+        // Untuk akun pending, peran baru dipakai otomatis saat tombol "Setujui" ditekan — tidak perlu simpan di sini.
+        if(target.status === 'pending') return;
+        const newRole = sel.value;
+        const isSelf = currentUser.uid && uidTarget === currentUser.uid;
+        if(isSelf && target.role === 'admin' && newRole !== 'admin'){
+          if(!confirm('Anda akan mengubah peran akun Anda sendiri dari Admin menjadi '+ROLE_LABEL[newRole]+'. Anda akan kehilangan akses panel Kelola Pengguna setelah ini. Lanjutkan?')){
+            sel.value = target.role; return;
+          }
+        } else if(!confirm('Ubah peran '+escapeHtml(target.name||target.email||'pengguna ini')+' menjadi '+ROLE_LABEL[newRole]+'?')){
+          sel.value = target.role; return;
+        }
+        sel.disabled = true;
+        try{
+          await window.bstAuth.setUserStatus(uidTarget, { role: newRole });
+          target.role = newRole; // sinkronkan cache lokal agar tidak tertimpa render berikutnya
+        }catch(err){
+          console.error(err); alert('Gagal mengubah peran: ' + err.message);
+          sel.value = target.role;
+        }
+        sel.disabled = false;
+      });
+    });
 
     area.querySelectorAll('button[data-action]').forEach(btn=>{
       btn.addEventListener('click', async ()=>{
