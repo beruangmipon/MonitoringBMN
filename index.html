@@ -1647,26 +1647,40 @@ const DUK_DATA = {
   // ============================================================
   const RKBMN_DATA = {
     tahun: 2026,
-    revisi: 'Februari 2026',
+    revisi: 'Tahap 2 Hasil Penelaahan, 30 September 2026',
     satker: 'Sekretariat Badan Pengawas Perdagangan Berjangka Komoditi (Bappebti)',
+    sumberNd: 'Nota Dinas Nomor PL.00/9266/SJ-DAG.5/ND/09/2026 tanggal 30 September 2026',
     items: [
       { nama:'Sedan', kode:'3020101001', jumlah:1, kategori:'kendaraan' },
       { nama:'Station Wagon', kode:'3020101003', jumlah:5, kategori:'kendaraan' },
       { nama:'Mini Bus (Penumpang 14 Orang Kebawah)', kode:'3020102003', jumlah:1, kategori:'kendaraan' },
+      { nama:'Sepeda Motor Listrik', kode:'&mdash;', jumlah:16, kategori:'kendaraan' },
       { nama:'Mesin Fotocopy Electronic', kode:'3050103009', jumlah:3, kategori:'elektronik' },
-      { nama:'P.C Unit', kode:'3100102001', jumlah:33, kategori:'elektronik' },
-      { nama:'Lap Top', kode:'3100102002', jumlah:23, kategori:'elektronik' },
-      { nama:'Note Book', kode:'3100102003', jumlah:8, kategori:'elektronik' },
+      { nama:'Mesin Fotocopy Double Folio', kode:'&mdash;', jumlah:1, kategori:'elektronik' },
+      { nama:'P.C Unit', kode:'3100102001', jumlah:133, kategori:'elektronik' },
+      { nama:'Lap Top', kode:'3100102002', jumlah:26, kategori:'elektronik' },
+      { nama:'Note Book', kode:'3100102003', jumlah:12, kategori:'elektronik' },
       { nama:'Printer (Peralatan Personal Komputer)', kode:'3100203003', jumlah:27, kategori:'elektronik' },
       { nama:'Scanner (Peralatan Personal Komputer)', kode:'3100203004', jumlah:19, kategori:'elektronik' },
-      { nama:'Air Conditioning (AC)', kode:'3150405006', jumlah:2, kategori:'elektronik' },
+      { nama:'Air Conditioning (AC)', kode:'3150405006', jumlah:4, kategori:'elektronik' },
+      { nama:'A.C Split', kode:'&mdash;', jumlah:5, kategori:'elektronik' },
+      { nama:'A.C. Sentral', kode:'&mdash;', jumlah:2, kategori:'elektronik' },
     ],
-    // Perbandingan terhadap RKBMN Induk sebelum revisi
+    // Perbandingan terhadap RKBMN sebelum revisi Tahap 2 (kolom "Jumlah Lama" pada rekap)
     perubahan: [
-      { nama:'Mini Bus (Penumpang 14 Orang Kebawah)', dari:3, ke:1 },
-      { nama:'Lap Top', dari:26, ke:23 },
-      { nama:'Note Book', dari:12, ke:8 },
-      { nama:'Air Conditioning (AC)', dari:0, ke:2 },
+      { nama:'P.C. Unit', dari:96, ke:133 },
+      { nama:'Lap Top', dari:3, ke:26 },
+      { nama:'Note Book', dari:4, ke:12 },
+      { nama:'Sepeda Motor Listrik', dari:11, ke:16 },
+      { nama:'Printer (Peralatan Personal Komputer)', dari:0, ke:27 },
+      { nama:'Scanner (Peralatan Personal Komputer)', dari:0, ke:19 },
+      { nama:'Mesin Fotocopy Electronic', dari:0, ke:3 },
+      { nama:'Sedan', dari:0, ke:1 },
+      { nama:'Station Wagon', dari:0, ke:5 },
+      { nama:'Mesin Fotocopy Double Folio', dari:0, ke:1 },
+      { nama:'Air Conditioning (AC)', dari:2, ke:4 },
+      { nama:'A.C Split', dari:4, ke:5 },
+      { nama:'Mini Bus (Penumpang 14 Orang Kebawah)', dari:2, ke:1 },
       { nama:'Mesin Fotocopy Folio', dari:1, ke:0 },
     ],
   };
@@ -1742,7 +1756,7 @@ const DUK_DATA = {
             <tbody id="rkbmn-chart">${rkbmnRowsHtml('semua')}</tbody>
           </table>
         </div>
-        <div class="rkbmn-footnote">Sumber: RKBMN Pemeliharaan TA ${RKBMN_DATA.tahun} (revisi ${RKBMN_DATA.revisi}) &middot; Kuasa Pengguna Barang, Sekretariat Bappebti</div>
+        <div class="rkbmn-footnote">Sumber: RKBMN Pemeliharaan TA ${RKBMN_DATA.tahun} (revisi ${RKBMN_DATA.revisi}) &middot; Kuasa Pengguna Barang, Sekretariat Bappebti &middot; ${RKBMN_DATA.sumberNd}</div>
       </div>
     `;
   }
@@ -1753,13 +1767,13 @@ const DUK_DATA = {
   //  akun 523121 Belanja Pemeliharaan Peralatan dan Mesin, hal. 25
   // ============================================================
   const COMPARE_DATA = [
-    { nama:'Kendaraan Es. I (Sedan)',        rkbmn:1,  rkakl:1   },
-    { nama:'Kendaraan Operasional',          rkbmn:5,  rkakl:6   },
-    { nama:'Motor Listrik Roda 2',           rkbmn:0,  rkakl:16  },
-    { nama:'PC / Laptop / Notebook',         rkbmn:64, rkakl:171 },
-    { nama:'Air Conditioning (AC)',          rkbmn:2,  rkakl:11  },
-    { nama:'Mesin Fotokopi',                 rkbmn:3,  rkakl:4   },
-    { nama:'Printer / Scanner',              rkbmn:46, rkakl:46  },
+    { nama:'Kendaraan Es. I (Sedan)',        rkbmn:1,   rkakl:1   },
+    { nama:'Kendaraan Operasional',          rkbmn:6,   rkakl:6   },
+    { nama:'Motor Listrik Roda 2',           rkbmn:16,  rkakl:16  },
+    { nama:'PC / Laptop / Notebook',         rkbmn:171, rkakl:171 },
+    { nama:'Air Conditioning (AC)',          rkbmn:11,  rkakl:11  },
+    { nama:'Mesin Fotokopi',                 rkbmn:4,   rkakl:4   },
+    { nama:'Printer / Scanner',              rkbmn:46,  rkakl:46  },
   ];
 
   function renderCompareSection(){
@@ -1793,7 +1807,7 @@ const DUK_DATA = {
           <span class="compare-legend-item"><span class="compare-swatch compare-swatch-rkakl"></span>RKAKL Revisi 5</span>
         </div>
         <div class="compare-chart">${rows}</div>
-        <div class="rkbmn-footnote">Sumber RKAKL: Rincian Kertas Kerja Satker T.A. 2026 Revisi 5, akun 523121 Belanja Pemeliharaan Peralatan dan Mesin (hal. 25). Angka RKBMN mencerminkan catatan BMN Sekretariat; angka RKAKL adalah volume yang dianggarkan untuk satu Satuan Kerja (BADAN PENGAWAS PERDAGANGAN BERJANGKA KOMODITI) sehingga cakupannya bisa lebih luas &mdash; selisih besar (mis. PC/Laptop/Notebook, Motor Listrik) wajar terjadi karena perbedaan cakupan ini, bukan berarti kesalahan data.</div>
+        <div class="rkbmn-footnote">Sumber RKAKL: Rincian Kertas Kerja Satker T.A. 2026 Revisi 5, akun 523121 Belanja Pemeliharaan Peralatan dan Mesin (hal. 25). Angka RKBMN per ${RKBMN_DATA.revisi} &mdash; setelah revisi Tahap 2 ini, seluruh kategori sudah sepadan dengan volume RKAKL Revisi 5 (0 selisih). Angka RKAKL tetap mengacu Revisi 5 dan akan diperbarui bila terbit revisi RKAKL berikutnya.</div>
       </div>
       ${rkbmnPerubahanHtml()}
     `;
@@ -1820,20 +1834,20 @@ const DUK_DATA = {
       isi: 'Pengajuan RKAKL memang disusun untuk satu Satker penuh (BADAN PENGAWAS PERDAGANGAN BERJANGKA KOMODITI), bukan hanya Sekretariat. Agar sepadan, RKBMN yang dijadikan dasar perbandingan juga perlu mencakup seluruh unit dalam Satker tersebut, bukan hanya data Sekretariat, sehingga volume kedua dokumen benar-benar dapat disandingkan secara apple-to-apple.',
     },
     {
-      judul: 'Klarifikasi & catat aset Motor Listrik Roda 2',
-      isi: '16 unit motor listrik dianggarkan pemeliharaannya di RKAKL namun 0 tercatat di RKBMN Sekretariat. Telusuri unit pengelola aset ini dan pastikan tercatat di RKBMN unit yang benar sebelum tahun anggaran berjalan.',
+      judul: 'Motor Listrik Roda 2 &mdash; terselesaikan di Tahap 2',
+      isi: 'Sebelumnya 16 unit motor listrik dianggarkan pemeliharaannya di RKAKL namun 0 tercatat di RKBMN Sekretariat. Revisi Tahap 2 Hasil Penelaahan (ND PL.00/9266/SJ-DAG.5/ND/09/2026) telah mencatat 16 unit Sepeda Motor Listrik di RKBMN &mdash; kini sepadan penuh dengan RKAKL. Pastikan kode klasifikasi BMN resminya dilengkapi di SIMAK-BMN.',
     },
     {
       judul: 'Rekonsiliasi berkala SIMAK-BMN, RKBMN, dan RKAKL',
-      isi: 'Lakukan rekonsiliasi rutin (disarankan triwulanan) antara data SIMAK-BMN, RKBMN, dan realisasi RKAKL, agar setiap revisi RKBMN otomatis diikuti penyesuaian RKAKL revisi berikutnya (dan sebaliknya).',
+      isi: 'Lakukan rekonsiliasi rutin (disarankan triwulanan) antara data SIMAK-BMN, RKBMN, dan realisasi RKAKL, agar setiap revisi RKBMN otomatis diikuti penyesuaian RKAKL revisi berikutnya (dan sebaliknya) &mdash; seperti yang berhasil dicapai pada revisi Tahap 2 ini.',
     },
     {
-      judul: 'Dokumentasikan dasar perhitungan volume RKAKL',
-      isi: 'Untuk kategori dengan volume RKAKL lebih besar dari RKBMN (mis. AC 2 vs 11, PC/Laptop/Notebook 64 vs 171), simpan dokumentasi tertulis alasan selisih (cakupan lebih luas, proyeksi kebutuhan, dsb) agar auditor dapat menelusuri dengan mudah tanpa dianggap anomali.',
+      judul: 'Lengkapi kode klasifikasi BMN untuk aset baru',
+      isi: 'Tiga jenis aset yang baru tercatat di revisi Tahap 2 (Sepeda Motor Listrik, A.C Split, A.C. Sentral, Mesin Fotocopy Double Folio) belum memiliki kode klasifikasi BMN resmi pada data ini. Lengkapi kode dari Buku Kodefikasi BMN agar pelaporan SIMAK-BMN tetap konsisten.',
     },
     {
-      judul: 'Jadikan kategori yang sudah sesuai sebagai acuan',
-      isi: 'Kendaraan Eselon I (1=1) dan Printer/Scanner (46=46) menunjukkan kesesuaian sempurna antara RKBMN dan RKAKL. Terapkan proses/pola pencatatan yang sama pada kategori lain yang masih timpang.',
+      judul: 'Pertahankan kesesuaian penuh RKBMN &harr; RKAKL',
+      isi: 'Seluruh 7 kategori kini sepadan 100% antara RKBMN dan RKAKL Revisi 5 (sebelumnya hanya Kendaraan Es. I dan Printer/Scanner yang sepadan). Jadikan proses pencatatan pada revisi Tahap 2 ini sebagai standar baku untuk revisi-revisi berikutnya.',
     },
     {
       judul: 'Perbarui RKBMN setiap ada revisi RKAKL',
@@ -2570,7 +2584,7 @@ const DUK_DATA = {
         </div>
         <div class="bst-footer-right">
           <div class="bst-footer-title">Dirancang sebagai prototipe</div>
-          <div class="bst-footer-sub">&copy; 2026 &mdash; dibuat oleh beruangmipon &middot; v14.07.2026-foto</div>
+          <div class="bst-footer-sub">&copy; 2026 &mdash; dibuat oleh beruangmipon &middot; v22.10.2026-rkbmn-tahap2</div>
         </div>
       </div>
     `;
