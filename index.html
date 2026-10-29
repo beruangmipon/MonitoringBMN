@@ -1808,7 +1808,7 @@ const DUK_DATA = {
           <span class="compare-legend-item"><span class="compare-swatch compare-swatch-rkakl"></span>RKAKL Revisi POK 10</span>
         </div>
         <div class="compare-chart">${rows}</div>
-        <div class="rkbmn-footnote">Sumber RKAKL: Rincian Kertas Kerja Satker T.A. 2026 Revisi POK 10, akun 523121 Belanja Pemeliharaan Peralatan dan Mesin (hal. 34). Angka RKBMN per ${RKBMN_DATA.revisi}. Pada Revisi POK 10, volume PC/Laptop/Notebook yang dianggarkan pemeliharaannya turun menjadi 135 unit, sementara RKBMN masih mencatat 171 unit &mdash; selisih 36 unit ini perlu ditelusuri (kategori lain tetap sepadan). Kendaraan sewa/rental pada akun 523121 dikecualikan dari sandingan ini karena bukan aset BMN.</div>
+        <div class="rkbmn-footnote">Sumber RKAKL: Rincian Kertas Kerja Satker T.A. 2026 Revisi POK 10, akun 523121 Belanja Pemeliharaan Peralatan dan Mesin (hal. 34). Angka RKBMN per ${RKBMN_DATA.revisi}. Pada Revisi POK 10, volume PC/Laptop/Notebook yang dianggarkan pemeliharaannya sengaja diturunkan menjadi 135 unit karena ketersediaan anggaran yang menipis mendekati akhir tahun, sementara RKBMN tetap mencatat 171 unit &mdash; selisih 36 unit adalah penyesuaian anggaran, bukan ketidaksesuaian data (kategori lain tetap sepadan). Kendaraan sewa/rental pada akun 523121 dikecualikan dari sandingan ini karena bukan aset BMN.</div>
       </div>
       ${rkbmnPerubahanHtml()}
     `;
@@ -1847,8 +1847,8 @@ const DUK_DATA = {
       isi: 'Tiga jenis aset yang baru tercatat di revisi Tahap 2 (Sepeda Motor Listrik, A.C Split, A.C. Sentral, Mesin Fotocopy Double Folio) belum memiliki kode klasifikasi BMN resmi pada data ini. Lengkapi kode dari Buku Kodefikasi BMN agar pelaporan SIMAK-BMN tetap konsisten.',
     },
     {
-      judul: 'Telusuri selisih PC/Laptop/Notebook pada Revisi POK 10',
-      isi: 'Pada RKAKL Revisi POK 10, volume pemeliharaan PC/Laptop/Notebook turun menjadi 135 unit, sementara RKBMN masih mencatat 171 unit &mdash; selisih 36 unit kini tidak tercakup anggaran pemeliharaan tahun berjalan. Klarifikasi ke Biro terkait apakah ini pengurangan cakupan yang disengaja atau RKBMN perlu direvisi menyesuaikan.',
+      judul: 'Prioritaskan 36 unit PC/Laptop/Notebook di luar cakupan POK 10',
+      isi: 'Volume pemeliharaan PC/Laptop/Notebook pada RKAKL Revisi POK 10 sengaja dikurangi menjadi 135 unit (RKBMN: 171 unit) karena anggaran menipis mendekati akhir tahun. Tetapkan prioritas unit yang tetap dipelihara, catat 36 unit sisanya sebagai kebutuhan yang tertunda, dan usulkan kembali pada perencanaan anggaran pemeliharaan berikutnya.',
     },
     {
       judul: 'Perbarui RKBMN setiap ada revisi RKAKL',
