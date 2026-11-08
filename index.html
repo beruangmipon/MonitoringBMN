@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 72'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322C68B'/%3E%3Cstop offset='1' stop-color='%23066B49'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M32 3 58 12v22C58 50 46 63 32 69 18 63 6 50 6 34V12z' fill='url(%23a)' stroke='%23E8B04A' stroke-width='4'/%3E%3Cpath d='M32 15 45 22 32 29 19 22z' fill='%23fff'/%3E%3Cpath d='M19 22 32 29V45L19 38z' fill='%23fff' opacity='.75'/%3E%3Cpath d='M45 22 32 29V45L45 38z' fill='%23fff' opacity='.5'/%3E%3C/svg%3E">
 <title>Layanan Servis BMN — Peralatan & Mesin | Bappebti</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
@@ -431,6 +432,65 @@
     border:1px solid var(--dk-line-hi); padding:7px 14px; border-radius:999px; color:var(--dk-ink);
     font-variant-numeric:tabular-nums;
   }
+
+
+  /* ---------- Logo BMN & penyegaran visual ---------- */
+  #bst-root .bst-logo{ display:block; flex:none; filter:drop-shadow(0 6px 14px rgba(0,0,0,0.35)); }
+  #bst-root .bst-hero-logo{
+    position:relative; width:104px; height:104px; margin:0 auto 18px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #bst-root .bst-hero-logo::before{
+    content:""; position:absolute; inset:-14px; border-radius:50%;
+    background:radial-gradient(circle, rgba(34,198,139,0.38) 0%, rgba(34,198,139,0) 68%);
+    animation:bstGlow 3.6s ease-in-out infinite;
+  }
+  #bst-root .bst-hero-logo::after{
+    content:""; position:absolute; inset:-6px; border-radius:50%;
+    border:1px dashed rgba(232,176,74,0.45); animation:bstSpin 28s linear infinite;
+  }
+  @keyframes bstGlow{ 0%,100%{ transform:scale(0.92); opacity:.75; } 50%{ transform:scale(1.08); opacity:1; } }
+  @keyframes bstSpin{ to{ transform:rotate(360deg); } }
+  #bst-root .bst-hero-logo .bst-logo{ position:relative; z-index:1; }
+  #bst-root .bst-hero-sub{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.22em; text-transform:uppercase;
+    color:#E8B04A; margin:-4px auto 18px; font-weight:600;
+  }
+  #bst-root .bst-brand{ display:flex; align-items:center; gap:15px; z-index:1; position:relative; }
+  #bst-root .bst-brand .bst-logo{ width:50px; height:56px; }
+  #bst-root .bst-header{ border-bottom:3px solid transparent; border-image:linear-gradient(90deg,#E8B04A,#22C68B 45%,#2563EB) 1; }
+  #bst-root .bst-title{ font-size:21px; background:linear-gradient(180deg,#fff 30%,#BFD6CA); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  #bst-root .bst-footer .bst-logo{ width:26px; height:29px; filter:none; }
+  #bst-root .bst-footer-brand{ display:flex; align-items:center; gap:11px; }
+
+  /* KPI ringkasan dashboard */
+  #bst-root .bst-kpis{
+    display:grid; grid-template-columns:repeat(5,1fr); gap:14px; padding:22px 30px 4px;
+    background:linear-gradient(180deg,#F1F5F1 0%, var(--paper) 100%);
+  }
+  #bst-root .kpi{
+    position:relative; overflow:hidden; text-align:left; cursor:pointer; font-family:inherit;
+    background:#fff; border:1px solid var(--line); border-radius:var(--r-md); padding:15px 16px 14px;
+    box-shadow:var(--shadow-card); transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    animation:bstFloatIn .5s ease both;
+  }
+  #bst-root .kpi:hover{ transform:translateY(-3px); box-shadow:var(--shadow-pop); }
+  #bst-root .kpi.active{ border-color:var(--kc); box-shadow:0 0 0 2px var(--kc), var(--shadow-pop); }
+  #bst-root .kpi::before{ content:""; position:absolute; left:0; top:0; right:0; height:4px; background:var(--kc); }
+  #bst-root .kpi::after{
+    content:""; position:absolute; right:-26px; bottom:-30px; width:90px; height:90px; border-radius:50%;
+    background:var(--kc); opacity:.10;
+  }
+  #bst-root .kpi-label{ font-size:11.5px; font-weight:600; color:var(--slate); letter-spacing:0.02em; display:flex; align-items:center; gap:7px; }
+  #bst-root .kpi-label i{ width:8px; height:8px; border-radius:50%; background:var(--kc); display:inline-block; }
+  #bst-root .kpi-num{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:34px; letter-spacing:-0.03em; line-height:1.1; margin-top:8px; color:var(--ink); font-variant-numeric:tabular-nums; }
+  #bst-root .kpi-bar{ height:5px; border-radius:99px; background:var(--line-soft); margin-top:10px; overflow:hidden; position:relative; z-index:1; }
+  #bst-root .kpi-bar b{ display:block; height:100%; border-radius:99px; background:var(--kc); transition:width .6s ease; }
+  #bst-root .kpi-pct{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--slate); margin-top:6px; }
+  @media (max-width:900px){ #bst-root .bst-kpis{ grid-template-columns:repeat(2,1fr); padding:16px 14px 2px; } }
+  @media (max-width:640px){ #bst-root .bst-brand .bst-logo{ width:40px; height:45px; } }
+  #bst-print-area .print-brand{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  #bst-print-area .print-brand svg{ width:34px; height:38px; }
 
   /* ---------- Tombol ---------- */
   #bst-root .btn{
@@ -1633,6 +1693,26 @@ const DUK_DATA = {
     { key:'tglSelesaiPekerjaan',label:'Selesai Pekerjaan',   icon:'&#127937;' },
   ];
 
+  // Logo BMN — emblem orisinal (perisai + kubus aset), bukan lambang resmi instansi mana pun
+  let _logoSeq = 0;
+  function bmnLogo(extra){
+    const id = 'bl' + (++_logoSeq);
+    return `<svg class="bst-logo" ${extra||''} viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo BMN">
+      <defs>
+        <linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2FD69B"/><stop offset="1" stop-color="#066B49"/></linearGradient>
+        <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8DB93"/><stop offset="1" stop-color="#D99A1E"/></linearGradient>
+      </defs>
+      <path d="M32 2.5 58.5 11.5V34C58.5 50 46.5 63 32 69.5 17.5 63 5.5 50 5.5 34V11.5Z" fill="url(#${id}a)" stroke="url(#${id}b)" stroke-width="3"/>
+      <path d="M32 2.5 58.5 11.5V30C46 24 18 24 5.5 30V11.5Z" fill="#fff" opacity=".12"/>
+      <path d="M32 12 46 19.5 32 27 18 19.5Z" fill="#fff"/>
+      <path d="M18 19.5 32 27V43L18 35.5Z" fill="#fff" opacity=".78"/>
+      <path d="M46 19.5 32 27V43L46 35.5Z" fill="#fff" opacity=".52"/>
+      <path d="M32 27V43" stroke="#066B49" stroke-opacity=".35" stroke-width="1"/>
+      <rect x="13" y="47.5" width="38" height="12" rx="3.5" fill="#06402D" fill-opacity=".55"/>
+      <text x="32" y="57.4" text-anchor="middle" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-size="11.5" font-weight="800" letter-spacing="1.2" fill="#fff">BMN</text>
+    </svg>`;
+  }
+
   // Ilustrasi siluet gedung (dekoratif, generik — bukan foto/lambang resmi apa pun)
   const BUILDING_SVG = `<svg class="bst-building" viewBox="0 0 760 460" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
     <polygon points="435.0,270.0 394.5,300.7 417.7,345.9 367.9,356.0 369.1,406.8 319.9,394.3 298.9,440.6 260.0,408.0 221.1,440.6 200.1,394.3 150.9,406.8 152.1,356.0 102.3,345.9 125.5,300.7 85.0,270.0 125.5,239.3 102.3,194.1 152.1,184.0 150.9,133.2 200.1,145.7 221.1,99.4 260.0,132.0 298.9,99.4 319.9,145.7 369.1,133.2 367.9,184.0 417.7,194.1 394.5,239.3"/>
@@ -2326,6 +2406,8 @@ const DUK_DATA = {
     root.innerHTML = `
       <div class="bst-login">
         ${BUILDING_SVG}
+        <div class="bst-hero-logo">${bmnLogo('width="86" height="97"')}</div>
+        <div class="bst-hero-sub">Barang Milik Negara</div>
         ${INSTANSI_BADGE}
         <h2 class="disp">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</h2>
         <p>Pilih jalur masuk sesuai posisi Anda.</p>
@@ -2364,6 +2446,7 @@ const DUK_DATA = {
     root.innerHTML = `
       <div class="bst-login">
         ${BUILDING_SVG}
+        <div class="bst-hero-logo" style="width:78px;height:78px;">${bmnLogo('width="62" height="70"')}</div>
         <h2 class="disp">Masuk sebagai Pemohon</h2>
         <p>Pilih Eselon II dan nama Anda sesuai Daftar Urut Kepangkatan (DUK). Tidak perlu akun atau kata sandi.</p>
         <div class="bst-login-form">
@@ -2545,9 +2628,12 @@ const DUK_DATA = {
     const initials = currentUser.name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase();
     root.innerHTML = `
       <div class="bst-header">
-        <div>
-          <div class="bst-title disp">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</div>
-          <div class="bst-sub">${currentUser.role === 'pemohon' ? 'Permohonan servis Anda - Bappebti' : 'Pelacakan permohonan servis - Bappebti'}</div>
+        <div class="bst-brand">
+          ${bmnLogo()}
+          <div>
+            <div class="bst-title disp">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</div>
+            <div class="bst-sub">${currentUser.role === 'pemohon' ? 'Permohonan servis Anda - Bappebti' : 'Pelacakan permohonan servis - Bappebti'}</div>
+          </div>
         </div>
         <div class="bst-header-actions">
           <span class="bst-count-pill mono" id="bst-count-pill">0 permohonan</span>
@@ -2564,6 +2650,7 @@ const DUK_DATA = {
           ${(currentUser.role === 'pemohon' || currentUser.role === 'admin') ? '<button class="btn btn-primary" id="bst-add-btn">+ Permohonan Baru</button>' : ''}
         </div>
       </div>
+      <div class="bst-kpis" id="bst-kpis"></div>
       <div class="bst-toolbar">
         <input type="text" class="bst-search" id="bst-search" placeholder="${currentUser.role === 'pemohon' ? 'Cari NUP atau jenis peralatan Anda...' : 'Cari nama pemohon, NIP, NUP, atau jenis peralatan...'}">
         <select class="bst-filter" id="bst-filter">
@@ -2579,13 +2666,16 @@ const DUK_DATA = {
       </div>
       <div class="bst-body" id="bst-body"><div class="bst-empty">Memuat data&hellip;</div></div>
       <div class="bst-footer">
-        <div>
-          <div class="bst-footer-title">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</div>
-          <div class="bst-footer-sub">Bappebti &middot; Multi-pengguna</div>
+        <div class="bst-footer-brand">
+          ${bmnLogo()}
+          <div>
+            <div class="bst-footer-title">Layanan Servis BMN &mdash; Peralatan &amp; Mesin</div>
+            <div class="bst-footer-sub">Bappebti &middot; Multi-pengguna</div>
+          </div>
         </div>
         <div class="bst-footer-right">
           <div class="bst-footer-title">Dirancang sebagai prototipe</div>
-          <div class="bst-footer-sub">&copy; 2026 &mdash; dibuat oleh beruangmipon &middot; v29.10.2026-rkakl-pok10</div>
+          <div class="bst-footer-sub">&copy; 2026 &mdash; dibuat oleh beruangmipon &middot; v08.11.2026-logo-bmn</div>
         </div>
       </div>
     `;
@@ -2926,7 +3016,7 @@ const DUK_DATA = {
       document.body.appendChild(printArea);
     }
     printArea.innerHTML = '<div class="print-head">'
-      + '<h1>Rekapitulasi Layanan Servis BMN &mdash; Peralatan &amp; Mesin</h1>'
+      + '<div class="print-brand">'+bmnLogo()+'<h1 style="margin:0">Rekapitulasi Layanan Servis BMN &mdash; Peralatan &amp; Mesin</h1></div>'
       + '<div class="print-meta">Dicetak oleh: '+escapeHtml(currentUser.name)+' ('+ROLE_LABEL[currentUser.role]+') &middot; '+new Date().toLocaleString('id-ID')+' &middot; Total: '+list.length+' permohonan'+(currentUser.role === 'pemohon' ? ' (hanya permohonan Anda)' : '')+'</div>'
       + '</div>'
       + '<table class="print-table"><thead><tr>'
@@ -2938,6 +3028,47 @@ const DUK_DATA = {
     setTimeout(()=> window.print(), 80);
   }
 
+  function renderKpis(){
+    const el = document.getElementById('bst-kpis');
+    if(!el) return;
+    const all = visibleEntries();
+    const c = {baru:0, aktif:0, selesai:0, telat:0};
+    all.forEach(e=>{
+      const st = getStatus(e);
+      if(st==='baru') c.baru++;
+      else if(st==='disetujui' || st==='proses') c.aktif++;
+      else if(st==='selesai') c.selesai++;
+      else if(st==='telat') c.telat++;
+    });
+    const total = all.length;
+    const cur = (document.getElementById('bst-filter')||{}).value || 'all';
+    const defs = [
+      {f:'all',       label:'Total Permohonan',   n:total,     color:'#0B9E6E'},
+      {f:'baru',      label:'Menunggu Persetujuan', n:c.baru,  color:'#8A948E'},
+      {f:'proses',    label:'Sedang Diproses',    n:c.aktif,   color:'#D97706'},
+      {f:'selesai',   label:'Selesai',            n:c.selesai, color:'#2563EB'},
+      {f:'telat',     label:'Melewati Estimasi',  n:c.telat,   color:'#DC2626'}
+    ];
+    el.innerHTML = defs.map((d,i)=>{
+      const pct = total ? Math.round(d.n/total*100) : 0;
+      return '<button type="button" class="kpi'+(cur===d.f?' active':'')+'" data-f="'+d.f+'" style="--kc:'+d.color+';animation-delay:'+(i*60)+'ms">'
+        + '<div class="kpi-label"><i></i>'+d.label+'</div>'
+        + '<div class="kpi-num">'+d.n+'</div>'
+        + '<div class="kpi-bar"><b style="width:'+(d.f==='all'?100:pct)+'%"></b></div>'
+        + '<div class="kpi-pct">'+(d.f==='all'?'seluruh data':pct+'% dari total')+'</div>'
+        + '</button>';
+    }).join('');
+    el.querySelectorAll('.kpi').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const f = document.getElementById('bst-filter');
+        if(!f) return;
+        const t = b.getAttribute('data-f');
+        f.value = (f.value===t && t!=='all') ? 'all' : t;
+        f.dispatchEvent(new Event('change'));
+      });
+    });
+  }
+
   function renderDashboard(){
     const bodyEl = document.getElementById('bst-body');
     const countPill = document.getElementById('bst-count-pill');
@@ -2945,6 +3076,7 @@ const DUK_DATA = {
 
     const filtered = getFilteredEntries();
 
+    renderKpis();
     if(countPill) countPill.textContent = visibleEntries().length + (currentUser.role === 'pemohon' ? ' permohonan Anda' : ' permohonan');
 
     if(filtered.length === 0){
