@@ -494,6 +494,47 @@
   #bst-print-area .print-brand{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
   #bst-print-area .print-brand svg{ width:34px; height:38px; }
 
+  #bst-root .bst-closure{
+    position:relative; overflow:hidden; display:flex; align-items:center; gap:18px; flex-wrap:wrap; text-align:left;
+    margin:18px 30px 0; padding:18px 22px; border-radius:var(--r-md); color:#fff;
+    background:linear-gradient(120deg,#F59E0B 0%,#EA580C 100%);
+    box-shadow:0 10px 26px rgba(234,88,12,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+    border:2px solid rgba(255,255,255,0.35);
+  }
+  #bst-root .bst-closure::after{
+    content:""; position:absolute; right:-40px; top:-60px; width:190px; height:190px; border-radius:50%;
+    background:rgba(255,255,255,0.12); pointer-events:none;
+  }
+  #bst-root .bst-closure.closed{
+    background:linear-gradient(120deg,#DC2626 0%,#9F1239 100%);
+    box-shadow:0 10px 26px rgba(159,18,57,0.38), inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  #bst-root .bst-closure .ci{
+    flex:none; width:54px; height:54px; border-radius:50%; background:rgba(255,255,255,0.22);
+    display:flex; align-items:center; justify-content:center; font-size:27px; position:relative; z-index:1;
+  }
+  #bst-root .bst-closure .ct{ flex:1; min-width:230px; position:relative; z-index:1; }
+  #bst-root .bst-closure .ck{ font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; opacity:.92; }
+  #bst-root .bst-closure .ch{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:21px; line-height:1.25; letter-spacing:-0.015em; margin:4px 0 5px; }
+  #bst-root .bst-closure .cs{ font-size:13px; line-height:1.55; opacity:.96; }
+  #bst-root .bst-closure .cr{ margin-top:12px; padding:11px 14px 11px; background:rgba(0,0,0,0.20); border-radius:11px; border:1px solid rgba(255,255,255,0.18); }
+  #bst-root .bst-closure .crt{ font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; opacity:.9; margin-bottom:6px; }
+  #bst-root .bst-closure .cr ol{ margin:0; padding-left:20px; font-size:12.5px; line-height:1.6; }
+  #bst-root .bst-closure .cr li{ margin:2px 0; padding-left:2px; }
+  #bst-root .bst-closure .cd{ display:flex; gap:8px; position:relative; z-index:1; }
+  #bst-root .bst-closure .cd div{ min-width:58px; text-align:center; background:rgba(0,0,0,0.22); border-radius:11px; padding:8px 6px 7px; }
+  #bst-root .bst-closure .cd b{ display:block; font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:800; line-height:1.1; font-variant-numeric:tabular-nums; }
+  #bst-root .bst-closure .cd span{ font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; opacity:.9; }
+  #bst-root .bst-login .bst-closure{ margin:0 auto 26px; max-width:720px; }
+  #bst-root .bst-closure-wrap{ padding-bottom:2px; background:linear-gradient(180deg,#F1F5F1,var(--paper)); }
+  @media (max-width:640px){
+    #bst-root .bst-closure{ margin:14px 14px 0; padding:15px 15px; }
+    #bst-root .bst-login .bst-closure{ margin:0 0 20px; }
+    #bst-root .bst-closure .ch{ font-size:18px; }
+  }
+  #bst-root .btn-primary.is-closed{ background:#9CA3AF; box-shadow:none; cursor:not-allowed; }
+  #bst-root .btn-primary.is-closed:hover{ transform:none; box-shadow:none; }
+
   /* ---------- Tombol ---------- */
   #bst-root .btn{
     font-family:'Inter',sans-serif; font-weight:600; font-size:13.5px; padding:10px 18px; border-radius:var(--r-sm);
@@ -1695,6 +1736,52 @@ const DUK_DATA = {
     { key:'tglSelesaiPekerjaan',label:'Selesai Pekerjaan',   icon:'&#127937;' },
   ];
 
+  // ---- Penutupan aplikasi: Permohonan Baru ditutup setelah batas waktu (kecuali Admin) ----
+  const CLOSE_AT = new Date('2026-11-30T23:59:59+07:00');
+  const CLOSE_LABEL = '30 November 2026 pukul 23:59 WIB';
+  function isIntakeClosed(){ return Date.now() > CLOSE_AT.getTime(); }
+  function canCreateNew(){
+    return !!currentUser && (currentUser.role === 'admin' || (currentUser.role === 'pemohon' && !isIntakeClosed()));
+  }
+  function closureCountdown(){
+    const ms = Math.max(0, CLOSE_AT.getTime()-Date.now());
+    return { d:Math.floor(ms/86400000), h:Math.floor(ms%86400000/3600000), m:Math.floor(ms%3600000/60000) };
+  }
+  const CLOSURE_REASONS = [
+    'Anggaran pemeliharaan peralatan dan mesin yang tersedia pada TA 2026, serta biaya yang dibutuhkan;',
+    'Daftar urutan pengajuan perbaikan, serta kesesuaiannya dengan data BMN;',
+    'Pengajuan yang belum dapat diakomodasi pada TA 2026 akan diakomodasi pada tahun berikutnya.'
+  ];
+  function closureReasonsHtml(){
+    return '<div class="cr"><div class="crt">Dasar pertimbangan penutupan</div><ol>'
+      + CLOSURE_REASONS.map(t=>'<li>'+t+'</li>').join('') + '</ol></div>';
+  }
+  function closureNoticeHtml(){
+    const adm = currentUser && currentUser.role==='admin';
+    if(isIntakeClosed()){
+      return '<div class="bst-closure closed" role="alert"><div class="ci">&#128274;</div><div class="ct">'
+        + '<div class="ck">Pengumuman penutupan layanan</div>'
+        + '<div class="ch">Layanan telah ditutup &mdash; permohonan baru tidak dapat diajukan</div>'
+        + '<div class="cs">Aplikasi ditutup pada <b>'+CLOSE_LABEL+'</b>. Pemohon masih dapat login untuk melihat progres permohonan yang sudah masuk.'+(adm?' Admin tetap dapat menambahkan permohonan.':'')+'</div>'
+        + closureReasonsHtml()
+        + '</div></div>';
+    }
+    const c = closureCountdown();
+    return '<div class="bst-closure" role="alert"><div class="ci">&#9203;</div><div class="ct">'
+      + '<div class="ck">Pengumuman penutupan layanan</div>'
+      + '<div class="ch">Ditutup '+CLOSE_LABEL+'</div>'
+      + '<div class="cs">Setelah batas waktu tersebut, <b>permohonan baru tidak dapat diajukan lagi</b>'+(adm?' (kecuali oleh Admin).':' oleh siapa pun.')+' Ajukan permohonan servis Anda sebelum waktu habis.</div>'
+      + closureReasonsHtml()
+      + '</div><div class="cd" id="bst-cd"><div><b data-u="d">'+c.d+'</b><span>Hari</span></div><div><b data-u="h">'+c.h+'</b><span>Jam</span></div><div><b data-u="m">'+c.m+'</b><span>Menit</span></div></div></div>';
+  }
+  setInterval(()=>{
+    const el = document.getElementById('bst-cd');
+    if(!el) return;
+    if(isIntakeClosed()){ const w=document.getElementById('bst-closure-wrap'); if(w) w.innerHTML = closureNoticeHtml(); return; }
+    const c = closureCountdown();
+    ['d','h','m'].forEach(u=>{ const n=el.querySelector('[data-u="'+u+'"]'); if(n) n.textContent=c[u]; });
+  }, 30000);
+
   // Logo BMN — emblem orisinal (perisai + kubus aset), bukan lambang resmi instansi mana pun
   let _logoSeq = 0;
   function bmnLogo(extra){
@@ -2284,6 +2371,7 @@ const DUK_DATA = {
   }
 
   async function createEntryRemote(entryData){
+    if(!canCreateNew()){ alert('Permohonan baru sudah ditutup sejak '+CLOSE_LABEL+'. Permohonan tidak disimpan.'); return false; }
     setSync(false, 'menyimpan...');
     try{
       await window.bstFirestore.addEntry(entryData);
@@ -2408,6 +2496,7 @@ const DUK_DATA = {
     root.innerHTML = `
       <div class="bst-login">
         ${BUILDING_SVG}
+        ${closureNoticeHtml()}
         <div class="bst-hero-logo">${bmnLogo('width="86" height="97"')}</div>
         <div class="bst-hero-sub">Barang Milik Negara</div>
         ${INSTANSI_BADGE}
@@ -2649,9 +2738,10 @@ const DUK_DATA = {
           <button class="btn btn-logout" id="bst-logout">Keluar</button>
           ${currentUser.role === 'admin' ? '<button class="btn btn-ghost" id="bst-users-btn">&#128101; Kelola Pengguna</button>' : ''}
           <button class="btn btn-ghost" id="bst-print-btn">&#128424; ${currentUser.role === 'pemohon' ? 'Cetak Permohonan Saya' : 'Cetak Rekapitulasi'}</button>
-          ${(currentUser.role === 'pemohon' || currentUser.role === 'admin') ? '<button class="btn btn-primary" id="bst-add-btn">+ Permohonan Baru</button>' : ''}
+          ${(currentUser.role === 'pemohon' || currentUser.role === 'admin') ? '<button class="btn btn-primary'+(canCreateNew()?'':' is-closed')+'" id="bst-add-btn" '+(canCreateNew()?'':'title="Permohonan baru sudah ditutup"')+'>'+(canCreateNew()?'+ Permohonan Baru':'&#128274; Permohonan Ditutup')+'</button>' : ''}
         </div>
       </div>
+      <div class="bst-closure-wrap" id="bst-closure-wrap">${closureNoticeHtml()}</div>
       <div class="bst-kpis" id="bst-kpis"></div>
       <div class="bst-toolbar">
         <input type="text" class="bst-search" id="bst-search" placeholder="${currentUser.role === 'pemohon' ? 'Cari NUP atau jenis peralatan Anda...' : 'Cari nama pemohon, NIP, NUP, atau jenis peralatan...'}">
@@ -2677,13 +2767,16 @@ const DUK_DATA = {
         </div>
         <div class="bst-footer-right">
           <div class="bst-footer-title">Dirancang sebagai prototipe</div>
-          <div class="bst-footer-sub">&copy; 2026 &mdash; dibuat oleh beruangmipon &middot; v08.11.2026-kpi-fix</div>
+          <div class="bst-footer-sub">&copy; 2026 &mdash; dibuat oleh beruangmipon &middot; v09.11.2026-penutupan-c</div>
         </div>
       </div>
     `;
     document.getElementById('bst-logout').addEventListener('click', logout);
     if(currentUser.role === 'pemohon' || currentUser.role === 'admin'){
-      document.getElementById('bst-add-btn').addEventListener('click', ()=> openCreateModal());
+      document.getElementById('bst-add-btn').addEventListener('click', ()=>{
+        if(!canCreateNew()){ alert('Permohonan baru sudah ditutup sejak '+CLOSE_LABEL+'.'); renderShell(); startEntriesSync(); return; }
+        openCreateModal();
+      });
     }
     if(currentUser.role === 'admin'){
       document.getElementById('bst-users-btn').addEventListener('click', openUserManagementModal);
@@ -3094,7 +3187,7 @@ const DUK_DATA = {
         ? 'Anda belum pernah mengajukan permohonan servis'
         : 'Belum ada permohonan yang cocok';
       bodyEl.innerHTML = '<div class="bst-empty"><div class="empty-icon">&#128203;</div><div class="disp" style="font-size:16px;margin-bottom:6px;">'+emptyTitle+'</div>'
-        + ((currentUser.role === 'pemohon' || currentUser.role === 'admin') ? 'Klik "+ Permohonan Baru" untuk mulai mencatat, atau ubah pencarian/filter.' : 'Coba ubah kata kunci pencarian atau filter status.')
+        + ((canCreateNew()) ? 'Klik "+ Permohonan Baru" untuk mulai mencatat, atau ubah pencarian/filter.' : 'Coba ubah kata kunci pencarian atau filter status.')
         + '</div>';
       return;
     }
@@ -3151,6 +3244,7 @@ const DUK_DATA = {
 
   /* ============ CREATE MODAL (pemohon & admin) ============ */
   function openCreateModal(){
+    if(!canCreateNew()){ alert('Permohonan baru sudah ditutup sejak '+CLOSE_LABEL+'.'); return; }
     const isPemohon = currentUser.role === 'pemohon';
     const overlay = document.createElement('div');
     overlay.className = 'bst-overlay';
